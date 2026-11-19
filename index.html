@@ -436,73 +436,11 @@
   </footer>
   <!-- footer end -->
 
-  <!-- Drone Flight Transition Overlay -->
-  <div id="drone-flight-layer" aria-hidden="true">
-    <div class="drone-mist drone-mist-1"></div>
-    <div class="drone-mist drone-mist-2"></div>
-    <div class="drone-flight-banner">
-      <span class="drone-compass">&#10022;</span>
-      <span id="drone-flight-text">Terbang menuju...</span>
-    </div>
-  </div>
-
-  <!-- Interactive Legendary Journey Map Modal -->
-  <div id="legend-map-modal" aria-hidden="true">
-    <div class="legend-map-card">
-      <div class="legend-map-header">
-        <div>
-          <small class="legend-map-kicker">Peta Perjalanan Legenda</small>
-          <h4 class="font-dancing mb-0">Jejak Langkah Undangan</h4>
-        </div>
-        <button type="button" id="legend-map-close" class="legend-map-close-btn" title="Tutup Peta">&times;</button>
-      </div>
-      <div class="legend-map-canvas" id="legend-map-canvas">
-        <svg id="legend-map-svg" viewBox="0 0 360 440" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-          <!-- Garis Kontur Topografi & Sungai Legenda -->
-          <path d="M-10,120 Q80,95 160,130 T370,110" fill="none" stroke="currentColor" stroke-opacity="0.08" stroke-width="18" stroke-linecap="round" />
-          <path d="M-10,310 Q110,275 210,320 T370,295" fill="none" stroke="currentColor" stroke-opacity="0.07" stroke-width="14" stroke-linecap="round" />
-          <ellipse cx="75" cy="190" rx="58" ry="34" fill="none" stroke="currentColor" stroke-opacity="0.08" stroke-width="1" stroke-dasharray="3 4" />
-          <ellipse cx="290" cy="255" rx="54" ry="42" fill="none" stroke="currentColor" stroke-opacity="0.08" stroke-width="1" stroke-dasharray="3 4" />
-          <!-- Siluet Pegunungan & Bukit -->
-          <path d="M18,92 L48,54 L72,78 L92,60 L118,92 Z" fill="currentColor" fill-opacity="0.09" />
-          <path d="M242,390 L276,346 L302,374 L322,354 L348,390 Z" fill="currentColor" fill-opacity="0.09" />
-          <!-- Hutan Pohon Pinus Kecil -->
-          <g fill="currentColor" fill-opacity="0.14">
-            <polygon points="36,245 43,225 50,245" />
-            <polygon points="48,252 54,235 60,252" />
-            <polygon points="304,158 311,138 318,158" />
-            <polygon points="318,166 324,149 330,166" />
-          </g>
-          <!-- Mawar Kompas Legenda (Pojok Kanan Atas) -->
-          <g transform="translate(312, 48)" opacity="0.55">
-            <circle cx="0" cy="0" r="22" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 2" />
-            <circle cx="0" cy="0" r="15" fill="none" stroke="currentColor" stroke-width="0.8" />
-            <polygon points="0,-20 4,-4 0,-8 -4,-4" fill="currentColor" />
-            <polygon points="0,20 4,4 0,8 -4,4" fill="currentColor" fill-opacity="0.45" />
-            <polygon points="-20,0 -4,-4 -8,0 -4,4" fill="currentColor" fill-opacity="0.45" />
-            <polygon points="20,0 4,-4 8,0 4,4" fill="currentColor" fill-opacity="0.45" />
-            <circle cx="0" cy="0" r="2.5" fill="currentColor" />
-            <text x="0" y="-24" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor">U</text>
-          </g>
-          <!-- Bingkai Sudut Peta Kuno -->
-          <path d="M10,28 L10,10 L28,10 M332,10 L350,10 L350,28 M10,412 L10,430 L28,430 M332,430 L350,430 L350,412" fill="none" stroke="currentColor" stroke-opacity="0.35" stroke-width="2" stroke-linecap="round" />
-          <!-- Jalur Terbang Drone -->
-          <path id="legend-flight-trail-bg" d="" fill="none" stroke="currentColor" stroke-opacity="0.18" stroke-width="5" stroke-linecap="round" />
-          <path id="legend-flight-trail" d="" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="6 6" stroke-linecap="round" />
-        </svg>
-        <div id="legend-waypoints-layer"></div>
-        <div id="legend-drone-marker" title="Posisi Saat Ini">&#9992;</div>
-      </div>
-      <p class="legend-map-hint mb-0">Pilih salah satu titik di peta untuk terbang langsung ke lokasi tersebut.</p>
-    </div>
-  </div>
-
-  <!-- 3D Journey HUD (Prev / Map / Scene Label / Next) -->
-  <div id="journey-hud" aria-label="Navigasi Perjalanan 3D">
-    <button type="button" id="journey-prev" class="journey-btn" title="Ruang Sebelumnya">&#8593;</button>
-    <button type="button" id="journey-map-btn" class="journey-btn journey-btn-map" title="Buka Peta Perjalanan">&#9992; Peta</button>
+  <!-- 3D Pop-Up Book HUD (Prev / Scene Label / Next) -->
+  <div id="journey-hud" aria-label="Navigasi Halaman Buku 3D">
+    <button type="button" id="journey-prev" class="journey-btn" title="Halaman Sebelumnya">&#8593;</button>
     <span id="journey-label">1 / 9 &middot; Gerbang Taman</span>
-    <button type="button" id="journey-next" class="journey-btn journey-btn-next" title="Terbang ke Ruang Berikutnya">Terbang &#8595;</button>
+    <button type="button" id="journey-next" class="journey-btn journey-btn-next" title="Buka Halaman Berikutnya">Lanjut &#8595;</button>
   </div>
 
   <!-- Bottom Nav (Quick Section Jump) -->
