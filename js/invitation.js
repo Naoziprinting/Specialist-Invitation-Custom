@@ -617,6 +617,34 @@
         '<path fill="var(--color-primary)" fill-opacity="0.32" d="M0,92 Q320,46 680,84 T1440,68 L1440,110 L0,110 Z"/>' +
         "</svg>";
 
+      // Tambahkan diorama kertas bertumpuk + ilustrasi pelaminan/bunga pop-up di dasar halaman
+      const archSvg =
+        '<svg viewBox="0 0 360 110" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M55,106 L55,58 C55,22 110,12 180,12 C250,12 305,22 305,58 L305,106" stroke="var(--color-primary)" stroke-width="3" fill="var(--color-surface)" fill-opacity="0.7"/>' +
+        '<path d="M85,106 L85,64 C85,38 125,28 180,28 C235,28 275,38 275,64 L275,106" stroke="var(--color-secondary)" stroke-width="2.5" fill="none"/>' +
+        '<circle cx="180" cy="14" r="7" fill="var(--color-secondary)" stroke="var(--color-primary)" stroke-width="2"/>' +
+        '<ellipse cx="152" cy="18" rx="14" ry="6" transform="rotate(-15 152 18)" fill="var(--color-primary)" fill-opacity="0.75"/>' +
+        '<ellipse cx="208" cy="18" rx="14" ry="6" transform="rotate(15 208 18)" fill="var(--color-primary)" fill-opacity="0.75"/>' +
+        '<circle cx="55" cy="70" r="6" fill="var(--color-secondary)"/>' +
+        '<circle cx="305" cy="70" r="6" fill="var(--color-secondary)"/>' +
+        "</svg>";
+
+      const profileScene = document.getElementById("profile");
+      if (profileScene && !profileScene.querySelector(".popup-stage-arch")) {
+        const profContainer = profileScene.querySelector(".container");
+        if (profContainer) {
+          const archWrap = document.createElement("div");
+          archWrap.className = "popup-stage-arch popup-fold-item";
+          archWrap.style.setProperty("--popup-z", "18px");
+          archWrap.style.setProperty("--popup-delay", "0.22s");
+          const parsedArch = new DOMParser().parseFromString(archSvg, "image/svg+xml");
+          if (parsedArch.documentElement && parsedArch.documentElement.nodeName === "svg") {
+            archWrap.appendChild(document.importNode(parsedArch.documentElement, true));
+          }
+          profContainer.insertBefore(archWrap, profContainer.firstChild);
+        }
+      }
+
       document.querySelectorAll(".journey-scene").forEach((scene) => {
         if (scene.id === "cover") return;
         const container = scene.querySelector(".container");
@@ -997,6 +1025,24 @@
         }
       });
   });
+
+  // 60fps Mouse-Move 3D Diorama Parallax (Desktop)
+  let mouseTicking = false;
+  window.addEventListener(
+    "mousemove",
+    function (e) {
+      if (mouseTicking || window.innerWidth < 992) return;
+      mouseTicking = true;
+      window.requestAnimationFrame(function () {
+        const nx = (e.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2;
+        const ny = (e.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2;
+        document.documentElement.style.setProperty("--tilt-y", nx.toFixed(3));
+        document.documentElement.style.setProperty("--tilt-x", (-ny).toFixed(3));
+        mouseTicking = false;
+      });
+    },
+    { passive: true }
+  );
 
   // Throttled Scroll Spy + 3D Depth Parallax pada Teras Depan
   let scrollTicking = false;
