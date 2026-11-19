@@ -8,14 +8,14 @@
     <style>
         :root { --ios-bg: #f5f5f9; --ios-accent: #8785a2; --ios-card: #FFFFFF; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--ios-bg); padding: 20px; margin: 0; color: #1c1c1e; }
-        .container { max-width: 780px; margin: 0 auto; }
+        .container { max-width: 840px; margin: 0 auto; }
         .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 14px 18px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
         .card { background: white; border-radius: 14px; padding: 20px; margin-bottom: 18px; box-shadow: 0 2px 10px rgba(135, 133, 162, 0.1); }
         .card h3 { margin-top: 0; color: #3a3a4c; }
         .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
         label { display: block; font-size: 12.5px; font-weight: 600; color: #6c6c70; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 10px 12px; border: 1px solid #d1d1d6; border-radius: 8px; font-size: 14.5px; box-sizing: border-box; font-family: inherit; margin-bottom: 10px; }
-        input:focus, select:focus { outline: none; border-color: var(--ios-accent); box-shadow: 0 0 0 3px rgba(135, 133, 162, 0.15); }
+        input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d1d6; border-radius: 8px; font-size: 14.5px; box-sizing: border-box; font-family: inherit; margin-bottom: 10px; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--ios-accent); box-shadow: 0 0 0 3px rgba(135, 133, 162, 0.15); }
         .btn { padding: 9px 14px; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
         .btn-primary { background: var(--ios-accent); color: white; width: 100%; padding: 12px; font-size: 15px; }
         .btn-sm { padding: 6px 10px; font-size: 12px; }
@@ -23,25 +23,48 @@
         .btn-outline:hover { background: #e5e5ea; }
         .btn-success { background: #34c759; color: white; }
         .btn-warn { background: #ff9500; color: white; }
+        .btn-wa { background: #25d366; color: white; }
         .event-row { border-bottom: 1px solid #f0f0f5; padding: 14px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
         .event-row:last-child { border-bottom: none; }
-        .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-left: 6px; }
         .badge-active { background: #e6f9ed; color: #1b8a42; }
+        .badge-draft { background: #fff4e5; color: #b25e09; }
         .badge-inactive { background: #ffeceb; color: #c92a2a; }
+        .slug-status { font-size: 11.5px; font-weight: 600; margin-top: -6px; margin-bottom: 10px; display: block; }
+        .slug-ok { color: #1b8a42; }
+        .slug-err { color: #c92a2a; }
         .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-        #auth-overlay { position: fixed; inset: 0; background: rgba(28, 28, 30, 0.75); backdrop-filter: blur(6px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-box { background: white; border-radius: 16px; padding: 24px; max-width: 380px; width: 100%; text-align: center; }
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+        .filter-bar input { flex: 1; min-width: 200px; margin-bottom: 0; }
+        .filter-bar select { width: auto; min-width: 140px; margin-bottom: 0; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(28, 28, 30, 0.75); backdrop-filter: blur(6px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: white; border-radius: 16px; padding: 24px; max-width: 460px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .section-sub { font-size: 13px; font-weight: 700; color: #3a3a4c; margin: 8px 0 10px; border-bottom: 1px solid #f0f0f5; padding-bottom: 6px; }
     </style>
 </head>
 <body>
 
-    <div id="auth-overlay">
-        <div class="auth-box">
+    <div id="auth-overlay" class="modal-overlay">
+        <div class="modal-box" style="text-align:center; max-width:380px;">
             <h3 style="margin-top:0; color:#3a3a4c;">Super Admin Login</h3>
             <p style="font-size:13px; color:#6c6c70; margin-bottom:14px;">Masukkan Super Admin Key untuk mengelola semua pesanan undangan.</p>
             <input type="password" id="super-key-input" placeholder="Super Admin Key" style="text-align:center;" />
             <button class="btn btn-primary" id="btn-login" onclick="loginSuperAdmin()">Masuk Dashboard</button>
             <p id="login-err" style="color:#ff3b30; font-size:12.5px; margin-top:10px; display:none;"></p>
+        </div>
+    </div>
+
+    <!-- Modal Handover 1-Klik WhatsApp -->
+    <div id="handover-modal" class="modal-overlay" style="display:none;">
+        <div class="modal-box">
+            <h3 style="margin-top:0; color:#1b8a42;">Undangan Siap Dikirim!</h3>
+            <p style="font-size:13px; color:#6c6c70; margin-bottom:10px;">Salin atau kirim langsung detail akses di bawah ini ke WhatsApp customer:</p>
+            <textarea id="handover-text" rows="9" readonly style="font-size:12.5px; background:#f8f8fb;"></textarea>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-outline" style="flex:1;" onclick="copyHandoverText()">Salin Pesan</button>
+                <button class="btn btn-wa" style="flex:1;" id="btn-send-wa-handover">Kirim ke WA Customer</button>
+                <button class="btn btn-outline" onclick="closeHandoverModal()">Tutup</button>
+            </div>
         </div>
     </div>
 
@@ -56,25 +79,78 @@
 
         <div class="card">
             <h3>Buat Pesanan / Acara Baru</h3>
+
+            <div class="section-sub">1. Identitas Acara &amp; Onboarding</div>
             <div class="grid-2">
                 <div>
-                    <label>Slug / ID Unik URL (tanpa spasi)</label>
-                    <input type="text" id="new-slug" placeholder="contoh: budi-ani-2026">
+                    <label>Judul Acara / Nama Pemesan</label>
+                    <input type="text" id="new-title" placeholder="contoh: Pernikahan Budi &amp; Ani" oninput="onTitleInput(this.value)">
                 </div>
                 <div>
-                    <label>Judul Acara / Nama Pemesan</label>
-                    <input type="text" id="new-title" placeholder="contoh: Pernikahan Budi &amp; Ani">
+                    <label>Slug / ID Unik URL (Otomatis)</label>
+                    <input type="text" id="new-slug" placeholder="contoh: budi-ani" oninput="onSlugInput(this.value)">
+                    <span id="slug-availability" class="slug-status"></span>
                 </div>
                 <div>
                     <label>Jenis Undangan</label>
-                    <select id="new-type">
+                    <select id="new-type" onchange="toggleQuickFields()">
                         <option value="wedding">Pernikahan</option>
                         <option value="khitan">Khitanan</option>
                     </select>
                 </div>
                 <div>
+                    <label>No. WhatsApp Customer</label>
+                    <input type="tel" id="new-phone" placeholder="contoh: 08123456789">
+                </div>
+            </div>
+
+            <div id="quick-wedding-fields" class="grid-2">
+                <div>
+                    <label>Nama Mempelai Pria (Quick Seed)</label>
+                    <input type="text" id="new-groom" placeholder="contoh: Budi Santoso">
+                </div>
+                <div>
+                    <label>Nama Mempelai Wanita (Quick Seed)</label>
+                    <input type="text" id="new-bride" placeholder="contoh: Ani Wijaya">
+                </div>
+            </div>
+
+            <div id="quick-khitan-fields" class="grid-2" style="display:none;">
+                <div>
+                    <label>Nama Anak Khitan (Quick Seed)</label>
+                    <input type="text" id="new-khitan" placeholder="contoh: Ahmad Fauzan">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div>
+                    <label>Tanggal &amp; Jam Acara Utama</label>
+                    <input type="datetime-local" id="new-date" onchange="autoSetExpiry()">
+                </div>
+                <div>
+                    <label>Masa Aktif Hingga (Opsional)</label>
+                    <input type="date" id="new-expires">
+                </div>
+                <div>
+                    <label>Status Awal</label>
+                    <select id="new-status">
+                        <option value="active">Active (Langsung Publik)</option>
+                        <option value="draft">Draft (Proses Desain)</option>
+                    </select>
+                </div>
+                <div>
                     <label>PIN Akses Customer (6 digit)</label>
                     <input type="text" id="new-pin" placeholder="Otomatis jika kosong">
+                </div>
+            </div>
+
+            <div class="section-sub">2. Tema &amp; Template Awal</div>
+            <div class="grid-2">
+                <div>
+                    <label>Clone Pengaturan dari Acara Lain (Opsional)</label>
+                    <select id="new-clone">
+                        <option value="">-- Mulai dari Template Bersih --</option>
+                    </select>
                 </div>
                 <div>
                     <label>Preset Palet Warna</label>
@@ -105,13 +181,23 @@
                     </select>
                 </div>
             </div>
-            <button class="btn btn-primary" id="btn-create-event" onclick="createNewEvent()">Buat Undangan Baru</button>
+
+            <button class="btn btn-primary" id="btn-create-event" onclick="createNewEvent()">Buat Undangan &amp; Siapkan Akses</button>
         </div>
 
         <div class="card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <h3 style="margin:0;">Daftar Acara Aktif</h3>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="margin:0;">Daftar Acara (<span id="events-count">0</span>)</h3>
                 <button class="btn btn-outline btn-sm" onclick="loadEvents()">Refresh</button>
+            </div>
+            <div class="filter-bar">
+                <input type="text" id="search-events" placeholder="Cari judul atau slug..." oninput="applyFilters()">
+                <select id="filter-status" onchange="applyFilters()">
+                    <option value="all">Semua Status</option>
+                    <option value="active">Active</option>
+                    <option value="draft">Draft</option>
+                    <option value="inactive">Inactive</option>
+                </select>
             </div>
             <div id="events-list">
                 <p style="text-align:center; color:#8e8e93;">Memuat daftar acara...</p>
@@ -124,6 +210,8 @@
     <script>
         const SUPER_KEY_STORAGE = 'naozi_super_key';
         let superKey = sessionStorage.getItem(SUPER_KEY_STORAGE) || '';
+        let allEvents = [];
+        let slugManuallyEdited = false;
 
         window.onload = function() {
             if (superKey) {
@@ -131,6 +219,14 @@
                 loadEvents();
             }
         };
+
+        function showListMessage(listEl, text, color) {
+            const p = document.createElement('p');
+            p.style.textAlign = 'center';
+            p.style.color = color;
+            p.textContent = text;
+            listEl.replaceChildren(p);
+        }
 
         function loginSuperAdmin() {
             const key = document.getElementById('super-key-input').value.trim();
@@ -147,7 +243,7 @@
                     superKey = key;
                     sessionStorage.setItem(SUPER_KEY_STORAGE, superKey);
                     document.getElementById('auth-overlay').style.display = 'none';
-                    renderEvents(events);
+                    onEventsLoaded(events);
                 })
                 .catch(err => {
                     errEl.innerText = err.message;
@@ -164,27 +260,109 @@
             location.reload();
         }
 
-        function showListMessage(listEl, text, color) {
-            const p = document.createElement('p');
-            p.style.textAlign = 'center';
-            p.style.color = color;
-            p.textContent = text;
-            listEl.replaceChildren(p);
+        function onTitleInput(val) {
+            if (slugManuallyEdited) return;
+            const autoSlug = String(val || '')
+                .toLowerCase()
+                .replace(/^(pernikahan|walimatul|khitanan|khitan|the wedding of)\s+/i, '')
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-+|-+$/g, '')
+                .slice(0, 32);
+            document.getElementById('new-slug').value = autoSlug;
+            checkSlugAvailability(autoSlug);
+        }
+
+        function onSlugInput(val) {
+            slugManuallyEdited = Boolean(val);
+            const cleaned = String(val || '').toLowerCase().replace(/[^a-z0-9-_]/g, '');
+            document.getElementById('new-slug').value = cleaned;
+            checkSlugAvailability(cleaned);
+        }
+
+        function checkSlugAvailability(slug) {
+            const badge = document.getElementById('slug-availability');
+            if (!slug || slug.length < 3) {
+                badge.textContent = slug ? 'Minimal 3 karakter' : '';
+                badge.className = 'slug-status slug-err';
+                return false;
+            }
+            const exists = allEvents.some(ev => ev.eventId === slug);
+            if (exists) {
+                badge.textContent = 'Sudah digunakan acara lain';
+                badge.className = 'slug-status slug-err';
+                return false;
+            }
+            badge.textContent = 'Slug tersedia';
+            badge.className = 'slug-status slug-ok';
+            return true;
+        }
+
+        function toggleQuickFields() {
+            const type = document.getElementById('new-type').value;
+            document.getElementById('quick-wedding-fields').style.display = type === 'wedding' ? 'grid' : 'none';
+            document.getElementById('quick-khitan-fields').style.display = type === 'khitan' ? 'grid' : 'none';
+        }
+
+        function autoSetExpiry() {
+            const dateVal = document.getElementById('new-date').value;
+            const expInput = document.getElementById('new-expires');
+            if (!dateVal || expInput.value) return;
+            const d = new Date(dateVal);
+            if (!isNaN(d.getTime())) {
+                d.setDate(d.getDate() + 90);
+                expInput.value = d.toISOString().slice(0, 10);
+            }
         }
 
         function loadEvents() {
             const listEl = document.getElementById('events-list');
             apiGet('listEvents', { superKey: superKey })
-                .then(renderEvents)
-                .catch(err => {
-                    showListMessage(listEl, err.message, '#ff3b30');
-                });
+                .then(onEventsLoaded)
+                .catch(err => showListMessage(listEl, err.message, '#ff3b30'));
+        }
+
+        function onEventsLoaded(events) {
+            allEvents = Array.isArray(events) ? events : [];
+            populateCloneDropdown();
+            applyFilters();
+            checkSlugAvailability(document.getElementById('new-slug').value);
+        }
+
+        function populateCloneDropdown() {
+            const sel = document.getElementById('new-clone');
+            const currentVal = sel.value;
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = '-- Mulai dari Template Bersih --';
+            sel.replaceChildren(defaultOpt);
+
+            allEvents.forEach(ev => {
+                const opt = document.createElement('option');
+                opt.value = ev.eventId;
+                opt.textContent = `Clone: ${ev.title} (${ev.eventId})`;
+                sel.appendChild(opt);
+            });
+            sel.value = currentVal;
+        }
+
+        function applyFilters() {
+            const q = (document.getElementById('search-events').value || '').trim().toLowerCase();
+            const statusFilter = document.getElementById('filter-status').value;
+
+            const filtered = allEvents.filter(ev => {
+                const matchText = !q || ev.title.toLowerCase().includes(q) || ev.eventId.toLowerCase().includes(q);
+                const matchStatus = statusFilter === 'all' || ev.status === statusFilter;
+                return matchText && matchStatus;
+            });
+
+            document.getElementById('events-count').textContent = String(filtered.length);
+            renderEvents(filtered);
         }
 
         function renderEvents(events) {
             const listEl = document.getElementById('events-list');
             if (!Array.isArray(events) || events.length === 0) {
-                showListMessage(listEl, 'Belum ada acara terdaftar.', '#8e8e93');
+                showListMessage(listEl, 'Tidak ada acara yang cocok.', '#8e8e93');
                 return;
             }
             listEl.replaceChildren();
@@ -195,15 +373,14 @@
                 row.className = 'event-row';
 
                 const info = document.createElement('div');
-                const isActive = ev.status === 'active';
-
                 const titleRow = document.createElement('div');
                 titleRow.style.fontWeight = '700';
                 titleRow.style.fontSize = '15px';
-                titleRow.textContent = (ev.title || ev.eventId) + ' ';
+                titleRow.textContent = ev.title || ev.eventId;
 
                 const badge = document.createElement('span');
-                badge.className = `badge ${isActive ? 'badge-active' : 'badge-inactive'}`;
+                const badgeClass = ev.status === 'active' ? 'badge-active' : (ev.status === 'draft' ? 'badge-draft' : 'badge-inactive');
+                badge.className = `badge ${badgeClass}`;
                 badge.textContent = ev.status;
                 titleRow.appendChild(badge);
 
@@ -211,7 +388,8 @@
                 metaRow.style.fontSize = '12.5px';
                 metaRow.style.color = '#6c6c70';
                 metaRow.style.marginTop = '3px';
-                metaRow.textContent = `Slug: ${ev.eventId} • Tipe: ${ev.type} • PIN: ${ev.adminPin || '-'}`;
+                const expInfo = ev.expiresAt ? ` • Exp: ${ev.expiresAt}` : '';
+                metaRow.textContent = `Slug: ${ev.eventId} • Tipe: ${ev.type} • PIN: ${ev.adminPin || '-'}${expInfo}`;
 
                 info.appendChild(titleRow);
                 info.appendChild(metaRow);
@@ -237,6 +415,12 @@
                 btnGuest.target = '_blank';
                 btnGuest.textContent = 'Tamu';
 
+                const btnHandover = document.createElement('button');
+                btnHandover.className = 'btn btn-wa btn-sm';
+                btnHandover.textContent = 'Kirim Akses';
+                btnHandover.onclick = () => openHandoverModal(ev);
+
+                const isActive = ev.status === 'active';
                 const btnToggle = document.createElement('button');
                 btnToggle.className = `btn btn-sm ${isActive ? 'btn-warn' : 'btn-success'}`;
                 btnToggle.textContent = isActive ? 'Nonaktifkan' : 'Aktifkan';
@@ -245,6 +429,7 @@
                 actions.appendChild(btnView);
                 actions.appendChild(btnEdit);
                 actions.appendChild(btnGuest);
+                actions.appendChild(btnHandover);
                 actions.appendChild(btnToggle);
 
                 row.appendChild(info);
@@ -258,17 +443,28 @@
             const title = document.getElementById('new-title').value.trim();
             const type = document.getElementById('new-type').value;
             const pin = document.getElementById('new-pin').value.trim();
+            const customerPhone = document.getElementById('new-phone').value.trim();
+            const status = document.getElementById('new-status').value;
+            const expiresAt = document.getElementById('new-expires').value;
+            const eventDate = document.getElementById('new-date').value;
+            const groomName = document.getElementById('new-groom').value.trim();
+            const brideName = document.getElementById('new-bride').value.trim();
+            const khitanName = document.getElementById('new-khitan').value.trim();
+            const cloneFrom = document.getElementById('new-clone').value;
             const paletteKey = document.getElementById('new-palette').value;
             const fontKey = document.getElementById('new-font').value;
             const ornament = document.getElementById('new-ornament').value;
 
             if (!slug || !title) {
-                return alert('Slug dan Judul Acara wajib diisi.');
+                return alert('Judul Acara dan Slug wajib diisi.');
+            }
+            if (!checkSlugAvailability(slug)) {
+                return alert('Slug tidak valid atau sudah dipakai acara lain.');
             }
 
             const btn = document.getElementById('btn-create-event');
             btn.disabled = true;
-            btn.innerText = 'Membuat...';
+            btn.innerText = 'Menyiapkan Undangan...';
 
             const palMap = {
                 'lilac-pink': ['#8785a2', '#ffc7c7', '#ffe2e2', '#f6f6f6'],
@@ -292,7 +488,15 @@
                 eventId: slug,
                 title: title,
                 type: type,
+                status: status,
                 adminPin: pin,
+                customerPhone: customerPhone,
+                expiresAt: expiresAt,
+                eventDate: eventDate,
+                groomName: groomName,
+                brideName: brideName,
+                khitanName: khitanName,
+                cloneFrom: cloneFrom,
                 themePreset: paletteKey,
                 primaryColor: colors[0],
                 secondaryColor: colors[1],
@@ -304,17 +508,69 @@
             })
             .then(res => {
                 const ev = res.data || res.message;
-                alert(`Acara berhasil dibuat!\nSlug: ${ev.eventId}\nPIN Customer: ${ev.adminPin}`);
-                document.getElementById('new-slug').value = '';
-                document.getElementById('new-title').value = '';
-                document.getElementById('new-pin').value = '';
+                slugManuallyEdited = false;
+                ['new-slug', 'new-title', 'new-pin', 'new-phone', 'new-groom', 'new-bride', 'new-khitan', 'new-date', 'new-expires'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
                 loadEvents();
+                openHandoverModal(ev);
             })
             .catch(err => alert('Gagal membuat acara: ' + err.message))
             .finally(() => {
                 btn.disabled = false;
-                btn.innerText = 'Buat Undangan Baru';
+                btn.innerText = 'Buat Undangan & Siapkan Akses';
             });
+        }
+
+        function openHandoverModal(ev) {
+            const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
+            const invUrl = `${baseUrl}/index.html?event=${encodeURIComponent(ev.eventId)}`;
+            const editUrl = `${baseUrl}/editor.html?event=${encodeURIComponent(ev.eventId)}`;
+            const guestUrl = `${baseUrl}/guest.html?event=${encodeURIComponent(ev.eventId)}`;
+
+            const msg = [
+                `Halo Kak, undangan digital untuk *${ev.title}* sudah siap! 🎉`,
+                ``,
+                `🔗 *Link Undangan Publik:*`,
+                invUrl,
+                ``,
+                `✏️ *Edit Isi & Tema Undangan:*`,
+                editUrl,
+                ``,
+                `👥 *Kelola Daftar Tamu & Kirim WA:*`,
+                guestUrl,
+                ``,
+                `🔐 *PIN Akses Editor & Tamu:* ${ev.adminPin || '-'}`,
+                ``,
+                `Silakan gunakan PIN di atas saat membuka halaman Editor atau Kelola Tamu. Terima kasih telah mempercayakan undangan Anda kepada *Naozi Printing*!`
+            ].join('\n');
+
+            document.getElementById('handover-text').value = msg;
+            document.getElementById('btn-send-wa-handover').onclick = () => {
+                let cleanPhone = String(ev.customerPhone || '').replace(/\D/g, '');
+                if (cleanPhone.startsWith('0')) cleanPhone = '62' + cleanPhone.slice(1);
+                else if (cleanPhone.startsWith('8')) cleanPhone = '62' + cleanPhone;
+                const waUrl = cleanPhone
+                    ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`
+                    : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+                window.open(waUrl, '_blank', 'noopener,noreferrer');
+            };
+            document.getElementById('handover-modal').style.display = 'flex';
+        }
+
+        function closeHandoverModal() {
+            document.getElementById('handover-modal').style.display = 'none';
+        }
+
+        function copyHandoverText() {
+            const ta = document.getElementById('handover-text');
+            ta.select();
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(ta.value).then(() => alert('Pesan akses berhasil disalin!'));
+            } else {
+                document.execCommand('copy');
+                alert('Pesan akses berhasil disalin!');
+            }
         }
 
         function toggleEventStatus(eventId, newStatus) {
