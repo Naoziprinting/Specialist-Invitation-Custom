@@ -1,5 +1,5 @@
 /**
- * Theme Engine: Color Presets, Dynamic Google Fonts, & Modular SVG Ornaments
+ * Theme Engine: 15 Color Palettes, 15 Font Pairings, & 15 Modular SVG Ornaments
  */
 window.NAOZI_THEMES = {
   palettes: {
@@ -38,6 +38,76 @@ window.NAOZI_THEMES = {
       bg: "#fdf4f5",
       surface: "#ffffff",
     },
+    "emerald-gold": {
+      label: "Emerald & Champagne Gold",
+      primary: "#1f4e43",
+      secondary: "#d4af37",
+      bg: "#f0f5f3",
+      surface: "#ffffff",
+    },
+    "ivory-champagne": {
+      label: "Ivory & Champagne",
+      primary: "#9e7b4f",
+      secondary: "#e8dcc8",
+      bg: "#faf7f2",
+      surface: "#ffffff",
+    },
+    "dusty-rose": {
+      label: "Dusty Rose & Mauve",
+      primary: "#9e5d6b",
+      secondary: "#ebd2d7",
+      bg: "#fdf4f6",
+      surface: "#ffffff",
+    },
+    "burgundy-gold": {
+      label: "Deep Burgundy & Gold",
+      primary: "#5c1a28",
+      secondary: "#d6b170",
+      bg: "#f9f1f2",
+      surface: "#ffffff",
+    },
+    "midnight-silver": {
+      label: "Midnight Blue & Silver",
+      primary: "#1d2d44",
+      secondary: "#c5cdd8",
+      bg: "#f2f5f9",
+      surface: "#ffffff",
+    },
+    "olive-cream": {
+      label: "Olive & Warm Cream",
+      primary: "#5c6449",
+      secondary: "#dde0cf",
+      bg: "#f7f8f3",
+      surface: "#ffffff",
+    },
+    "sand-espresso": {
+      label: "Espresso & Sand",
+      primary: "#5a4231",
+      secondary: "#decbb7",
+      bg: "#f8f4ef",
+      surface: "#ffffff",
+    },
+    "plum-blush": {
+      label: "Royal Plum & Blush",
+      primary: "#633a5b",
+      secondary: "#e8cde2",
+      bg: "#faf3f8",
+      surface: "#ffffff",
+    },
+    "teal-copper": {
+      label: "Deep Teal & Copper",
+      primary: "#1e4d54",
+      secondary: "#d2957a",
+      bg: "#eff6f7",
+      surface: "#ffffff",
+    },
+    "pearl-charcoal": {
+      label: "Charcoal & Pearl Gold",
+      primary: "#2f3136",
+      secondary: "#d4b886",
+      bg: "#f5f5f5",
+      surface: "#ffffff",
+    },
   },
 
   fontPairings: {
@@ -65,6 +135,72 @@ window.NAOZI_THEMES = {
       body: "Lora",
       googleUrl: "https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap",
     },
+    "sacred-calligraphy": {
+      label: "Sacred Calligraphy (Great Vibes + Lato)",
+      heading: "Great Vibes",
+      body: "Lato",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lato:wght@400;700&display=swap",
+    },
+    "royal-monarch": {
+      label: "Royal Monarch (Cinzel + Raleway)",
+      heading: "Cinzel",
+      body: "Raleway",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Raleway:wght@400;500;600;700&display=swap",
+    },
+    "paris-romance": {
+      label: "Paris Romance (Alex Brush + Nunito Sans)",
+      heading: "Alex Brush",
+      body: "Nunito Sans",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Alex+Brush&family=Nunito+Sans:wght@400;600;700&display=swap",
+    },
+    "timeless-grace": {
+      label: "Timeless Grace (Cormorant Upright + Work Sans)",
+      heading: "Cormorant Upright",
+      body: "Work Sans",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@600;700&family=Work+Sans:wght@400;500;600&display=swap",
+    },
+    "poetic-script": {
+      label: "Poetic Script (Sacramento + DM Sans)",
+      heading: "Sacramento",
+      body: "DM Sans",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Sacramento&family=DM+Sans:wght@400;500;700&display=swap",
+    },
+    "atelier-chic": {
+      label: "Atelier Chic (Bodoni Moda + Inter)",
+      heading: "Bodoni Moda",
+      body: "Inter",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600&display=swap",
+    },
+    "royal-script": {
+      label: "Royal Script (Tangerine + Source Sans 3)",
+      heading: "Tangerine",
+      body: "Source Sans 3",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Tangerine:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap",
+    },
+    "soft-botanical": {
+      label: "Soft Botanical (Allura + Quicksand)",
+      heading: "Allura",
+      body: "Quicksand",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Allura&family=Quicksand:wght@400;500;600;700&display=swap",
+    },
+    "classic-vogue": {
+      label: "Classic Vogue (DM Serif Display + Poppins)",
+      heading: "DM Serif Display",
+      body: "Poppins",
+      googleUrl: "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Poppins:wght@400;500;600&display=swap",
+    },
+    "sacred-heritage": {
+      label: "Sacred Heritage (Marcellus + Mulish)",
+      heading: "Marcellus",
+      body: "Mulish",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Marcellus&family=Mulish:wght@400;600;700&display=swap",
+    },
+    "velvet-script": {
+      label: "Velvet Script (Pinyon Script + Karla)",
+      heading: "Pinyon Script",
+      body: "Karla",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Pinyon+Script&family=Karla:wght@400;500;700&display=swap",
+    },
   },
 
   ornaments: {
@@ -72,14 +208,47 @@ window.NAOZI_THEMES = {
     "floral-botanical": "Floral & Daun Minimalis",
     "islamic-arch": "Lengkung Islami (Arch)",
     "minimal-line": "Garis Geometris Modern",
+    "royal-crest": "Royal Crest & Mahkota (Luxury)",
+    "art-deco-gold": "Art Deco Simetris (Luxury)",
+    "sacred-dome": "Kubah & Lengkungan Sakral",
+    "mandala-lotus": "Mandala Lotus Halus (Sakral)",
+    "vine-wreath": "Sulur Daun & Ranting Romantis",
+    "heart-filigree": "Filigree Hati Romantis",
+    "double-frame": "Bingkai Ganda Klasik (Elegant)",
+    "diamond-lattice": "Kisi Berlian Elegan (Luxury)",
+    "ribbon-scallop": "Scallop Pita Lembut (Romantic)",
+    "javanese-gunungan": "Siluet Gunungan Klasik (Sakral)",
+    "pearl-beads": "Rangkaian Mutiara Halus (Elegant)",
   },
 };
+
+function populateSelectFromMap(selectEl, mapObj, includeCustomOption) {
+  if (!selectEl || !mapObj) return;
+  const current = selectEl.value;
+  selectEl.replaceChildren();
+  Object.keys(mapObj).forEach((key) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    const item = mapObj[key];
+    opt.textContent = typeof item === "string" ? item : item.label;
+    selectEl.appendChild(opt);
+  });
+  if (includeCustomOption) {
+    const customOpt = document.createElement("option");
+    customOpt.value = "custom";
+    customOpt.textContent = "Custom Warna Sendiri";
+    selectEl.appendChild(customOpt);
+  }
+  if (current && Array.from(selectEl.options).some((o) => o.value === current)) {
+    selectEl.value = current;
+  }
+}
 
 function loadDynamicFonts(headingFont, bodyFont) {
   const pairings = Object.values(window.NAOZI_THEMES.fontPairings);
   const matched = pairings.find(
-    (p) => p.heading === headingFont || p.body === bodyFont
-  );
+    (p) => p.heading === headingFont && p.body === bodyFont
+  ) || pairings.find((p) => p.heading === headingFont || p.body === bodyFont);
 
   let fontUrl = matched ? matched.googleUrl : "";
   if (!fontUrl && (headingFont || bodyFont)) {
@@ -119,14 +288,52 @@ function buildDividerSvg(styleType, variant, flip) {
     return `<div class="divider-minimal" style="${rotateStyle}"><span></span><i>✦</i><span></span></div>`;
   }
 
+  if (styleType === "double-frame") {
+    return `<div class="divider-minimal" style="${rotateStyle}"><span></span><i>◈ ❖ ◈</i><span></span></div>`;
+  }
+
+  if (styleType === "pearl-beads") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 50" xmlns="http://www.w3.org/2000/svg">
+        <line x1="120" y1="25" x2="1320" y2="25" stroke="var(--color-primary)" stroke-opacity="0.35" stroke-width="1.5"></line>
+        <circle cx="670" cy="25" r="3" fill="var(--color-secondary)"></circle>
+        <circle cx="690" cy="25" r="4.5" fill="var(--color-primary)"></circle>
+        <circle cx="720" cy="25" r="7" fill="var(--color-secondary)" stroke="var(--color-primary)" stroke-width="1.5"></circle>
+        <circle cx="750" cy="25" r="4.5" fill="var(--color-primary)"></circle>
+        <circle cx="770" cy="25" r="3" fill="var(--color-secondary)"></circle>
+      </svg>`;
+  }
+
   if (styleType === "floral-botanical") {
     return `
       <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg">
-        <path fill="var(--color-primary)" fill-opacity="0.16" d="M0,45 Q360,90 720,45 T1440,45 L1440,90 L0,90 Z"></path>
+        <path fill="var(--color-primary)" fill-opacity="0.14" d="M0,45 Q360,90 720,45 T1440,45 L1440,90 L0,90 Z"></path>
         <path fill="none" stroke="var(--color-primary)" stroke-opacity="0.45" stroke-width="2" d="M0,45 Q360,90 720,45 T1440,45"></path>
         <circle cx="720" cy="45" r="7" fill="var(--color-primary)"></circle>
         <ellipse cx="696" cy="42" rx="12" ry="5" transform="rotate(-18 696 42)" fill="var(--color-secondary)"></ellipse>
         <ellipse cx="744" cy="42" rx="12" ry="5" transform="rotate(18 744 42)" fill="var(--color-secondary)"></ellipse>
+      </svg>`;
+  }
+
+  if (styleType === "vine-wreath") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg">
+        <path fill="none" stroke="var(--color-primary)" stroke-opacity="0.5" stroke-width="2" d="M160,35 C380,15 540,55 720,35 C900,15 1060,55 1280,35"></path>
+        <ellipse cx="640" cy="36" rx="10" ry="4" transform="rotate(-25 640 36)" fill="var(--color-primary)" fill-opacity="0.6"></ellipse>
+        <ellipse cx="680" cy="34" rx="10" ry="4" transform="rotate(20 680 34)" fill="var(--color-secondary)"></ellipse>
+        <circle cx="720" cy="35" r="6" fill="var(--color-primary)"></circle>
+        <ellipse cx="760" cy="34" rx="10" ry="4" transform="rotate(-20 760 34)" fill="var(--color-secondary)"></ellipse>
+        <ellipse cx="800" cy="36" rx="10" ry="4" transform="rotate(25 800 36)" fill="var(--color-primary)" fill-opacity="0.6"></ellipse>
+      </svg>`;
+  }
+
+  if (styleType === "heart-filigree") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg">
+        <path fill="none" stroke="var(--color-primary)" stroke-opacity="0.4" stroke-width="1.5" d="M120,35 L660,35 M780,35 L1320,35"></path>
+        <path fill="var(--color-primary)" d="M720,48 C705,36 696,29 696,21 C696,15 701,11 707,11 C712,11 717,14 720,19 C723,14 728,11 733,11 C739,11 744,15 744,21 C744,29 735,36 720,48 Z"></path>
+        <circle cx="680" cy="35" r="3.5" fill="var(--color-secondary)"></circle>
+        <circle cx="760" cy="35" r="3.5" fill="var(--color-secondary)"></circle>
       </svg>`;
   }
 
@@ -135,6 +342,72 @@ function buildDividerSvg(styleType, variant, flip) {
       <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg">
         <path fill="var(--color-primary)" fill-opacity="0.92" d="M0,100 L0,70 Q360,70 540,45 Q660,28 720,10 Q780,28 900,45 Q1080,70 1440,70 L1440,100 Z"></path>
         <path fill="none" stroke="var(--color-secondary)" stroke-width="3" d="M0,66 Q360,66 540,41 Q660,24 720,6 Q780,24 900,41 Q1080,66 1440,66"></path>
+      </svg>`;
+  }
+
+  if (styleType === "sacred-dome") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 90" xmlns="http://www.w3.org/2000/svg">
+        <path fill="var(--color-primary)" fill-opacity="0.16" d="M0,90 L0,62 L620,62 C655,62 690,22 720,10 C750,22 785,62 820,62 L1440,62 L1440,90 Z"></path>
+        <path fill="none" stroke="var(--color-primary)" stroke-width="2" d="M80,62 L620,62 C655,62 690,22 720,10 C750,22 785,62 820,62 L1360,62"></path>
+        <circle cx="720" cy="40" r="5" fill="var(--color-secondary)" stroke="var(--color-primary)" stroke-width="1.5"></circle>
+      </svg>`;
+  }
+
+  if (styleType === "mandala-lotus") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 76" xmlns="http://www.w3.org/2000/svg">
+        <line x1="140" y1="38" x2="660" y2="38" stroke="var(--color-primary)" stroke-opacity="0.35" stroke-width="1.5"></line>
+        <line x1="780" y1="38" x2="1300" y2="38" stroke="var(--color-primary)" stroke-opacity="0.35" stroke-width="1.5"></line>
+        <path fill="var(--color-secondary)" stroke="var(--color-primary)" stroke-width="1.5" d="M720,12 C730,26 730,44 720,56 C710,44 710,26 720,12 Z"></path>
+        <path fill="var(--color-primary)" fill-opacity="0.7" d="M720,52 C704,46 694,34 694,22 C704,26 714,36 720,52 Z"></path>
+        <path fill="var(--color-primary)" fill-opacity="0.7" d="M720,52 C736,46 746,34 746,22 C736,26 726,36 720,52 Z"></path>
+      </svg>`;
+  }
+
+  if (styleType === "royal-crest") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 76" xmlns="http://www.w3.org/2000/svg">
+        <line x1="120" y1="42" x2="665" y2="42" stroke="var(--color-primary)" stroke-opacity="0.4" stroke-width="1.5"></line>
+        <line x1="775" y1="42" x2="1320" y2="42" stroke="var(--color-primary)" stroke-opacity="0.4" stroke-width="1.5"></line>
+        <path fill="var(--color-secondary)" stroke="var(--color-primary)" stroke-width="1.8" d="M695,52 L690,26 L706,36 L720,16 L734,36 L750,26 L745,52 Z"></path>
+        <circle cx="720" cy="14" r="3" fill="var(--color-primary)"></circle>
+      </svg>`;
+  }
+
+  if (styleType === "art-deco-gold") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 70" xmlns="http://www.w3.org/2000/svg">
+        <path fill="none" stroke="var(--color-primary)" stroke-width="2" d="M100,35 L680,35 L705,15 L720,30 L735,15 L760,35 L1340,35"></path>
+        <path fill="none" stroke="var(--color-secondary)" stroke-width="1.5" d="M160,43 L688,43 L720,58 L752,43 L1280,43"></path>
+      </svg>`;
+  }
+
+  if (styleType === "diamond-lattice") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg">
+        <line x1="120" y1="30" x2="670" y2="30" stroke="var(--color-primary)" stroke-opacity="0.35" stroke-width="1.5"></line>
+        <line x1="770" y1="30" x2="1320" y2="30" stroke="var(--color-primary)" stroke-opacity="0.35" stroke-width="1.5"></line>
+        <polygon points="720,10 738,30 720,50 702,30" fill="var(--color-secondary)" stroke="var(--color-primary)" stroke-width="1.8"></polygon>
+        <polygon points="688,20 698,30 688,40 678,30" fill="var(--color-primary)"></polygon>
+        <polygon points="752,20 762,30 752,40 742,30" fill="var(--color-primary)"></polygon>
+      </svg>`;
+  }
+
+  if (styleType === "ribbon-scallop") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg">
+        <path fill="var(--color-secondary)" fill-opacity="0.85" d="M0,40 Q90,75 180,40 T360,40 T540,40 T720,40 T900,40 T1080,40 T1260,40 T1440,40 L1440,80 L0,80 Z"></path>
+      </svg>`;
+  }
+
+  if (styleType === "javanese-gunungan") {
+    return `
+      <svg class="bg-wakwak divider-svg" style="display:block; ${rotateStyle}" viewBox="0 0 1440 96" xmlns="http://www.w3.org/2000/svg">
+        <line x1="100" y1="74" x2="660" y2="74" stroke="var(--color-primary)" stroke-opacity="0.4" stroke-width="1.5"></line>
+        <line x1="780" y1="74" x2="1340" y2="74" stroke="var(--color-primary)" stroke-opacity="0.4" stroke-width="1.5"></line>
+        <path fill="var(--color-primary)" fill-opacity="0.88" d="M720,10 C742,34 762,56 766,76 L674,76 C678,56 698,34 720,10 Z"></path>
+        <path fill="none" stroke="var(--color-secondary)" stroke-width="2" d="M720,20 C735,38 748,56 752,70 L688,70 C692,56 705,38 720,20 Z"></path>
       </svg>`;
   }
 
@@ -155,12 +428,8 @@ function buildDividerSvg(styleType, variant, flip) {
 
 function renderOrnamentDividers(ornamentType) {
   const type = ornamentType || "wave-soft";
-  document.body.classList.remove(
-    "theme-wave-soft",
-    "theme-floral-botanical",
-    "theme-islamic-arch",
-    "theme-minimal-line"
-  );
+  const allThemeClasses = Object.keys(window.NAOZI_THEMES.ornaments).map((k) => "theme-" + k);
+  document.body.classList.remove(...allThemeClasses);
   document.body.classList.add("theme-" + type);
 
   document.querySelectorAll(".ornament-divider").forEach((el) => {
