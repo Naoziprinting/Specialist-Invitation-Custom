@@ -603,20 +603,54 @@
         document.body.appendChild(motes);
       }
 
-      // Tambahkan plakat bab legenda di setiap ruangan (kecuali cover)
+      // Garis lipatan tengah buku pop-up (book spine crease)
+      if (!document.getElementById("book-spine-crease")) {
+        const spine = document.createElement("div");
+        spine.id = "book-spine-crease";
+        document.body.appendChild(spine);
+      }
+
+      // Tambahkan plakat bab legenda, engsel lipatan pop-up, & diorama kertas di setiap ruangan
+      const dioramaSvg =
+        '<svg viewBox="0 0 1440 110" xmlns="http://www.w3.org/2000/svg">' +
+        '<path fill="var(--color-secondary)" fill-opacity="0.55" d="M0,78 Q220,24 480,68 T960,52 T1440,74 L1440,110 L0,110 Z"/>' +
+        '<path fill="var(--color-primary)" fill-opacity="0.32" d="M0,92 Q320,46 680,84 T1440,68 L1440,110 L0,110 Z"/>' +
+        "</svg>";
+
       document.querySelectorAll(".journey-scene").forEach((scene) => {
-        if (scene.id === "cover" || scene.querySelector(".scene-chapter-crest")) return;
-        const chapter = scene.getAttribute("data-chapter") || "";
-        const title = scene.getAttribute("data-scene-title") || "";
+        if (scene.id === "cover") return;
         const container = scene.querySelector(".container");
-        if (chapter && title && container) {
-          const crestWrap = document.createElement("div");
-          crestWrap.className = "text-center";
-          const crest = document.createElement("span");
-          crest.className = "scene-chapter-crest";
-          crest.textContent = `✦ ${chapter} · ${title} ✦`;
-          crestWrap.appendChild(crest);
-          container.insertBefore(crestWrap, container.firstChild);
+
+        if (!scene.querySelector(".scene-chapter-crest")) {
+          const chapter = scene.getAttribute("data-chapter") || "";
+          const title = scene.getAttribute("data-scene-title") || "";
+          if (chapter && title && container) {
+            const crestWrap = document.createElement("div");
+            crestWrap.className = "text-center";
+            const crest = document.createElement("span");
+            crest.className = "scene-chapter-crest";
+            crest.textContent = `✦ ${chapter} · ${title} ✦`;
+            crestWrap.appendChild(crest);
+            container.insertBefore(crestWrap, container.firstChild);
+          }
+        }
+
+        // Tandai elemen utama sebagai lipatan kertas pop-up (.popup-fold-item)
+        const foldTargets = scene.querySelectorAll(".card, .profile-circle, .owl-carousel, #my-form");
+        foldTargets.forEach((el, idx) => {
+          el.classList.add("popup-fold-item");
+          el.style.setProperty("--popup-delay", `${0.18 + Math.min(idx, 4) * 0.12}s`);
+        });
+
+        // Tambahkan diorama kertas bertumpuk di dasar halaman
+        if (!scene.querySelector(".popup-paper-diorama")) {
+          const diorama = document.createElement("div");
+          diorama.className = "popup-paper-diorama";
+          const parsed = new DOMParser().parseFromString(dioramaSvg, "image/svg+xml");
+          if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
+            diorama.appendChild(document.importNode(parsed.documentElement, true));
+          }
+          scene.appendChild(diorama);
         }
       });
     }
