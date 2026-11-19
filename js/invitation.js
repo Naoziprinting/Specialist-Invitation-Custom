@@ -635,11 +635,21 @@
           }
         }
 
-        // Tandai elemen utama sebagai lipatan kertas pop-up (.popup-fold-item)
-        const foldTargets = scene.querySelectorAll(".card, .profile-circle, .owl-carousel, #my-form");
-        foldTargets.forEach((el, idx) => {
-          el.classList.add("popup-fold-item");
-          el.style.setProperty("--popup-delay", `${0.18 + Math.min(idx, 4) * 0.12}s`);
+        // Tandai elemen utama (foto & wadah tulisan) berurutan dari depan ke belakang (low-angle 3D pop-up)
+        const depthPlanes = [
+          { selector: ".scene-chapter-crest, .simply-countdown", z: "42px", delay: 0.14 },
+          { selector: ".profile-circle, #closing-img, h1.font-dancing", z: "24px", delay: 0.28 },
+          { selector: ".card, #ayat-text, #my-form, .owl-carousel, #turut-mengundang-text", z: "8px", delay: 0.44 },
+          { selector: ".map-responsive, #wishes-container, #disp-address", z: "-16px", delay: 0.60 },
+        ];
+
+        depthPlanes.forEach((plane) => {
+          scene.querySelectorAll(plane.selector).forEach((el, idx) => {
+            if (el.classList.contains("popup-fold-item")) return;
+            el.classList.add("popup-fold-item");
+            el.style.setProperty("--popup-z", plane.z);
+            el.style.setProperty("--popup-delay", `${(plane.delay + Math.min(idx, 3) * 0.1).toFixed(2)}s`);
+          });
         });
 
         // Tambahkan diorama kertas bertumpuk di dasar halaman
