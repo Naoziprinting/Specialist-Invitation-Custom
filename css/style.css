@@ -1142,26 +1142,83 @@ body.journey-3d-mode .journey-scene.scene-enter-from-front {
   top: 0;
   bottom: 0;
   left: 50%;
-  width: 36px;
+  width: 44px;
   transform: translateX(-50%);
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(25, 20, 30, 0.04) 42%,
-    rgba(25, 20, 30, 0.1) 50%,
-    rgba(255, 255, 255, 0.14) 54%,
+    rgba(25, 20, 30, 0.05) 38%,
+    rgba(25, 20, 30, 0.14) 50%,
+    rgba(255, 255, 255, 0.18) 54%,
+    rgba(25, 20, 30, 0.03) 68%,
     transparent 100%
   );
   pointer-events: none;
   z-index: 13;
 }
 
+/* Mobile: lipatan buku beradaptasi secara horizontal (flip atas/bawah) */
+@media (max-width: 991.98px) {
+  #book-spine-crease {
+    top: 50%;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 36px;
+    transform: translateY(-50%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(25, 20, 30, 0.04) 40%,
+      rgba(25, 20, 30, 0.09) 50%,
+      rgba(255, 255, 255, 0.14) 55%,
+      transparent 100%
+    );
+  }
+}
+
+/* Tekstur Kertas Matte / Paper Grain & Tata Letak Buku Terbuka */
+body.journey-3d-mode {
+  background-color: #2b2623;
+  background-image: radial-gradient(circle at 50% 45%, #3d3530 0%, #1e1a18 100%);
+}
+
 body.journey-3d-mode .journey-scene {
   box-shadow:
-    inset 0 0 0 10px rgba(255, 255, 255, 0.12),
-    inset 0 0 48px rgba(30, 22, 36, 0.12);
+    inset 0 0 0 10px rgba(255, 255, 255, 0.16),
+    inset 0 0 56px rgba(38, 28, 22, 0.14);
   perspective: 950px;
   perspective-origin: 50% 88%;
+}
+
+/* Tekstur serat kertas matte ringan (60fps, tanpa network request) */
+body.journey-3d-mode .journey-scene::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+/* Desktop Landscape Open-Book Spread */
+@media (min-width: 992px) {
+  body.journey-3d-mode .journey-scene {
+    max-width: 1120px;
+    max-height: calc(100dvh - 36px);
+    margin: 18px auto;
+    border-radius: 16px;
+    box-shadow:
+      inset 0 0 0 12px rgba(255, 252, 245, 0.25),
+      inset 0 0 54px rgba(35, 26, 20, 0.14),
+      -8px 0 0 -2px rgba(246, 240, 230, 0.88),
+      8px 0 0 -2px rgba(246, 240, 230, 0.88),
+      -14px 0 0 -4px rgba(226, 218, 205, 0.72),
+      14px 0 0 -4px rgba(226, 218, 205, 0.72),
+      0 26px 64px rgba(0, 0, 0, 0.48);
+  }
 }
 
 body.journey-3d-mode .journey-scene > .container {
@@ -1173,10 +1230,10 @@ body.journey-3d-mode .journey-scene > .container {
 }
 
 body.journey-3d-mode .journey-scene.scene-active > .container {
-  transform: rotateX(0deg);
+  transform: rotateX(calc(var(--tilt-x, 0) * 2.2deg)) rotateY(calc(var(--tilt-y, 0) * 2.6deg));
 }
 
-/* Elemen Pop-Up (foto & wadah tulisan) berdiri berurutan dari depan ke belakang (low-angle shoot) */
+/* Elemen Pop-Up (foto, ilustrasi & wadah tulisan) berdiri berurutan dari depan ke belakang + paralaks 3D */
 .popup-fold-item {
   transform-origin: center bottom;
   transform-style: preserve-3d;
@@ -1190,8 +1247,32 @@ body.journey-3d-mode .journey-scene.scene-active > .container {
 }
 
 .journey-scene.scene-active .popup-fold-item {
-  transform: translate3d(0, 0, var(--popup-z, 0px)) rotateX(0deg);
+  transform: translate3d(
+    calc(var(--tilt-y, 0) * 6px),
+    calc(var(--tilt-x, 0) * -4px),
+    var(--popup-z, 0px)
+  ) rotateX(0deg);
   opacity: 1;
+}
+
+/* Drop shadow dinamis di bawah elemen pop-up agar berjarak dari permukaan kertas */
+.journey-scene.scene-active .profile-circle.popup-fold-item,
+.journey-scene.scene-active #closing-img.popup-fold-item {
+  filter: drop-shadow(0 14px 18px rgba(30, 22, 32, 0.24));
+}
+
+/* Ilustrasi Pop-Up Pelaminan / Archway & Bunga */
+.popup-stage-arch {
+  width: min(340px, 86%);
+  margin: 0 auto 10px;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 14px rgba(30, 22, 32, 0.18));
+}
+
+.popup-stage-arch svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 /* Efek bayangan kertas bertumpuk pada kartu & foto pop-up */
