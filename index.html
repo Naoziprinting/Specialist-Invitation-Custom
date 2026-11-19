@@ -90,7 +90,7 @@
   <!-- popup sampul end -->
 
   <!-- header start -->
-  <header class="bg-wakwak" id="cover">
+  <header class="bg-wakwak journey-scene scene-active" id="cover" data-scene-title="Teras Depan" data-focal="50% 45%">
     <div id="hero-bg" class="d-flex justify-content-center align-items-center vh-100"
       style="background-image: url('img/img7.png'); background-size: cover; background-position: center;">
       <div class="container text-center">
@@ -108,7 +108,7 @@
   <!-- header end -->
 
   <!-- ayat start -->
-  <section class="bg-wakwak stage-room" id="ayat-section">
+  <section class="bg-wakwak stage-room journey-scene" id="ayat-section" data-scene-title="Doa &amp; Ayat" data-focal="50% 50%">
     <div class="container py-5">
       <div class="row text-center fw-bold justify-content-center" data-aos="zoom-in" data-aos-duration="1300">
         <div class="col-lg-9 col-md-11 col-12">
@@ -130,7 +130,7 @@
   <div class="ornament-divider" data-variant="secondary" data-flip="true"></div>
 
   <!-- calon / profile start -->
-  <section class="bg-wakwak stage-room" id="profile">
+  <section class="bg-wakwak stage-room journey-scene" id="profile" data-scene-title="Profil Mempelai" data-focal="50% 38%">
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
@@ -192,7 +192,7 @@
   <!-- akad / events start -->
   <div class="ornament-divider sec_events_v" data-variant="primary" data-flip="false"></div>
 
-  <section class="bg-berem sec_events_v stage-room" id="events">
+  <section class="bg-berem sec_events_v stage-room journey-scene" id="events" data-scene-title="Waktu &amp; Lokasi" data-focal="50% 50%">
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
@@ -247,7 +247,7 @@
   <!-- galeri start -->
   <div class="ornament-divider sec_gallery_v" data-variant="primary" data-flip="false"></div>
 
-  <section class="bg-berem sec_gallery_v stage-room" id="gallery">
+  <section class="bg-berem sec_gallery_v stage-room journey-scene" id="gallery" data-scene-title="Galeri Kenangan" data-focal="50% 50%">
     <div class="container py-5">
       <div class="row text-center text-white">
         <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
@@ -273,7 +273,7 @@
   <!-- galeri end -->
 
   <!-- amplop / gift start -->
-  <section class="bg-wakwak sec_gift_v stage-room" id="gift">
+  <section class="bg-wakwak sec_gift_v stage-room journey-scene" id="gift" data-scene-title="Amplop Digital" data-focal="50% 48%">
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
@@ -320,7 +320,7 @@
   <!-- amplop / gift end -->
 
   <!-- Ucapan / Wishes start -->
-  <section class="bg-wakwak sec_wishes_v stage-room" id="rsvp">
+  <section class="bg-wakwak sec_wishes_v stage-room journey-scene" id="rsvp" data-scene-title="Wishes &amp; RSVP" data-focal="50% 40%">
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-4" data-aos="zoom-in" data-aos-duration="1300">
@@ -375,7 +375,7 @@
   <!-- Ucapan / Wishes end -->
 
   <!-- salam start -->
-  <section class="bg-wakwak stage-room" id="closing-section">
+  <section class="bg-wakwak stage-room journey-scene" id="closing-section" data-scene-title="Salam Penutup" data-focal="50% 45%">
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-lg-9 col-md-11 col-12">
@@ -397,7 +397,7 @@
   <!-- salam end -->
 
   <!-- turut mengundang start -->
-  <section class="bg-berem sec_turut_v stage-room" id="turut-section">
+  <section class="bg-berem sec_turut_v stage-room journey-scene" id="turut-section" data-scene-title="Turut Mengundang" data-focal="50% 50%">
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-3" data-aos="zoom-in" data-aos-duration="1300">
@@ -435,6 +435,13 @@
     </div>
   </footer>
   <!-- footer end -->
+
+  <!-- 3D Journey HUD (Prev / Scene Label / Next) -->
+  <div id="journey-hud" aria-label="Navigasi Perjalanan 3D">
+    <button type="button" id="journey-prev" class="journey-btn" title="Ruang Sebelumnya">&#8593;</button>
+    <span id="journey-label">1 / 9 &middot; Teras Depan</span>
+    <button type="button" id="journey-next" class="journey-btn journey-btn-next" title="Masuk ke Ruang Berikutnya">Lanjut &#8595;</button>
+  </div>
 
   <!-- Bottom Nav (Quick Section Jump) -->
   <div class="bottom-nav">
