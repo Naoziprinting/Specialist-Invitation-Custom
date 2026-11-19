@@ -554,7 +554,7 @@
       if (prevBtn) prevBtn.disabled = idx <= 0;
       if (nextBtn) {
         nextBtn.disabled = idx >= scenes.length - 1;
-        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Terbang ↓";
+        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Lanjut ↓";
       }
 
       document.querySelectorAll(".bottom-nav a").forEach((link) => {
@@ -693,73 +693,6 @@
       });
     }
 
-    function renderLegendMap(scenes, activeIdx) {
-      const layer = document.getElementById("legend-waypoints-layer");
-      const trail = document.getElementById("legend-flight-trail");
-      const trailBg = document.getElementById("legend-flight-trail-bg");
-      if (!layer || !trail || !trailBg || scenes.length === 0) return;
-
-      layer.replaceChildren();
-      const points = scenes.map((sc, i) => {
-        const progress = scenes.length > 1 ? i / (scenes.length - 1) : 0.5;
-        const y = 38 + progress * 364;
-        const x = 180 + Math.sin(i * 1.15) * 95;
-        return { x, y, scene: sc, index: i };
-      });
-
-      let pathD = `M ${points[0].x} ${points[0].y}`;
-      for (let i = 1; i < points.length; i++) {
-        const prev = points[i - 1];
-        const curr = points[i];
-        const midY = (prev.y + curr.y) / 2;
-        pathD += ` C ${prev.x} ${midY}, ${curr.x} ${midY}, ${curr.x} ${curr.y}`;
-      }
-      trail.setAttribute("d", pathD);
-      trailBg.setAttribute("d", pathD);
-
-      points.forEach((pt) => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "legend-waypoint" + (pt.index === activeIdx ? " is-current" : "");
-        btn.style.left = `${(pt.x / 360) * 100}%`;
-        btn.style.top = `${(pt.y / 440) * 100}%`;
-        const chapter = pt.scene.getAttribute("data-chapter") || `${pt.index + 1}`;
-        const title = pt.scene.getAttribute("data-scene-title") || pt.scene.id;
-        btn.textContent = `${chapter} · ${title}`;
-        btn.addEventListener("click", () => {
-          goToScene(pt.index);
-        });
-        layer.appendChild(btn);
-      });
-
-      const droneMarker = document.getElementById("legend-drone-marker");
-      const activePt = points[activeIdx] || points[0];
-      if (droneMarker && activePt) {
-        droneMarker.style.left = `${(activePt.x / 360) * 100}%`;
-        droneMarker.style.top = `${(activePt.y / 440) * 100}%`;
-      }
-      return points;
-    }
-
-    function openLegendMap() {
-      const modal = document.getElementById("legend-map-modal");
-      const canvas = document.getElementById("legend-map-canvas");
-      if (!modal) return;
-      if (canvas) canvas.classList.remove("is-zooming-in");
-      renderLegendMap(getActiveScenes(), currentSceneIdx);
-      modal.classList.add("is-open");
-      modal.setAttribute("aria-hidden", "false");
-    }
-
-    function closeLegendMap() {
-      const modal = document.getElementById("legend-map-modal");
-      const canvas = document.getElementById("legend-map-canvas");
-      if (canvas) canvas.classList.remove("is-zooming-in");
-      if (!modal) return;
-      modal.classList.remove("is-open");
-      modal.setAttribute("aria-hidden", "true");
-    }
-
     function goToScene(targetIdxOrId) {
       if (isTransitioning3D) return;
       const scenes = getActiveScenes();
@@ -770,99 +703,42 @@
           ? targetIdxOrId
           : scenes.findIndex((s) => s.id === targetIdxOrId);
 
-      if (targetIdx < 0 || targetIdx >= scenes.length) return;
-      if (targetIdx === currentSceneIdx) {
-        closeLegendMap();
-        return;
-      }
+      if (targetIdx < 0 || targetIdx >= scenes.length || targetIdx === currentSceneIdx) return;
 
       const fromEl = scenes[currentSceneIdx];
       const toEl = scenes[targetIdx];
       const isForward = targetIdx > currentSceneIdx;
       isTransitioning3D = true;
 
-      // 1. Kembali ke Peta Dunia (seperti game level map)
-      const mapModal = document.getElementById("legend-map-modal");
-      const mapCanvas = document.getElementById("legend-map-canvas");
-      const droneMarker = document.getElementById("legend-drone-marker");
-      const flightLayer = document.getElementById("drone-flight-layer");
-      const flightText = document.getElementById("drone-flight-text");
+      toEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out", "scene-active");
+      toEl.classList.add(isForward ? "scene-enter-from-deep" : "scene-enter-from-front");
+      toEl.scrollTop = 0;
 
-      const points = renderLegendMap(scenes, currentSceneIdx);
-      const targetPt = points[targetIdx];
-      const targetXpct = targetPt ? `${(targetPt.x / 360) * 100}%` : "50%";
-      const targetYpct = targetPt ? `${(targetPt.y / 440) * 100}%` : "50%";
+      // Force reflow agar animasi balik halaman buku berjalan mulus
+      void toEl.offsetWidth;
 
-      if (flightLayer && flightText) {
-        const ch = toEl.getAttribute("data-chapter") || "";
-        const tt = toEl.getAttribute("data-scene-title") || "";
-        flightText.textContent = `Terbang menuju ${ch ? ch + " · " : ""}${tt}`;
-        flightLayer.classList.add("is-flying");
-      }
-
-      // Buka peta & mundurkan scene lama
       if (fromEl) {
         fromEl.classList.remove("scene-active");
-        fromEl.classList.add("scene-exit-zoom-out");
-      }
-      if (mapCanvas) mapCanvas.classList.remove("is-zooming-in");
-      if (mapModal) {
-        mapModal.classList.add("is-open");
-        mapModal.setAttribute("aria-hidden", "false");
+        fromEl.classList.add(isForward ? "scene-exit-zoom-in" : "scene-exit-zoom-out");
       }
 
-      // 2. Gerakkan marker drone di atas peta menuju titik tujuan
+      toEl.classList.remove("scene-enter-from-deep", "scene-enter-from-front");
+      toEl.classList.add("scene-active", "is-entered");
+      toEl.querySelectorAll("[data-aos]").forEach((node) => node.classList.add("aos-animate"));
+
+      currentSceneIdx = targetIdx;
+      updateJourneyHud(scenes, currentSceneIdx);
+
+      if (toEl.id === "gallery" && typeof initGalleryCarousel === "function") {
+        setTimeout(() => initGalleryCarousel(), 120);
+      }
+
       setTimeout(() => {
-        if (droneMarker) {
-          droneMarker.style.left = targetXpct;
-          droneMarker.style.top = targetYpct;
-        }
-        document.querySelectorAll(".legend-waypoint").forEach((el, idx) => {
-          el.classList.toggle("is-current", idx === targetIdx);
-        });
-      }, 120);
-
-      // 3. Zoom-in ke titik tujuan pada peta untuk membuka halaman/bagian baru
-      setTimeout(() => {
-        if (mapCanvas) {
-          mapCanvas.style.setProperty("--map-zoom-origin", `${targetXpct} ${targetYpct}`);
-          mapCanvas.classList.add("is-zooming-in");
-        }
-
-        const flyX = toEl.getAttribute("data-fly-x") || "0px";
-        const flyY = toEl.getAttribute("data-fly-y") || "0px";
-        const flyTilt = toEl.getAttribute("data-fly-tilt") || "0deg";
-        toEl.style.setProperty("--focal-origin", toEl.getAttribute("data-focal") || "50% 50%");
-        toEl.style.setProperty("--fly-x", flyX);
-        toEl.style.setProperty("--fly-y", flyY);
-        toEl.style.setProperty("--fly-tilt", flyTilt);
-
-        toEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out", "scene-active");
-        toEl.classList.add(isForward ? "scene-enter-from-deep" : "scene-enter-from-front");
-        toEl.scrollTop = 0;
-        void toEl.offsetWidth;
-
-        toEl.classList.remove("scene-enter-from-deep", "scene-enter-from-front");
-        toEl.classList.add("scene-active", "is-entered");
-        toEl.querySelectorAll("[data-aos]").forEach((node) => node.classList.add("aos-animate"));
-
-        currentSceneIdx = targetIdx;
-        updateJourneyHud(scenes, currentSceneIdx);
-
-        if (toEl.id === "gallery" && typeof initGalleryCarousel === "function") {
-          setTimeout(() => initGalleryCarousel(), 150);
-        }
-      }, 650);
-
-      // 4. Tutup overlay peta setelah zoom-in selesai
-      setTimeout(() => {
-        closeLegendMap();
         if (fromEl) {
           fromEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out");
         }
-        if (flightLayer) flightLayer.classList.remove("is-flying");
         isTransitioning3D = false;
-      }, 1250);
+      }, 920);
     }
 
     window.refresh3DJourneyState = function () {
@@ -876,17 +752,6 @@
     };
 
     injectRealisticOrnaments();
-
-    const mapBtn = document.getElementById("journey-map-btn");
-    const mapCloseBtn = document.getElementById("legend-map-close");
-    const mapModal = document.getElementById("legend-map-modal");
-    if (mapBtn) mapBtn.addEventListener("click", openLegendMap);
-    if (mapCloseBtn) mapCloseBtn.addEventListener("click", closeLegendMap);
-    if (mapModal) {
-      mapModal.addEventListener("click", (e) => {
-        if (e.target === mapModal) closeLegendMap();
-      });
-    }
 
     const prevBtn = document.getElementById("journey-prev");
     const nextBtn = document.getElementById("journey-next");
