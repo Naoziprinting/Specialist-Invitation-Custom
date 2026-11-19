@@ -166,7 +166,12 @@ function renderOrnamentDividers(ornamentType) {
   document.querySelectorAll(".ornament-divider").forEach((el) => {
     const variant = el.getAttribute("data-variant") || "primary";
     const flip = el.getAttribute("data-flip") === "true";
-    el.innerHTML = buildDividerSvg(type, variant, flip);
+    const markup = buildDividerSvg(type, variant, flip);
+    const parsed = new DOMParser().parseFromString(markup, "text/html");
+    const node = parsed.body.firstElementChild;
+    if (node) {
+      el.replaceChildren(document.importNode(node, true));
+    }
   });
 }
 
