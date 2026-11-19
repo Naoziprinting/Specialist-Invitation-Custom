@@ -1134,6 +1134,82 @@ body.journey-3d-mode .journey-scene.scene-enter-from-front {
   100% { transform: translateY(-90px) scale(1.1); opacity: 0; }
 }
 
+/* =========================================================
+   7. Pop-Up Book Paper-Engineering Layer (Lipatan Kertas 3D)
+   ========================================================= */
+#book-spine-crease {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 36px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(25, 20, 30, 0.04) 42%,
+    rgba(25, 20, 30, 0.1) 50%,
+    rgba(255, 255, 255, 0.14) 54%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 13;
+}
+
+body.journey-3d-mode .journey-scene {
+  box-shadow:
+    inset 0 0 0 10px rgba(255, 255, 255, 0.12),
+    inset 0 0 48px rgba(30, 22, 36, 0.12);
+}
+
+/* Elemen Pop-Up yang berdiri tegak dari lipatan bawah saat halaman dibuka */
+.popup-fold-item {
+  transform-origin: center bottom;
+  transform: perspective(1100px) rotateX(76deg) translateY(18px) scale(0.95);
+  opacity: 0;
+  transition:
+    transform 0.85s cubic-bezier(0.34, 1.42, 0.64, 1) var(--popup-delay, 0.15s),
+    opacity 0.55s ease var(--popup-delay, 0.15s),
+    box-shadow 0.6s ease var(--popup-delay, 0.15s);
+  will-change: transform, opacity;
+}
+
+.journey-scene.scene-active .popup-fold-item {
+  transform: perspective(1100px) rotateX(0deg) translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Efek bayangan kertas bertumpuk pada kartu & foto pop-up */
+.journey-scene.scene-active .card.popup-fold-item {
+  box-shadow:
+    0 14px 28px -8px rgba(30, 22, 38, 0.22),
+    0 4px 10px -2px rgba(30, 22, 38, 0.12) !important;
+}
+
+/* Lapisan kertas die-cut (paper diorama) di bagian bawah setiap halaman */
+.popup-paper-diorama {
+  position: relative;
+  width: 100%;
+  margin-top: 24px;
+  pointer-events: none;
+  transform-origin: center bottom;
+  transform: perspective(900px) rotateX(80deg);
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(0.34, 1.38, 0.64, 1) 0.28s, opacity 0.6s ease 0.28s;
+}
+
+.journey-scene.scene-active .popup-paper-diorama {
+  transform: perspective(900px) rotateX(0deg);
+  opacity: 1;
+}
+
+.popup-paper-diorama svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 -4px 8px rgba(0, 0, 0, 0.1));
+}
+
 @media (max-width: 576px) {
   #journey-hud {
     bottom: 66px;
