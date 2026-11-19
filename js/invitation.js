@@ -64,7 +64,7 @@
         instance.hide();
         modalEl.classList.remove("stage-doors-opening");
         if (typeof AOS !== "undefined") AOS.refresh();
-      }, 650);
+      }, 780);
     } else if (typeof AOS !== "undefined") {
       setTimeout(() => AOS.refresh(), 300);
     }
@@ -525,7 +525,7 @@
       AOS.init({ once: true });
     }
 
-    // Observer untuk transisi masuk ke setiap ruang panggung (.stage-room)
+    // Observer untuk transisi masuk ke setiap ruang panggung 3D (.stage-room)
     const rooms = document.querySelectorAll(".stage-room");
     if ("IntersectionObserver" in window && rooms.length > 0) {
       const roomObserver = new IntersectionObserver(
@@ -537,12 +537,32 @@
             }
           });
         },
-        { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+        { threshold: 0.1, rootMargin: "0px 0px -30px 0px" }
       );
       rooms.forEach((room) => roomObserver.observe(room));
     } else {
       rooms.forEach((room) => room.classList.add("is-entered"));
     }
+
+    // Portal 3D saat berpindah ruang lewat Bottom Nav
+    const portalOverlay = document.createElement("div");
+    portalOverlay.id = "door-portal-overlay";
+    document.body.appendChild(portalOverlay);
+
+    document.querySelectorAll(".bottom-nav a").forEach((link) => {
+      link.addEventListener("click", function (e) {
+        const targetId = (this.getAttribute("href") || "").replace("#", "");
+        const targetEl = targetId ? document.getElementById(targetId) : null;
+        if (!targetEl) return;
+        e.preventDefault();
+        portalOverlay.classList.add("is-active");
+        targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+        setTimeout(() => {
+          targetEl.classList.add("is-entered");
+          portalOverlay.classList.remove("is-active");
+        }, 420);
+      });
+    });
 
     // Stale-while-revalidate: tampilkan cache lokal jika ada sambil sinkronisasi ke backend
     try {
@@ -595,12 +615,17 @@
       });
   });
 
-  // Throttled Scroll Spy untuk Bottom Nav
+  // Throttled Scroll Spy + 3D Depth Parallax pada Teras Depan
   let scrollTicking = false;
   window.addEventListener("scroll", function () {
     if (scrollTicking) return;
     scrollTicking = true;
     window.requestAnimationFrame(function () {
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const heroProgress = Math.min(Math.max(scrollY / Math.max(window.innerHeight, 1), 0), 1);
+      document.documentElement.style.setProperty("--hero-zoom", (1 + heroProgress * 0.08).toFixed(3));
+      document.documentElement.style.setProperty("--hero-shift", `${(heroProgress * 28).toFixed(1)}px`);
+
       const sections = ["cover", "profile", "events", "gallery", "rsvp"];
       let current = "cover";
       sections.forEach((secId) => {
