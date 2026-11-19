@@ -52,7 +52,20 @@
     if (btn) btn.blur();
     isInvitationOpened = true;
     if (typeof playAudio === "function") playAudio();
-    if (typeof AOS !== "undefined") {
+
+    const modalEl = document.getElementById("exampleModal");
+    const coverEl = document.getElementById("cover");
+    if (coverEl) coverEl.classList.add("hero-entered");
+
+    if (modalEl && typeof bootstrap !== "undefined") {
+      modalEl.classList.add("stage-doors-opening");
+      setTimeout(() => {
+        const instance = bootstrap.Modal.getOrCreateInstance(modalEl);
+        instance.hide();
+        modalEl.classList.remove("stage-doors-opening");
+        if (typeof AOS !== "undefined") AOS.refresh();
+      }, 650);
+    } else if (typeof AOS !== "undefined") {
       setTimeout(() => AOS.refresh(), 300);
     }
   };
@@ -510,6 +523,25 @@
   document.addEventListener("DOMContentLoaded", function () {
     if (typeof AOS !== "undefined") {
       AOS.init({ once: true });
+    }
+
+    // Observer untuk transisi masuk ke setiap ruang panggung (.stage-room)
+    const rooms = document.querySelectorAll(".stage-room");
+    if ("IntersectionObserver" in window && rooms.length > 0) {
+      const roomObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-entered");
+              roomObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+      );
+      rooms.forEach((room) => roomObserver.observe(room));
+    } else {
+      rooms.forEach((room) => room.classList.add("is-entered"));
     }
 
     // Stale-while-revalidate: tampilkan cache lokal jika ada sambil sinkronisasi ke backend
