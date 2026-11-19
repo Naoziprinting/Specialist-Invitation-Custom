@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title id="page-title">Undangan Digital | Naozi Printing</title>
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Undangan Digital | Naozi Printing" />
+  <meta property="og:description" content="Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara kami." />
+  <link rel="icon" href="img/bismillah.png" type="image/png" />
+  <link rel="stylesheet" href="css/aos.css" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/owl.carousel.min.css" />
+  <link rel="stylesheet" href="css/owl.theme.default.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
+  <link rel="stylesheet" href="countdown/simplyCountdown.theme.default.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="countdown/simplyCountdown.min.js"></script>
+</head>
+
+<body>
+  <!-- Shared SVG Wave Gradients (menghindari duplikasi kode <defs>) -->
+  <svg width="0" height="0" style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+    <defs>
+      <linearGradient id="sw-grad-0" x1="0" x2="0" y1="1" y2="0">
+        <stop class="wave-stop" stop-color="#8785a2" stop-opacity="0.84" offset="0%"></stop>
+        <stop class="wave-stop" stop-color="#8785a2" stop-opacity="1" offset="100%"></stop>
+      </linearGradient>
+      <linearGradient id="sw-grad-1" x1="0" x2="0" y1="1" y2="0">
+        <stop class="wave-stop" stop-color="#8785a2" stop-opacity="0.74" offset="0%"></stop>
+        <stop class="wave-stop" stop-color="#8785a2" stop-opacity="1" offset="100%"></stop>
+      </linearGradient>
+      <linearGradient id="sw-grad-2" x1="0" x2="0" y1="1" y2="0">
+        <stop class="wave-stop" stop-color="#8785a2" stop-opacity="0.8" offset="0%"></stop>
+        <stop class="wave-stop" stop-color="#8785a2" stop-opacity="1" offset="100%"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Preloader Sinkronisasi Backend start -->
+  <div id="app-loading" aria-live="polite">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Menyiapkan Undangan...</div>
+  </div>
+  <!-- Preloader Sinkronisasi Backend end -->
+
+  <!-- lagu start -->
+  <audio loop preload="auto" id="lagu" src="audio/audio.mp3"></audio>
+  <!-- lagu end -->
+
+  <!-- popup sampul start -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="open-names" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-body bg-wakwak p-0">
+          <div class="row justify-content-center mt-0 text-center h-100 g-0" id="front-image-container">
+            <div class="col-md-6 col-12" id="front-image">
+              <img id="front-image-img" src="img/img3.jpg" alt="Foto Sampul" />
+            </div>
+            <div class="col-md-6 col-12 px-3" id="front-text">
+              <p class="mb-1"><small id="open-title">The Wedding of</small></p>
+              <h1 id="open-names" class="font-dancing fs-60">Aril <br />&amp;<br /> Cici</h1>
+              <small class="mt-3 d-block" id="open-date">Sabtu, 8 Februari 2025</small>
+              <hr class="border-secondary w-50 mx-auto my-3" />
+              <p class="mb-1">Kepada Yth. Bapak/Ibu/Saudara/i</p>
+              <p class="mb-2 mt-2"><span class="fw-semibold h4" id="namaTamu">Tamu Undangan</span></p>
+              <p class="mb-1"><small>di Tempat</small></p>
+              <p class="mb-3"><small class="fst-italic text-muted" style="font-size: 0.75rem;">*Mohon maaf apabila ada
+                  kesalahan penulisan nama/gelar</small></p>
+              <button type="button" id="btn-open-invitation"
+                class="btn bg-berem btn-outline-secondary text-white rounded-4 px-4 py-2 shadow-sm"
+                data-bs-dismiss="modal" onclick="openInvitation()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                  class="bi bi-envelope-heart-fill mb-1 me-1" viewBox="0 0 16 16">
+                  <path
+                    d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555l-4.2 2.568a2.785 2.785 0 0 0-.051-.105c-.666-1.3-2.363-1.917-3.699-1.25-1.336-.667-3.033-.05-3.699 1.25l-.05.105L.05 3.555ZM11.584 8.91a4.694 4.694 0 0 1-.073.139L16 11.8V4.697l-4.003 2.447c.027.562-.107 1.163-.413 1.767Zm-4.135 3.05c-1.048-.693-1.84-1.39-2.398-2.082L.19 12.856A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144L10.95 9.878c-.559.692-1.35 1.389-2.398 2.081L8 12.324l-.551-.365ZM4.416 8.91c-.306-.603-.44-1.204-.413-1.766L0 4.697v7.104l4.49-2.752a4.742 4.742 0 0 1-.074-.138Z" />
+                  <path d="M8 5.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132Z" />
+                </svg>
+                <span id="btn-open-text">Buka Undangan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- popup sampul end -->
+
+  <!-- header start -->
+  <header class="bg-wakwak" id="cover">
+    <div id="hero-bg" class="d-flex justify-content-center align-items-center vh-100"
+      style="background-image: url('img/img7.png'); background-size: cover; background-position: center;">
+      <div class="container text-center">
+        <div class="row">
+          <div class="col-12 mt-5">
+            <span id="hero-title">The Wedding of</span>
+            <h1 id="hero-names" class="font-dancing fs-60 mt-2">Aril &amp; Cici</h1>
+            <p id="hero-date">Sabtu, 8 Februari 2025</p>
+            <div class="simply-countdown" id="countdown-wrap"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- header end -->
+
+  <!-- ayat start -->
+  <section class="bg-wakwak">
+    <div class="container py-5">
+      <div class="row text-center fw-bold justify-content-center" data-aos="zoom-in" data-aos-duration="1300">
+        <div class="col-lg-9 col-md-11 col-12">
+          <p class="fw-light" id="ayat-text">
+            "Dan diantara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu
+            sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan
+            sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang
+            berpikir"
+          </p>
+          <p id="ayat-source">- QS. Ar-Rum 21 -</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ayat end -->
+
+  <!-- Divider 1 (Ayat -> Profile) -->
+  <div class="ornament-divider" data-variant="secondary" data-flip="false"></div>
+  <div class="ornament-divider" data-variant="secondary" data-flip="true"></div>
+
+  <!-- calon / profile start -->
+  <section class="bg-wakwak" id="profile">
+    <div class="container py-5">
+      <div class="row text-center justify-content-center">
+        <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
+          <img src="img/bismillah.png" alt="Bismillah" width="200px" class="mb-3" />
+          <h5 class="mb-3">Assalamualaikum Wr. Wb.</h5>
+          <p class="m-0 p-0">Tanpa mengurangi rasa hormat</p>
+          <p class="m-0 p-0" id="intro-text">Kami mengundang Bapak/Ibu/Saudara/i serta kerabat sekalian untuk menghadiri
+            acara pernikahan kami</p>
+        </div>
+
+        <!-- Wedding UI -->
+        <div id="wedding-ui" class="row justify-content-center align-items-center">
+          <div class="col-md-5 col-12 my-md-4 my-3" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="300">
+            <img id="groom-img" src="img/img9.jpg" class="rounded-circle shadow-lg profile-circle mb-3"
+              alt="Mempelai Pria" />
+            <h1 id="groom-fullname" class="font-dancing text-dark fs-45">Muhammad Nazril Mokodompit</h1>
+            <p class="text-muted mb-1" id="groom-nickname-wrap">(<span id="groom-nickname">Aril</span>)</p>
+            <p class="m-0 p-0 fw-semibold" id="groom-order">Putra Pertama</p>
+            <p class="m-0 p-0">Bapak <span id="groom-father">Hamsa Mokodompit</span> &amp; Ibu <span
+                id="groom-mother">Serli Mokodompit</span></p>
+            <p id="groom-address-container" class="mt-2 mb-0 small fst-italic text-muted" style="display: none;">
+              Kediaman: <span id="groom-address"></span>
+            </p>
+          </div>
+
+          <div class="col-md-2 col-12 m-md-auto my-4" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="500">
+            <h1 class="m-0 p-0 font-dancing fs-60">&amp;</h1>
+          </div>
+
+          <div class="col-md-5 col-12 my-md-4 my-3" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="700">
+            <img id="bride-img" src="img/img8.jpg" class="rounded-circle shadow-lg profile-circle mb-3"
+              alt="Mempelai Wanita" />
+            <h1 id="bride-fullname" class="font-dancing text-dark fs-45">Cici Puspitasari Dakotalot</h1>
+            <p class="text-muted mb-1" id="bride-nickname-wrap">(<span id="bride-nickname">Cici</span>)</p>
+            <p class="m-0 p-0 fw-semibold" id="bride-order">Putri Pertama</p>
+            <p class="m-0 p-0">Bapak <span id="bride-father">Nopol Dakotalot</span> &amp; Ibu <span
+                id="bride-mother">Rina Buntuan, S.Pd.</span></p>
+            <p id="bride-address-container" class="mt-2 mb-0 small fst-italic text-muted" style="display: none;">
+              Kediaman: <span id="bride-address"></span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Khitan UI -->
+        <div id="khitan-ui" class="row justify-content-center hidden">
+          <div class="col-md-6 col-12 my-3" data-aos="zoom-in" data-aos-duration="1300">
+            <img id="khitan-img" src="img/img9.jpg" class="rounded-circle shadow-lg profile-circle mb-3"
+              alt="Foto Anak" />
+            <h1 id="khitan-name" class="font-dancing text-dark fs-45">Nama Anak</h1>
+            <p class="m-0 p-0">Putra Tercinta dari</p>
+            <p class="m-0 p-0 fw-bold" id="khitan-parents">Bapak &amp; Ibu</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- calon / profile end -->
+
+  <!-- akad / events start -->
+  <div class="ornament-divider sec_events_v" data-variant="primary" data-flip="false"></div>
+
+  <section class="bg-berem sec_events_v" id="events">
+    <div class="container py-5">
+      <div class="row text-center justify-content-center">
+        <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
+          <h1 class="font-dancing fs-40 text-white">Save The Date</h1>
+        </div>
+        <div class="col-md-6 col-12 py-3" id="card-1" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="300">
+          <div class="card p-4 shadow bg-fee h-100 rounded-4">
+            <h1 id="event-1-name" class="font-dancing mb-3 fs-40">Akad Nikah</h1>
+            <p id="event-1-date" class="fw-bold p-0 m-0">Sabtu, 8 Februari 2025</p>
+            <p id="event-1-time" class="m-0 p-0">Pukul 08:00 WIB</p>
+            <p id="event-1-loc" class="m-0 p-0 mt-1">Rumah Mempelai Wanita Desa Bai, Kec. Nuangan Boltim</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-12 py-3 sec_event_2_v" id="card-2" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="500">
+          <div class="card p-4 shadow bg-fee h-100 rounded-4">
+            <h1 id="event-2-name" class="font-dancing mb-3 fs-40">Resepsi</h1>
+            <p id="event-2-date" class="fw-bold p-0 m-0">Sabtu, 8 Februari 2025</p>
+            <p id="event-2-time" class="m-0 p-0">Pukul 11:00 WIB - Selesai</p>
+            <p id="event-2-loc" class="m-0 p-0 mt-1">Rumah Mempelai Wanita Desa Bai, Kec. Nuangan Boltim</p>
+            <p id="event-2-entertainment-wrap" class="fw-bold p-0 m-0 mt-2">Hiburan : <span
+                id="event-2-entertainment">Electone</span></p>
+          </div>
+        </div>
+        <div class="col-12 py-4" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="700">
+          <h1 class="font-dancing mb-3 fs-40 text-white">Lokasi</h1>
+          <p class="text-white" id="disp-address">
+            Rumah Mempelai Wanita Desa Bai, Kec. Nuangan Boltim
+          </p>
+          <a href="https://maps.app.goo.gl/vrXDtTCL3W9aifYE9" id="map-link" target="_blank" rel="noopener noreferrer"
+            class="text-decoration-none btn btn-light btn-outline-secondary mb-4 mt-2 rounded-4 px-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-geo-alt-fill mb-1 me-1" viewBox="0 0 16 16">
+              <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z" />
+            </svg>
+            Buka Google Map
+          </a>
+
+          <div class="map-responsive mt-2" id="map-embed-container">
+            <iframe id="map-iframe"
+              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3989.5730308355605!2d124.49512899999999!3d0.6353349999999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMMKwMzgnMDcuMiJOIDEyNMKwMjknNDIuNSJF!5e0!3m2!1sid!2sid!4v1738550915310!5m2!1sid!2sid"
+              width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider sec_events_v" data-variant="primary" data-flip="true"></div>
+  <!-- akad / events end -->
+
+  <!-- galeri start -->
+  <div class="ornament-divider sec_gallery_v" data-variant="primary" data-flip="false"></div>
+
+  <section class="bg-berem sec_gallery_v" id="gallery">
+    <div class="container py-5">
+      <div class="row text-center text-white">
+        <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
+          <h1 class="font-dancing fs-40">Gallery Foto</h1>
+        </div>
+        <div class="col-12" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="400">
+          <div class="owl-carousel owl-theme" id="gallery-container">
+            <div class="item"><a href="img/img2.jpg" data-lightbox="gallery"><img src="img/img2.jpg"
+                  alt="Gallery 1" /></a></div>
+            <div class="item"><a href="img/img12.jpg" data-lightbox="gallery"><img src="img/img12.jpg"
+                  alt="Gallery 2" /></a></div>
+            <div class="item"><a href="img/img13.jpg" data-lightbox="gallery"><img src="img/img13.jpg"
+                  alt="Gallery 3" /></a></div>
+            <div class="item"><a href="img/img4.jpg" data-lightbox="gallery"><img src="img/img4.jpg"
+                  alt="Gallery 4" /></a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ornament-divider sec_gallery_v" data-variant="primary" data-flip="true"></div>
+  <!-- galeri end -->
+
+  <!-- amplop / gift start -->
+  <section class="bg-wakwak sec_gift_v" id="gift">
+    <div class="container py-5">
+      <div class="row text-center justify-content-center">
+        <div class="col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300">
+          <div class="card bg-berem shadow text-white mb-2 w-75 p-2 mx-auto rounded-4">
+            <h1 class="font-dancing fs-40 m-0">Amplop Digital</h1>
+          </div>
+        </div>
+        <div class="col-lg-8 col-md-10 col-12 mb-5" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="300">
+          <p class="p-0 m-0">Kami merasa sangat berbahagia menyambut hari istimewa kami! Jika Anda ingin memberikan
+            hadiah, kami telah membuat amplop digital untuk memudahkan pilihan Anda. Doa restu dan tanda kasih Anda
+            sangat berarti bagi kami. Terima kasih atas kasih sayang dan dukungannya!</p>
+        </div>
+        <div class="col-md-6 col-12 mb-3 blur" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="500">
+          <div class="card bg-fee rounded-4 shadow p-4">
+            <img id="gift-bank-logo" src="img/Bank_BSG.png" height="50px" alt="Logo Bank" class="mx-auto mb-2"
+              style="object-fit: contain;" />
+            <h5 id="gift-bank" class="fw-bold text-berem mb-0">BSG</h5>
+            <hr />
+            <p class="mb-2">
+              <input type="text" value="02702090005226" class="bg-fee norek fs-5" id="rek1" readonly
+                onclick="copyAcc()" />
+            </p>
+            <p class="mb-3">a/n <span id="gift-name" class="fw-semibold">Rina Buntuan</span></p>
+            <div>
+              <button type="button" class="btn bg-berem text-white btn-outline-secondary rounded-pill" id="salin1"
+                onclick="copyAcc()">
+                <div class="mx-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-clipboard2-check-fill mb-1 me-1" viewBox="0 0 16 16">
+                    <path
+                      d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5Z" />
+                    <path
+                      d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585c.055.156.085.325.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5c0-.175.03-.344.085-.5Zm6.769 6.854-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708.708Z" />
+                  </svg>
+                  Salin No. Rekening
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- amplop / gift end -->
+
+  <!-- Ucapan / Wishes start -->
+  <section class="bg-wakwak sec_wishes_v" id="rsvp">
+    <div class="container py-5">
+      <div class="row text-center justify-content-center">
+        <div class="col-12 mb-4" data-aos="zoom-in" data-aos-duration="1300">
+          <h1 class="font-dancing fs-40">Wishes &amp; RSVP</h1>
+          <p class="p-0 m-0">Doa Restu Anda merupakan karunia</p>
+          <p class="p-0 m-0">yang sangat berarti bagi kami.</p>
+        </div>
+        <div class="col-md-8 col-12 mx-2" data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="300">
+          <div class="card bg-fee rounded-4 shadow-sm p-4 text-start">
+            <form id="my-form" onsubmit="event.preventDefault(); submitWish();">
+              <div class="mb-3">
+                <label for="wish-name-input" class="form-label fw-semibold small text-muted">Nama Anda</label>
+                <input type="text" id="wish-name-input" name="nama" placeholder="Masukkan nama Anda"
+                  class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label for="wish-msg-input" class="form-label fw-semibold small text-muted">Ucapan &amp; Doa</label>
+                <textarea id="wish-msg-input" name="ucapan" placeholder="Berikan ucapan atau doa terbaik Anda..."
+                  rows="3" class="form-control" required></textarea>
+              </div>
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label for="wish-attend" class="form-label fw-semibold small text-muted">Konfirmasi Kehadiran</label>
+                  <select id="wish-attend" name="konfirmasi" class="form-select" required>
+                    <option value="Hadir">Hadir</option>
+                    <option value="Tidak Hadir">Tidak Hadir</option>
+                    <option value="Ragu-ragu">Masih Ragu-ragu</option>
+                  </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="jumlah" class="form-label fw-semibold small text-muted">Jumlah Orang</label>
+                  <input type="number" class="form-control" id="jumlah" name="jumlah" min="1" max="5" value="1" />
+                </div>
+              </div>
+              <div class="mt-2">
+                <button type="submit" id="btn-submit-wish"
+                  class="btn bg-berem btn-outline-secondary text-white px-4 rounded-pill">
+                  Kirim RSVP &amp; Ucapan
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Daftar Ucapan Live -->
+          <div class="wish-list" id="wishes-container" data-aos="fade-up" data-aos-duration="1000">
+            <p class="text-center text-muted small py-3">Memuat ucapan...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Ucapan / Wishes end -->
+
+  <!-- salam start -->
+  <section class="bg-wakwak">
+    <div class="container py-5">
+      <div class="row text-center justify-content-center">
+        <div class="col-lg-9 col-md-11 col-12">
+          <div data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="300">
+            <img id="closing-img" src="img/img10.jpg" class="rounded-circle shadow-lg profile-circle mb-3"
+              alt="Foto Penutup" />
+            <p class="m-0 p-0 mb-3">Merupakan suatu kehormatan dan kebahagiaan bagi kami, apabila Bapak/Ibu/Saudara/i
+              berkenan hadir dan memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
+            </p>
+            <h5 class="mb-4">Wassalamualaikum Wr. Wb.</h5>
+          </div>
+          <div data-aos="zoom-in" data-aos-duration="1300" data-aos-delay="500">
+            <h1 class="font-dancing fs-60" id="footer-names">Aril &amp; Cici</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- salam end -->
+
+  <!-- turut mengundang start -->
+  <section class="bg-berem sec_turut_v" id="turut-section">
+    <div class="container py-5">
+      <div class="row text-center justify-content-center">
+        <div class="col-12 mb-3" data-aos="zoom-in" data-aos-duration="1300">
+          <h1 class="font-dancing fs-40 text-white mb-3">Turut Mengundang</h1>
+          <p class="text-white" id="turut-mengundang-text">
+            Kel. Ibu Meti Paputungan (Pj. Sangadi Bai) | Kel. Bapak Mursid Mamonto, S.Pd (Camat Nuangan) | Kel. Bapak
+            Toni Ololah, S.Pd (Anggota DPRD Boltim) | Kel. Bapak Wahyudi H. Daumpung, SE (Anggota DPRD Boltim) | Kel.
+            Bapak Yusri Damopolii, S.Pd MM (Kadis Dikbud Boltim) | Kel. Ibu Haslinda Kadengkang, SE (Kadis DAGKOP
+            Boltim) | Kel. Bapak Hi. S.Kadengkang (Mantan Anggota DPRD Boltim) | Kel. Bapak Yoldi Mamonto, S.Pd (Kabid
+            SD DIKBUD Boltim) | Kel. Bapak Dharman Dg Matara, S.Hut (Kabid INOVTEK BRIDA Boltim) | Kel. Bapak Zaenal
+            Mamonto (Ketua BPD Bai) | Kel. Ibu Afriyanti Hasan, S.Pd (Kepsek SDN Bai) | Kel. Bapak La Ode Ala (Kepsek
+            SMP Satap Bai) | Kel. Bapak Suhamdi Dakotalot (Pembantu PPN Kec. Nuangan) | Kel. Bapak W. R Paputungan
+            (Mantan Sangadi Bai) | Kel. Bapak Muslim Paputungan (Imam Masjid Bai) | Kel. Bapak Rijal Dakotalot
+            (Keluarga) | Kel. Bapak Nune Wakulu (Kadus 3 Desa Bai) | Kel. Bapak Ime Paputungan (Guhanga Desa Bai)
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- turut mengundang end -->
+
+  <div class="ornament-divider" data-variant="secondary" data-flip="false"></div>
+
+  <!-- footer start -->
+  <footer class="bg-kulit pb-5">
+    <div class="container pb-5">
+      <div class="row text-center">
+        <div class="col-12">
+          <small class="p-0 m-0">
+            Produced by <a target="_blank" rel="noopener noreferrer" href="https://wa.me/6288216215391"
+              class="text-dark fw-semibold">Naozi Printing</a> | 2026
+          </small>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- footer end -->
+
+  <!-- Bottom Nav (Quick Section Jump) -->
+  <div class="bottom-nav">
+    <a href="#cover" title="Beranda" class="active">
+      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+        xmlns="http://www.w3.org/2000/svg">
+        <path d="M256 32L32 240h53.33v240h128V330.67h85.34V480h128V240H480L256 32z"></path>
+      </svg>
+    </a>
+    <a href="#profile" title="Profil">
+      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M256 256c53.02 0 96-42.98 96-96s-42.98-96-96-96-96 42.98-96 96 42.98 96 96 96zm135.53 42.67C351.48 274.67 298.53 256 256 256s-95.48 18.67-135.53 42.67C82.88 321.28 64 366.51 64 416v32h384v-32c0-49.49-18.88-94.72-56.47-117.33z">
+        </path>
+      </svg>
+    </a>
+    <a href="#events" title="Acara" class="sec_events_v">
+      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M384 48h-32V16h-64v32H224V16h-64v32H128C92.65 48 64 76.65 64 112v336c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V112c0-35.35-28.65-64-64-64zm-16 352H144V208h224v192z">
+        </path>
+      </svg>
+    </a>
+    <a href="#gallery" title="Galeri" class="sec_gallery_v">
+      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+        xmlns="http://www.w3.org/2000/svg">
+        <rect width="384" height="256" x="64" y="128" fill="none" stroke-linejoin="round" stroke-width="32" rx="48">
+        </rect>
+        <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
+          d="M64 288l102.08-102.08a48 48 0 0167.84 0l118.08 118.08"></path>
+        <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
+          d="M320 288l15.92-15.92a48 48 0 0167.84 0l44.24 44.24"></path>
+        <circle cx="336" cy="208" r="32" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32">
+        </circle>
+      </svg>
+    </a>
+    <a href="#rsvp" title="Ucapan" class="sec_wishes_v">
+      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+        xmlns="http://www.w3.org/2000/svg">
+        <path fill="none" stroke-linejoin="round" stroke-width="32"
+          d="M408 64H104a56.16 56.16 0 00-56 56v192a56.16 56.16 0 0056 56h40v80l93.72-78.14a8 8 0 015.13-1.86H408a56.16 56.16 0 0056-56V120a56.16 56.16 0 00-56-56z">
+        </path>
+        <circle cx="160" cy="216" r="32"></circle>
+        <circle cx="256" cy="216" r="32"></circle>
+        <circle cx="352" cy="216" r="32"></circle>
+      </svg>
+    </a>
+  </div>
+
+  <!-- button audio -->
+  <div class="audio-floating">
+    <div class="btn-group shadow rounded-pill overflow-hidden">
+      <button type="button" id="btn-stop-audio" class="btn btn-sm bg-berem btn-outline-secondary" onclick="stopAudio()"
+        title="Stop Musik">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-stop-fill text-white" viewBox="0 0 16 16">
+          <path
+            d="M5 3.5h6A1.5 1.5 0 0 1 12.5 5v6a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 11V5A1.5 1.5 0 0 1 5 3.5z" />
+        </svg>
+      </button>
+      <button type="button" id="btn-play-audio" class="btn btn-sm bg-berem btn-outline-secondary" onclick="playAudio()"
+        title="Putar Musik">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+          class="bi bi-play-fill text-light" viewBox="0 0 16 16">
+          <path
+            d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <!-- button audio -->
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="js/owl.carousel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/invitation.js"></script>
+</body>
+
+</html>

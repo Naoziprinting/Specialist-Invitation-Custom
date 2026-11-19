@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin Undangan | Naozi Printing</title>
+    <link rel="icon" href="img/bismillah.png" type="image/png" />
+    <style>
+        :root { --ios-bg: #f5f5f9; --ios-accent: #8785a2; --ios-card: #FFFFFF; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--ios-bg); padding: 20px; margin: 0; color: #1c1c1e; }
+        .container { max-width: 780px; margin: 0 auto; }
+        .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: white; padding: 14px 18px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .card { background: white; border-radius: 14px; padding: 20px; margin-bottom: 18px; box-shadow: 0 2px 10px rgba(135, 133, 162, 0.1); }
+        .card h3 { margin-top: 0; color: #3a3a4c; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        label { display: block; font-size: 12.5px; font-weight: 600; color: #6c6c70; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px 12px; border: 1px solid #d1d1d6; border-radius: 8px; font-size: 14.5px; box-sizing: border-box; font-family: inherit; margin-bottom: 10px; }
+        input:focus, select:focus { outline: none; border-color: var(--ios-accent); box-shadow: 0 0 0 3px rgba(135, 133, 162, 0.15); }
+        .btn { padding: 9px 14px; border-radius: 8px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary { background: var(--ios-accent); color: white; width: 100%; padding: 12px; font-size: 15px; }
+        .btn-sm { padding: 6px 10px; font-size: 12px; }
+        .btn-outline { background: #f2f2f7; color: #3a3a4c; }
+        .btn-outline:hover { background: #e5e5ea; }
+        .btn-success { background: #34c759; color: white; }
+        .btn-warn { background: #ff9500; color: white; }
+        .event-row { border-bottom: 1px solid #f0f0f5; padding: 14px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .event-row:last-child { border-bottom: none; }
+        .badge { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+        .badge-active { background: #e6f9ed; color: #1b8a42; }
+        .badge-inactive { background: #ffeceb; color: #c92a2a; }
+        .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        #auth-overlay { position: fixed; inset: 0; background: rgba(28, 28, 30, 0.75); backdrop-filter: blur(6px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-box { background: white; border-radius: 16px; padding: 24px; max-width: 380px; width: 100%; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-overlay">
+        <div class="auth-box">
+            <h3 style="margin-top:0; color:#3a3a4c;">Super Admin Login</h3>
+            <p style="font-size:13px; color:#6c6c70; margin-bottom:14px;">Masukkan Super Admin Key untuk mengelola semua pesanan undangan.</p>
+            <input type="password" id="super-key-input" placeholder="Super Admin Key" style="text-align:center;" />
+            <button class="btn btn-primary" id="btn-login" onclick="loginSuperAdmin()">Masuk Dashboard</button>
+            <p id="login-err" style="color:#ff3b30; font-size:12.5px; margin-top:10px; display:none;"></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="top-nav">
+            <div>
+                <strong style="font-size:17px; color:#3a3a4c;">Dashboard Multi-Customer</strong>
+                <div style="font-size:12px; color:#8e8e93;">Naozi Printing Invitation Manager</div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="logout()">Keluar</button>
+        </div>
+
+        <div class="card">
+            <h3>Buat Pesanan / Acara Baru</h3>
+            <div class="grid-2">
+                <div>
+                    <label>Slug / ID Unik URL (tanpa spasi)</label>
+                    <input type="text" id="new-slug" placeholder="contoh: budi-ani-2026">
+                </div>
+                <div>
+                    <label>Judul Acara / Nama Pemesan</label>
+                    <input type="text" id="new-title" placeholder="contoh: Pernikahan Budi &amp; Ani">
+                </div>
+                <div>
+                    <label>Jenis Undangan</label>
+                    <select id="new-type">
+                        <option value="wedding">Pernikahan</option>
+                        <option value="khitan">Khitanan</option>
+                    </select>
+                </div>
+                <div>
+                    <label>PIN Akses Customer (6 digit)</label>
+                    <input type="text" id="new-pin" placeholder="Otomatis jika kosong">
+                </div>
+                <div>
+                    <label>Preset Palet Warna</label>
+                    <select id="new-palette">
+                        <option value="lilac-pink">Lilac Pink</option>
+                        <option value="sage-green">Sage Botanical</option>
+                        <option value="navy-gold">Royal Navy &amp; Gold</option>
+                        <option value="terracotta">Warm Terracotta</option>
+                        <option value="maroon-classic">Maroon Classic</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Pasangan Font</label>
+                    <select id="new-font">
+                        <option value="romantic-classic">Romantic Classic</option>
+                        <option value="modern-editorial">Modern Editorial</option>
+                        <option value="luxury-serif">Luxury Serif</option>
+                        <option value="heritage-serif">Heritage Classic</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Tema Ornamen</label>
+                    <select id="new-ornament">
+                        <option value="wave-soft">Gelombang Lembut</option>
+                        <option value="floral-botanical">Floral &amp; Daun Minimalis</option>
+                        <option value="islamic-arch">Lengkung Islami (Arch)</option>
+                        <option value="minimal-line">Garis Geometris Modern</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="btn-create-event" onclick="createNewEvent()">Buat Undangan Baru</button>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h3 style="margin:0;">Daftar Acara Aktif</h3>
+                <button class="btn btn-outline btn-sm" onclick="loadEvents()">Refresh</button>
+            </div>
+            <div id="events-list">
+                <p style="text-align:center; color:#8e8e93;">Memuat daftar acara...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        const SUPER_KEY_STORAGE = 'naozi_super_key';
+        let superKey = sessionStorage.getItem(SUPER_KEY_STORAGE) || '';
+
+        window.onload = function() {
+            if (superKey) {
+                document.getElementById('auth-overlay').style.display = 'none';
+                loadEvents();
+            }
+        };
+
+        function loginSuperAdmin() {
+            const key = document.getElementById('super-key-input').value.trim();
+            const errEl = document.getElementById('login-err');
+            const btn = document.getElementById('btn-login');
+            if (!key) return;
+
+            btn.disabled = true;
+            btn.innerText = 'Memverifikasi...';
+            errEl.style.display = 'none';
+
+            apiGet('listEvents', { superKey: key })
+                .then(events => {
+                    superKey = key;
+                    sessionStorage.setItem(SUPER_KEY_STORAGE, superKey);
+                    document.getElementById('auth-overlay').style.display = 'none';
+                    renderEvents(events);
+                })
+                .catch(err => {
+                    errEl.innerText = err.message;
+                    errEl.style.display = 'block';
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerText = 'Masuk Dashboard';
+                });
+        }
+
+        function logout() {
+            sessionStorage.removeItem(SUPER_KEY_STORAGE);
+            location.reload();
+        }
+
+        function showListMessage(listEl, text, color) {
+            const p = document.createElement('p');
+            p.style.textAlign = 'center';
+            p.style.color = color;
+            p.textContent = text;
+            listEl.replaceChildren(p);
+        }
+
+        function loadEvents() {
+            const listEl = document.getElementById('events-list');
+            apiGet('listEvents', { superKey: superKey })
+                .then(renderEvents)
+                .catch(err => {
+                    showListMessage(listEl, err.message, '#ff3b30');
+                });
+        }
+
+        function renderEvents(events) {
+            const listEl = document.getElementById('events-list');
+            if (!Array.isArray(events) || events.length === 0) {
+                showListMessage(listEl, 'Belum ada acara terdaftar.', '#8e8e93');
+                return;
+            }
+            listEl.replaceChildren();
+            const baseUrl = window.location.href.split('/').slice(0, -1).join('/');
+
+            events.forEach(ev => {
+                const row = document.createElement('div');
+                row.className = 'event-row';
+
+                const info = document.createElement('div');
+                const isActive = ev.status === 'active';
+
+                const titleRow = document.createElement('div');
+                titleRow.style.fontWeight = '700';
+                titleRow.style.fontSize = '15px';
+                titleRow.textContent = (ev.title || ev.eventId) + ' ';
+
+                const badge = document.createElement('span');
+                badge.className = `badge ${isActive ? 'badge-active' : 'badge-inactive'}`;
+                badge.textContent = ev.status;
+                titleRow.appendChild(badge);
+
+                const metaRow = document.createElement('div');
+                metaRow.style.fontSize = '12.5px';
+                metaRow.style.color = '#6c6c70';
+                metaRow.style.marginTop = '3px';
+                metaRow.textContent = `Slug: ${ev.eventId} • Tipe: ${ev.type} • PIN: ${ev.adminPin || '-'}`;
+
+                info.appendChild(titleRow);
+                info.appendChild(metaRow);
+
+                const actions = document.createElement('div');
+                actions.className = 'actions';
+
+                const btnView = document.createElement('a');
+                btnView.className = 'btn btn-outline btn-sm';
+                btnView.href = `${baseUrl}/index.html?event=${encodeURIComponent(ev.eventId)}`;
+                btnView.target = '_blank';
+                btnView.textContent = 'Undangan';
+
+                const btnEdit = document.createElement('a');
+                btnEdit.className = 'btn btn-outline btn-sm';
+                btnEdit.href = `${baseUrl}/editor.html?event=${encodeURIComponent(ev.eventId)}`;
+                btnEdit.target = '_blank';
+                btnEdit.textContent = 'Editor';
+
+                const btnGuest = document.createElement('a');
+                btnGuest.className = 'btn btn-outline btn-sm';
+                btnGuest.href = `${baseUrl}/guest.html?event=${encodeURIComponent(ev.eventId)}`;
+                btnGuest.target = '_blank';
+                btnGuest.textContent = 'Tamu';
+
+                const btnToggle = document.createElement('button');
+                btnToggle.className = `btn btn-sm ${isActive ? 'btn-warn' : 'btn-success'}`;
+                btnToggle.textContent = isActive ? 'Nonaktifkan' : 'Aktifkan';
+                btnToggle.onclick = () => toggleEventStatus(ev.eventId, isActive ? 'inactive' : 'active');
+
+                actions.appendChild(btnView);
+                actions.appendChild(btnEdit);
+                actions.appendChild(btnGuest);
+                actions.appendChild(btnToggle);
+
+                row.appendChild(info);
+                row.appendChild(actions);
+                listEl.appendChild(row);
+            });
+        }
+
+        function createNewEvent() {
+            const slug = document.getElementById('new-slug').value.trim().toLowerCase().replace(/[^a-z0-9-_]/g, '');
+            const title = document.getElementById('new-title').value.trim();
+            const type = document.getElementById('new-type').value;
+            const pin = document.getElementById('new-pin').value.trim();
+            const paletteKey = document.getElementById('new-palette').value;
+            const fontKey = document.getElementById('new-font').value;
+            const ornament = document.getElementById('new-ornament').value;
+
+            if (!slug || !title) {
+                return alert('Slug dan Judul Acara wajib diisi.');
+            }
+
+            const btn = document.getElementById('btn-create-event');
+            btn.disabled = true;
+            btn.innerText = 'Membuat...';
+
+            const palMap = {
+                'lilac-pink': ['#8785a2', '#ffc7c7', '#ffe2e2', '#f6f6f6'],
+                'sage-green': ['#5f7a61', '#d5e2d5', '#eef4ee', '#ffffff'],
+                'navy-gold': ['#1e3a5f', '#d4af37', '#f4f6f9', '#ffffff'],
+                'terracotta': ['#a8573b', '#f0cbb8', '#fbf0ea', '#ffffff'],
+                'maroon-classic': ['#7b2d3b', '#ead2d6', '#fdf4f5', '#ffffff']
+            };
+            const fontMap = {
+                'romantic-classic': ['Dancing Script', 'Open Sans'],
+                'modern-editorial': ['Playfair Display', 'Plus Jakarta Sans'],
+                'luxury-serif': ['Cormorant Garamond', 'Montserrat'],
+                'heritage-serif': ['Cinzel Decorative', 'Lora']
+            };
+
+            const colors = palMap[paletteKey] || palMap['lilac-pink'];
+            const fonts = fontMap[fontKey] || fontMap['romantic-classic'];
+
+            apiPost('createEvent', {
+                superKey: superKey,
+                eventId: slug,
+                title: title,
+                type: type,
+                adminPin: pin,
+                themePreset: paletteKey,
+                primaryColor: colors[0],
+                secondaryColor: colors[1],
+                bgColor: colors[2],
+                surfaceColor: colors[3],
+                fontHeading: fonts[0],
+                fontBody: fonts[1],
+                ornament: ornament
+            })
+            .then(res => {
+                const ev = res.data || res.message;
+                alert(`Acara berhasil dibuat!\nSlug: ${ev.eventId}\nPIN Customer: ${ev.adminPin}`);
+                document.getElementById('new-slug').value = '';
+                document.getElementById('new-title').value = '';
+                document.getElementById('new-pin').value = '';
+                loadEvents();
+            })
+            .catch(err => alert('Gagal membuat acara: ' + err.message))
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = 'Buat Undangan Baru';
+            });
+        }
+
+        function toggleEventStatus(eventId, newStatus) {
+            apiPost('updateEvent', {
+                superKey: superKey,
+                eventId: eventId,
+                status: newStatus
+            })
+            .then(loadEvents)
+            .catch(err => alert('Gagal memperbarui status: ' + err.message));
+        }
+    </script>
+</body>
+</html>
