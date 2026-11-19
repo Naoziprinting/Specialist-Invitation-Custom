@@ -282,6 +282,10 @@
         document.getElementById('nav-view-inv').href = `index.html?event=${encodeURIComponent(EVENT_ID)}`;
         document.getElementById('nav-guests').href = `guest.html?event=${encodeURIComponent(EVENT_ID)}`;
 
+        populateSelectFromMap(document.getElementById('theme_preset'), window.NAOZI_THEMES.palettes, true);
+        populateSelectFromMap(document.getElementById('font_pairing_select'), window.NAOZI_THEMES.fontPairings, false);
+        populateSelectFromMap(document.getElementById('theme_ornament'), window.NAOZI_THEMES.ornaments, false);
+
         window.onload = function() {
             if (!activePin) {
                 document.getElementById('auth-overlay').style.display = 'flex';

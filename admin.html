@@ -207,6 +207,7 @@
 
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/themes.js"></script>
     <script>
         const SUPER_KEY_STORAGE = 'naozi_super_key';
         let superKey = sessionStorage.getItem(SUPER_KEY_STORAGE) || '';
@@ -214,6 +215,10 @@
         let slugManuallyEdited = false;
 
         window.onload = function() {
+            populateSelectFromMap(document.getElementById('new-palette'), window.NAOZI_THEMES.palettes, false);
+            populateSelectFromMap(document.getElementById('new-font'), window.NAOZI_THEMES.fontPairings, false);
+            populateSelectFromMap(document.getElementById('new-ornament'), window.NAOZI_THEMES.ornaments, false);
+
             if (superKey) {
                 document.getElementById('auth-overlay').style.display = 'none';
                 loadEvents();
@@ -466,22 +471,8 @@
             btn.disabled = true;
             btn.innerText = 'Menyiapkan Undangan...';
 
-            const palMap = {
-                'lilac-pink': ['#8785a2', '#ffc7c7', '#ffe2e2', '#f6f6f6'],
-                'sage-green': ['#5f7a61', '#d5e2d5', '#eef4ee', '#ffffff'],
-                'navy-gold': ['#1e3a5f', '#d4af37', '#f4f6f9', '#ffffff'],
-                'terracotta': ['#a8573b', '#f0cbb8', '#fbf0ea', '#ffffff'],
-                'maroon-classic': ['#7b2d3b', '#ead2d6', '#fdf4f5', '#ffffff']
-            };
-            const fontMap = {
-                'romantic-classic': ['Dancing Script', 'Open Sans'],
-                'modern-editorial': ['Playfair Display', 'Plus Jakarta Sans'],
-                'luxury-serif': ['Cormorant Garamond', 'Montserrat'],
-                'heritage-serif': ['Cinzel Decorative', 'Lora']
-            };
-
-            const colors = palMap[paletteKey] || palMap['lilac-pink'];
-            const fonts = fontMap[fontKey] || fontMap['romantic-classic'];
+            const pal = window.NAOZI_THEMES.palettes[paletteKey] || window.NAOZI_THEMES.palettes['lilac-pink'];
+            const fp = window.NAOZI_THEMES.fontPairings[fontKey] || window.NAOZI_THEMES.fontPairings['romantic-classic'];
 
             apiPost('createEvent', {
                 superKey: superKey,
@@ -498,12 +489,12 @@
                 khitanName: khitanName,
                 cloneFrom: cloneFrom,
                 themePreset: paletteKey,
-                primaryColor: colors[0],
-                secondaryColor: colors[1],
-                bgColor: colors[2],
-                surfaceColor: colors[3],
-                fontHeading: fonts[0],
-                fontBody: fonts[1],
+                primaryColor: pal.primary,
+                secondaryColor: pal.secondary,
+                bgColor: pal.bg,
+                surfaceColor: pal.surface,
+                fontHeading: fp.heading,
+                fontBody: fp.body,
                 ornament: ornament
             })
             .then(res => {
