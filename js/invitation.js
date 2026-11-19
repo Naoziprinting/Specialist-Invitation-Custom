@@ -554,12 +554,127 @@
       if (prevBtn) prevBtn.disabled = idx <= 0;
       if (nextBtn) {
         nextBtn.disabled = idx >= scenes.length - 1;
-        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Lanjut ↓";
+        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Terbang ↓";
       }
 
       document.querySelectorAll(".bottom-nav a").forEach((link) => {
         link.classList.toggle("active", link.getAttribute("href") === "#" + active.id);
       });
+    }
+
+    function injectRealisticOrnaments() {
+      if (!document.getElementById("scene-ornament-corners")) {
+        const cornerWrap = document.createElement("div");
+        cornerWrap.id = "scene-ornament-corners";
+        cornerWrap.className = "scene-ornament-corners";
+        const cornerSvg =
+          '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+          '<path d="M4 40 C4 18, 18 4, 40 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
+          '<path d="M12 34 C12 20, 20 12, 34 12" stroke="currentColor" stroke-width="1.2" stroke-opacity="0.65"/>' +
+          '<circle cx="40" cy="4" r="2.5" fill="currentColor"/>' +
+          '<circle cx="4" cy="40" r="2.5" fill="currentColor"/>' +
+          '<circle cx="10" cy="10" r="3" fill="currentColor" fill-opacity="0.7"/>' +
+          "</svg>";
+        ["tl", "tr", "bl", "br"].forEach((pos) => {
+          const holder = document.createElement("div");
+          holder.className = `ornament-corner ornament-corner-${pos}`;
+          const parsed = new DOMParser().parseFromString(cornerSvg, "image/svg+xml");
+          if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
+            holder.appendChild(document.importNode(parsed.documentElement, true));
+          }
+          cornerWrap.appendChild(holder);
+        });
+        document.body.appendChild(cornerWrap);
+      }
+
+      if (!document.getElementById("ambient-motes")) {
+        const motes = document.createElement("div");
+        motes.id = "ambient-motes";
+        motes.className = "ambient-motes";
+        for (let i = 0; i < 12; i++) {
+          const dot = document.createElement("span");
+          dot.className = "ambient-mote";
+          dot.style.left = `${8 + ((i * 7.8) % 86)}%`;
+          dot.style.top = `${15 + ((i * 13) % 72)}%`;
+          dot.style.animationDelay = `${(i * 0.75).toFixed(2)}s`;
+          dot.style.animationDuration = `${7 + (i % 4)}s`;
+          motes.appendChild(dot);
+        }
+        document.body.appendChild(motes);
+      }
+
+      // Tambahkan plakat bab legenda di setiap ruangan (kecuali cover)
+      document.querySelectorAll(".journey-scene").forEach((scene) => {
+        if (scene.id === "cover" || scene.querySelector(".scene-chapter-crest")) return;
+        const chapter = scene.getAttribute("data-chapter") || "";
+        const title = scene.getAttribute("data-scene-title") || "";
+        const container = scene.querySelector(".container");
+        if (chapter && title && container) {
+          const crestWrap = document.createElement("div");
+          crestWrap.className = "text-center";
+          const crest = document.createElement("span");
+          crest.className = "scene-chapter-crest";
+          crest.textContent = `✦ ${chapter} · ${title} ✦`;
+          crestWrap.appendChild(crest);
+          container.insertBefore(crestWrap, container.firstChild);
+        }
+      });
+    }
+
+    function renderLegendMap(scenes, activeIdx) {
+      const layer = document.getElementById("legend-waypoints-layer");
+      const trail = document.getElementById("legend-flight-trail");
+      const trailBg = document.getElementById("legend-flight-trail-bg");
+      if (!layer || !trail || !trailBg || scenes.length === 0) return;
+
+      layer.replaceChildren();
+      const points = scenes.map((sc, i) => {
+        const progress = scenes.length > 1 ? i / (scenes.length - 1) : 0.5;
+        const y = 38 + progress * 364;
+        const x = 180 + Math.sin(i * 1.15) * 95;
+        return { x, y, scene: sc, index: i };
+      });
+
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const midY = (prev.y + curr.y) / 2;
+        pathD += ` C ${prev.x} ${midY}, ${curr.x} ${midY}, ${curr.x} ${curr.y}`;
+      }
+      trail.setAttribute("d", pathD);
+      trailBg.setAttribute("d", pathD);
+
+      points.forEach((pt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "legend-waypoint" + (pt.index === activeIdx ? " is-current" : "");
+        btn.style.left = `${(pt.x / 360) * 100}%`;
+        btn.style.top = `${(pt.y / 440) * 100}%`;
+        const chapter = pt.scene.getAttribute("data-chapter") || `${pt.index + 1}`;
+        const title = pt.scene.getAttribute("data-scene-title") || pt.scene.id;
+        btn.textContent = pt.index === activeIdx ? `✈ ${chapter} · ${title}` : `${chapter} · ${title}`;
+        btn.addEventListener("click", () => {
+          closeLegendMap();
+          goToScene(pt.index);
+        });
+        layer.appendChild(btn);
+      });
+    }
+
+    function openLegendMap() {
+      const modal = document.getElementById("legend-map-modal");
+      if (!modal) return;
+      renderLegendMap(getActiveScenes(), currentSceneIdx);
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeLegendMap() {
+      const modal = document.getElementById("legend-map-modal");
+      if (!modal) return;
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
     }
 
     function goToScene(targetIdxOrId) {
@@ -579,12 +694,34 @@
       const isForward = targetIdx > currentSceneIdx;
       isTransitioning3D = true;
 
-      // Terapkan titik fokus zoom-in dari ruangan asal
-      const focalOrigin = (fromEl && fromEl.getAttribute("data-focal")) || "50% 50%";
-      if (fromEl) fromEl.style.setProperty("--focal-origin", focalOrigin);
-      toEl.style.setProperty("--focal-origin", toEl.getAttribute("data-focal") || "50% 50%");
+      // Aktifkan layer penerbangan drone + banner tujuan
+      const flightLayer = document.getElementById("drone-flight-layer");
+      const flightText = document.getElementById("drone-flight-text");
+      if (flightLayer && flightText) {
+        const ch = toEl.getAttribute("data-chapter") || "";
+        const tt = toEl.getAttribute("data-scene-title") || "";
+        flightText.textContent = `Terbang menuju ${ch ? ch + " · " : ""}${tt}`;
+        flightLayer.classList.add("is-flying");
+      }
 
-      // Siapkan ruangan baru dari kedalaman (atau depan jika mundur)
+      // Terapkan vektor kamera drone & titik fokus zoom-in
+      const focalOrigin = (fromEl && fromEl.getAttribute("data-focal")) || "50% 50%";
+      const flyX = toEl.getAttribute("data-fly-x") || "0px";
+      const flyY = toEl.getAttribute("data-fly-y") || "0px";
+      const flyTilt = toEl.getAttribute("data-fly-tilt") || "0deg";
+
+      if (fromEl) {
+        fromEl.style.setProperty("--focal-origin", focalOrigin);
+        fromEl.style.setProperty("--fly-x", flyX);
+        fromEl.style.setProperty("--fly-y", flyY);
+        fromEl.style.setProperty("--fly-tilt", flyTilt);
+      }
+      toEl.style.setProperty("--focal-origin", toEl.getAttribute("data-focal") || "50% 50%");
+      toEl.style.setProperty("--fly-x", flyX);
+      toEl.style.setProperty("--fly-y", flyY);
+      toEl.style.setProperty("--fly-tilt", flyTilt);
+
+      // Siapkan ruangan baru dari kedalaman udara
       toEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out", "scene-active");
       toEl.classList.add(isForward ? "scene-enter-from-deep" : "scene-enter-from-front");
       toEl.scrollTop = 0;
@@ -612,6 +749,7 @@
         if (fromEl) {
           fromEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out");
         }
+        if (flightLayer) flightLayer.classList.remove("is-flying");
         isTransitioning3D = false;
       }, 920);
     }
@@ -625,6 +763,19 @@
       });
       updateJourneyHud(scenes, currentSceneIdx);
     };
+
+    injectRealisticOrnaments();
+
+    const mapBtn = document.getElementById("journey-map-btn");
+    const mapCloseBtn = document.getElementById("legend-map-close");
+    const mapModal = document.getElementById("legend-map-modal");
+    if (mapBtn) mapBtn.addEventListener("click", openLegendMap);
+    if (mapCloseBtn) mapCloseBtn.addEventListener("click", closeLegendMap);
+    if (mapModal) {
+      mapModal.addEventListener("click", (e) => {
+        if (e.target === mapModal) closeLegendMap();
+      });
+    }
 
     const prevBtn = document.getElementById("journey-prev");
     const nextBtn = document.getElementById("journey-next");
