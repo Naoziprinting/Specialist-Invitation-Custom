@@ -39,6 +39,9 @@ body {
 
 .bg-berem {
   background-color: var(--berem) !important;
+  background-image:
+    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.06) 0%, transparent 22%, transparent 78%, rgba(0, 0, 0, 0.14) 100%) !important;
 }
 
 .text-berem {
@@ -47,6 +50,9 @@ body {
 
 .bg-wakwak {
   background-color: var(--wakwak) !important;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.42) 0%, transparent 68%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 45%, rgba(0, 0, 0, 0.025) 100%) !important;
 }
 
 .bg-fee {
@@ -529,4 +535,115 @@ body.theme-heart-filigree .profile-circle,
 body.theme-ribbon-scallop .profile-circle {
   border: 5px solid #ffffff;
   box-shadow: 0 0 0 2px var(--color-secondary), 0 10px 24px rgba(0, 0, 0, 0.12) !important;
+}
+
+/* =========================================================
+   Stage-Set Journey Transitions (Halaman Depan -> Ruang Dalam)
+   ========================================================= */
+.ornament-divider {
+  margin-top: -1px;
+  margin-bottom: -1px;
+  position: relative;
+  z-index: 2;
+}
+
+/* 1. Pintu Gerbang Depan / Tirai Sampul Terbuka */
+#exampleModal #front-image,
+#exampleModal #front-text {
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease;
+  will-change: transform, opacity;
+}
+
+#exampleModal.stage-doors-opening {
+  pointer-events: none;
+}
+
+#exampleModal.stage-doors-opening #front-image {
+  transform: translateX(-105%) scale(1.04);
+  opacity: 0.25;
+}
+
+#exampleModal.stage-doors-opening #front-text {
+  transform: translateX(105%) scale(1.04);
+  opacity: 0.15;
+}
+
+/* 2. Halaman Depan / Teras (#cover) dengan Sorot Lampu Panggung */
+#cover {
+  position: relative;
+  overflow: hidden;
+}
+
+#hero-bg {
+  position: relative;
+  transform: scale(1.06);
+  transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1), filter 1.2s ease;
+}
+
+#cover.hero-entered #hero-bg {
+  transform: scale(1);
+}
+
+#hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 48%, rgba(18, 16, 24, 0.32) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 0%, transparent 35%, rgba(0, 0, 0, 0.18) 100%);
+  pointer-events: none;
+}
+
+#hero-bg > .container {
+  position: relative;
+  z-index: 2;
+}
+
+/* 3. Transisi Masuk ke Ruang yang Lebih Dalam (.stage-room) */
+.stage-room {
+  position: relative;
+  opacity: 0;
+  transform: perspective(1200px) translateY(32px) scale(0.975);
+  transition:
+    opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 1.05s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.stage-room.is-entered {
+  opacity: 1;
+  transform: perspective(1200px) translateY(0) scale(1);
+}
+
+/* Kedalaman pencahayaan panggung yang makin intim di ruang dalam */
+#profile::before,
+#gift::before,
+#rsvp::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.35) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+#profile > .container,
+#gift > .container,
+#rsvp > .container {
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-room,
+  #hero-bg,
+  #exampleModal #front-image,
+  #exampleModal #front-text {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }
