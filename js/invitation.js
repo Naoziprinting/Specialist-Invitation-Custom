@@ -410,6 +410,10 @@
         document.querySelectorAll("." + key).forEach((el) => el.classList.remove("hidden"));
       }
     });
+
+    if (typeof window.refresh3DJourneyState === "function") {
+      window.refresh3DJourneyState();
+    }
   }
 
   window.submitWish = function () {
@@ -525,44 +529,189 @@
       AOS.init({ once: true });
     }
 
-    // Observer untuk transisi masuk ke setiap ruang panggung 3D (.stage-room)
-    const rooms = document.querySelectorAll(".stage-room");
-    if ("IntersectionObserver" in window && rooms.length > 0) {
-      const roomObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("is-entered");
-              roomObserver.unobserve(entry.target);
-            }
-          });
-        },
-        { threshold: 0.1, rootMargin: "0px 0px -30px 0px" }
+    // Aktifkan Mode Perjalanan Video 3D (Focal-Point Zoom-In Fly-Through)
+    document.body.classList.add("journey-3d-mode");
+    let currentSceneIdx = 0;
+    let isTransitioning3D = false;
+
+    function getActiveScenes() {
+      return Array.from(document.querySelectorAll(".journey-scene")).filter(
+        (el) => !el.classList.contains("hidden")
       );
-      rooms.forEach((room) => roomObserver.observe(room));
-    } else {
-      rooms.forEach((room) => room.classList.add("is-entered"));
     }
 
-    // Portal 3D saat berpindah ruang lewat Bottom Nav
-    const portalOverlay = document.createElement("div");
-    portalOverlay.id = "door-portal-overlay";
-    document.body.appendChild(portalOverlay);
+    function updateJourneyHud(scenes, idx) {
+      const active = scenes[idx];
+      if (!active) return;
+      const labelEl = document.getElementById("journey-label");
+      const prevBtn = document.getElementById("journey-prev");
+      const nextBtn = document.getElementById("journey-next");
+
+      if (labelEl) {
+        const title = active.getAttribute("data-scene-title") || "";
+        labelEl.textContent = `${idx + 1} / ${scenes.length} · ${title}`;
+      }
+      if (prevBtn) prevBtn.disabled = idx <= 0;
+      if (nextBtn) {
+        nextBtn.disabled = idx >= scenes.length - 1;
+        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Lanjut ↓";
+      }
+
+      document.querySelectorAll(".bottom-nav a").forEach((link) => {
+        link.classList.toggle("active", link.getAttribute("href") === "#" + active.id);
+      });
+    }
+
+    function goToScene(targetIdxOrId) {
+      if (isTransitioning3D) return;
+      const scenes = getActiveScenes();
+      if (scenes.length === 0) return;
+
+      let targetIdx =
+        typeof targetIdxOrId === "number"
+          ? targetIdxOrId
+          : scenes.findIndex((s) => s.id === targetIdxOrId);
+
+      if (targetIdx < 0 || targetIdx >= scenes.length || targetIdx === currentSceneIdx) return;
+
+      const fromEl = scenes[currentSceneIdx];
+      const toEl = scenes[targetIdx];
+      const isForward = targetIdx > currentSceneIdx;
+      isTransitioning3D = true;
+
+      // Terapkan titik fokus zoom-in dari ruangan asal
+      const focalOrigin = (fromEl && fromEl.getAttribute("data-focal")) || "50% 50%";
+      if (fromEl) fromEl.style.setProperty("--focal-origin", focalOrigin);
+      toEl.style.setProperty("--focal-origin", toEl.getAttribute("data-focal") || "50% 50%");
+
+      // Siapkan ruangan baru dari kedalaman (atau depan jika mundur)
+      toEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out", "scene-active");
+      toEl.classList.add(isForward ? "scene-enter-from-deep" : "scene-enter-from-front");
+      toEl.scrollTop = 0;
+
+      // Force reflow agar animasi masuk berjalan mulus
+      void toEl.offsetWidth;
+
+      if (fromEl) {
+        fromEl.classList.remove("scene-active");
+        fromEl.classList.add(isForward ? "scene-exit-zoom-in" : "scene-exit-zoom-out");
+      }
+
+      toEl.classList.remove("scene-enter-from-deep", "scene-enter-from-front");
+      toEl.classList.add("scene-active", "is-entered");
+      toEl.querySelectorAll("[data-aos]").forEach((node) => node.classList.add("aos-animate"));
+
+      currentSceneIdx = targetIdx;
+      updateJourneyHud(scenes, currentSceneIdx);
+
+      if (toEl.id === "gallery" && typeof initGalleryCarousel === "function") {
+        setTimeout(() => initGalleryCarousel(), 120);
+      }
+
+      setTimeout(() => {
+        if (fromEl) {
+          fromEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out");
+        }
+        isTransitioning3D = false;
+      }, 920);
+    }
+
+    window.refresh3DJourneyState = function () {
+      const scenes = getActiveScenes();
+      if (currentSceneIdx >= scenes.length) currentSceneIdx = 0;
+      scenes.forEach((s, i) => {
+        s.classList.toggle("scene-active", i === currentSceneIdx);
+        if (i === currentSceneIdx) s.classList.add("is-entered");
+      });
+      updateJourneyHud(scenes, currentSceneIdx);
+    };
+
+    const prevBtn = document.getElementById("journey-prev");
+    const nextBtn = document.getElementById("journey-next");
+    if (prevBtn) prevBtn.addEventListener("click", () => goToScene(currentSceneIdx - 1));
+    if (nextBtn) nextBtn.addEventListener("click", () => goToScene(currentSceneIdx + 1));
 
     document.querySelectorAll(".bottom-nav a").forEach((link) => {
       link.addEventListener("click", function (e) {
         const targetId = (this.getAttribute("href") || "").replace("#", "");
-        const targetEl = targetId ? document.getElementById(targetId) : null;
-        if (!targetEl) return;
+        if (!targetId) return;
         e.preventDefault();
-        portalOverlay.classList.add("is-active");
-        targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
-        setTimeout(() => {
-          targetEl.classList.add("is-entered");
-          portalOverlay.classList.remove("is-active");
-        }, 420);
+        goToScene(targetId);
       });
     });
+
+    // Navigasi Wheel (hanya pindah scene jika sudah di batas atas/bawah scene saat ini)
+    let wheelCooldown = 0;
+    window.addEventListener(
+      "wheel",
+      function (e) {
+        if (!isInvitationOpened || isTransitioning3D) return;
+        const now = Date.now();
+        if (now - wheelCooldown < 950) return;
+
+        const scenes = getActiveScenes();
+        const active = scenes[currentSceneIdx];
+        if (!active) return;
+
+        const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 8;
+        const atTop = active.scrollTop <= 4;
+
+        if (e.deltaY > 35 && atBottom) {
+          wheelCooldown = now;
+          goToScene(currentSceneIdx + 1);
+        } else if (e.deltaY < -35 && atTop) {
+          wheelCooldown = now;
+          goToScene(currentSceneIdx - 1);
+        }
+      },
+      { passive: true }
+    );
+
+    // Navigasi Touch Swipe di batas atas/bawah scene (Mobile)
+    let touchStartY = 0;
+    window.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.touches && e.touches[0]) touchStartY = e.touches[0].clientY;
+      },
+      { passive: true }
+    );
+    window.addEventListener(
+      "touchend",
+      (e) => {
+        if (!isInvitationOpened || isTransitioning3D || !e.changedTouches || !e.changedTouches[0]) return;
+        const dy = touchStartY - e.changedTouches[0].clientY;
+        const scenes = getActiveScenes();
+        const active = scenes[currentSceneIdx];
+        if (!active) return;
+
+        const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 10;
+        const atTop = active.scrollTop <= 6;
+
+        if (dy > 55 && atBottom) {
+          goToScene(currentSceneIdx + 1);
+        } else if (dy < -55 && atTop) {
+          goToScene(currentSceneIdx - 1);
+        }
+      },
+      { passive: true }
+    );
+
+    // Navigasi Keyboard ArrowDown/ArrowUp
+    window.addEventListener("keydown", (e) => {
+      if (!isInvitationOpened || isTransitioning3D) return;
+      const tag = (document.activeElement && document.activeElement.tagName) || "";
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (e.key === "ArrowDown" || e.key === "PageDown") {
+        e.preventDefault();
+        goToScene(currentSceneIdx + 1);
+      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+        e.preventDefault();
+        goToScene(currentSceneIdx - 1);
+      }
+    });
+
+    window.refresh3DJourneyState();
 
     // Stale-while-revalidate: tampilkan cache lokal jika ada sambil sinkronisasi ke backend
     try {
