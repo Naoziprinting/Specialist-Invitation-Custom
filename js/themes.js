@@ -251,6 +251,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Treasure Chest",
       rsvpTag: "Guild Registry",
       rsvpTitle: "Wishes & RSVP",
+      bg: "#12181b",
+      bgVoid: "#0a0e10",
+      surface: "#1e1b18",
+      accent: "#d4af37",
+      accentBright: "#f6e05e",
+      secondary: "#4fd1c5",
+      particleRgb: "246, 224, 94",
+      particleAltRgb: "79, 209, 197",
     },
     "celestial-fantasy": {
       label: "[Adventure] Celestial Fantasy Odyssey",
@@ -268,6 +276,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Blessing Gift",
       rsvpTag: "Oracle Scroll",
       rsvpTitle: "Wishes & Attendance",
+      bg: "#0f172a",
+      bgVoid: "#070b14",
+      surface: "#172036",
+      accent: "#f6e05e",
+      accentBright: "#fef08a",
+      secondary: "#7dd3fc",
+      particleRgb: "125, 211, 252",
+      particleAltRgb: "246, 224, 94",
     },
     "botanical-journey": {
       label: "[Adventure] Mystical Forest Journey",
@@ -285,6 +301,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Gift & Blessing",
       rsvpTag: "Forest Chronicle",
       rsvpTitle: "Guestbook & RSVP",
+      bg: "#0d1f18",
+      bgVoid: "#06100c",
+      surface: "#142920",
+      accent: "#fcd34d",
+      accentBright: "#fef08a",
+      secondary: "#6ee7b7",
+      particleRgb: "110, 231, 183",
+      particleAltRgb: "252, 211, 77",
     },
     "romantic-visual-novel": {
       label: "[Romantic] Visual Novel Love Story",
@@ -302,6 +326,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Wedding Gift",
       rsvpTag: "Heartfelt Notes",
       rsvpTitle: "Wishes & RSVP",
+      bg: "#24131c",
+      bgVoid: "#14090f",
+      surface: "#2d1924",
+      accent: "#f472b6",
+      accentBright: "#fbcfe8",
+      secondary: "#fde68a",
+      particleRgb: "249, 168, 212",
+      particleAltRgb: "253, 230, 138",
     },
     "moonlight-serenade": {
       label: "[Romantic] Moonlight Serenade",
@@ -319,6 +351,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Digital Envelope",
       rsvpTag: "Love Letters",
       rsvpTitle: "Warm Wishes & RSVP",
+      bg: "#1a1226",
+      bgVoid: "#0e0916",
+      surface: "#241933",
+      accent: "#c4b5fd",
+      accentBright: "#ede9fe",
+      secondary: "#f9a8d4",
+      particleRgb: "196, 181, 253",
+      particleAltRgb: "249, 168, 212",
     },
     "paris-atelier": {
       label: "[Romantic] Parisian Atelier Romance",
@@ -336,6 +376,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Wedding Gift",
       rsvpTag: "Guestbook",
       rsvpTitle: "RSVP & Wishes",
+      bg: "#211916",
+      bgVoid: "#120d0b",
+      surface: "#2b201c",
+      accent: "#f3d078",
+      accentBright: "#fef3c7",
+      secondary: "#fda4af",
+      particleRgb: "253, 164, 175",
+      particleAltRgb: "243, 208, 120",
     },
     "cherry-blossom": {
       label: "[Romantic] Sakura & Spring Tale",
@@ -353,6 +401,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Gift of Love",
       rsvpTag: "Blessings",
       rsvpTitle: "Guest Wishes & RSVP",
+      bg: "#1f1524",
+      bgVoid: "#110b14",
+      surface: "#2a1c30",
+      accent: "#fbcfe8",
+      accentBright: "#fdf2f8",
+      secondary: "#fef08a",
+      particleRgb: "251, 207, 232",
+      particleAltRgb: "254, 240, 138",
     },
     "royal-palace": {
       label: "[Luxury] Royal Palace Gala",
@@ -370,6 +426,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Royal Gift",
       rsvpTag: "Royal Registry",
       rsvpTitle: "Attendance & Wishes",
+      bg: "#14110f",
+      bgVoid: "#090706",
+      surface: "#1f1a16",
+      accent: "#fbbf24",
+      accentBright: "#fef3c7",
+      secondary: "#fde68a",
+      particleRgb: "251, 191, 36",
+      particleAltRgb: "254, 243, 199",
     },
     "art-deco-gala": {
       label: "[Luxury] Art Deco Gatsby Gala",
@@ -387,6 +451,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Gift Registry",
       rsvpTag: "Soirée RSVP",
       rsvpTitle: "Confirm Attendance",
+      bg: "#101014",
+      bgVoid: "#060608",
+      surface: "#1a1a20",
+      accent: "#eab308",
+      accentBright: "#fef08a",
+      secondary: "#fde047",
+      particleRgb: "253, 224, 71",
+      particleAltRgb: "255, 255, 255",
     },
     "diamond-monarch": {
       label: "[Luxury] Diamond & Platinum Sovereign",
@@ -404,6 +476,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Wedding Gift",
       rsvpTag: "Honorary Ledger",
       rsvpTitle: "RSVP & Blessings",
+      bg: "#0d192b",
+      bgVoid: "#060d18",
+      surface: "#13233b",
+      accent: "#e2e8f0",
+      accentBright: "#ffffff",
+      secondary: "#7dd3fc",
+      particleRgb: "226, 232, 240",
+      particleAltRgb: "125, 211, 252",
     },
     "emerald-crown": {
       label: "[Luxury] Emerald & Champagne Crown",
@@ -421,6 +501,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Digital Gift",
       rsvpTag: "Noble Wishes",
       rsvpTitle: "RSVP & Prayers",
+      bg: "#0a1d17",
+      bgVoid: "#05100c",
+      surface: "#102921",
+      accent: "#fde68a",
+      accentBright: "#fef9c3",
+      secondary: "#34d399",
+      particleRgb: "253, 230, 138",
+      particleAltRgb: "52, 211, 153",
     },
     "sacral-sanctuary": {
       label: "[Sacral] Walimatul Ursy Islami",
@@ -438,6 +526,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Amplop Digital",
       rsvpTag: "Doa & Kehadiran",
       rsvpTitle: "Ucapan & RSVP",
+      bg: "#0c1e1e",
+      bgVoid: "#061111",
+      surface: "#122929",
+      accent: "#d4af37",
+      accentBright: "#fef08a",
+      secondary: "#5eead4",
+      particleRgb: "212, 175, 55",
+      particleAltRgb: "94, 234, 212",
     },
     "celestial-hymn": {
       label: "[Sacral] Holy Matrimony Sanctuary",
@@ -455,6 +551,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Wedding Gift",
       rsvpTag: "Prayer & Wishes",
       rsvpTitle: "RSVP & Blessings",
+      bg: "#141923",
+      bgVoid: "#0b0e14",
+      surface: "#1c2331",
+      accent: "#fcd34d",
+      accentBright: "#fef9c3",
+      secondary: "#bae6fd",
+      particleRgb: "252, 211, 77",
+      particleAltRgb: "186, 230, 253",
     },
     "nusantara-keraton": {
       label: "[Culture] Keraton Jawa Klasik",
@@ -472,6 +576,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Pundi Tanda Kasih",
       rsvpTag: "Buku Tamu",
       rsvpTitle: "Doa Restu & RSVP",
+      bg: "#1e140e",
+      bgVoid: "#100a06",
+      surface: "#291c14",
+      accent: "#eab308",
+      accentBright: "#fde68a",
+      secondary: "#fca5a5",
+      particleRgb: "234, 179, 8",
+      particleAltRgb: "252, 165, 165",
     },
     "archipelago-heritage": {
       label: "[Culture] Nusantara Heritage & Adat",
@@ -489,6 +601,14 @@ window.NAOZI_THEMES = {
       chestTitle: "Tanda Kasih",
       rsvpTag: "Pesan Restu",
       rsvpTitle: "Konfirmasi & Doa",
+      bg: "#231015",
+      bgVoid: "#12070a",
+      surface: "#2f151c",
+      accent: "#f59e0b",
+      accentBright: "#fde68a",
+      secondary: "#fda4af",
+      particleRgb: "245, 158, 11",
+      particleAltRgb: "253, 164, 175",
     },
   },
 };
@@ -869,6 +989,21 @@ function applyThemeFromSettings(settings) {
 
   const genreCfg = window.NAOZI_THEMES.gameGenres[genreKey];
   if (genreCfg) {
+    // Jika preset warna masih default (lilac-pink/ancient-explorer/kosong), gunakan palet atmosfer milik genre!
+    const presetVal = (s.theme_preset && s.theme_preset.value) || "";
+    const isDefaultPreset = !presetVal || presetVal === "lilac-pink" || presetVal === "ancient-explorer";
+    if (isDefaultPreset) {
+      root.style.setProperty("--bg-slate", genreCfg.bg);
+      root.style.setProperty("--bg-void", genreCfg.bgVoid);
+      root.style.setProperty("--bg-parchment-dark", genreCfg.surface);
+      root.style.setProperty("--gold-antique", ensureReadableOnDark(genreCfg.accent, 0.55));
+      root.style.setProperty("--gold-bright", ensureReadableOnDark(genreCfg.accentBright, 0.68));
+      root.style.setProperty("--cyan-ethereal", ensureReadableOnDark(genreCfg.secondary, 0.58));
+      root.style.setProperty("--text-on-accent", getContrastTextColor(genreCfg.accent));
+    }
+
+    window.NAOZI_PARTICLE_COLORS = [genreCfg.particleRgb, genreCfg.particleAltRgb];
+
     const mapText = {
       "ui-crest-badge": genreCfg.crest,
       "btn-open-text": genreCfg.startBtn,

@@ -680,12 +680,17 @@
         if (p.x < -10) p.x = width + 10;
         if (p.x > width + 10) p.x = -10;
 
+        const palette = Array.isArray(window.NAOZI_PARTICLE_COLORS) && window.NAOZI_PARTICLE_COLORS.length === 2
+          ? window.NAOZI_PARTICLE_COLORS
+          : ["246, 224, 94", "79, 209, 197"];
+        const activeColor = i % 4 === 0 ? palette[1] : palette[0];
+
         const glowAlpha = p.alpha * (0.65 + 0.35 * Math.sin(p.phase));
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.color}, ${glowAlpha.toFixed(2)})`;
+        ctx.fillStyle = `rgba(${activeColor}, ${glowAlpha.toFixed(2)})`;
         ctx.shadowBlur = 10;
-        ctx.shadowColor = `rgba(${p.color}, 0.8)`;
+        ctx.shadowColor = `rgba(${activeColor}, 0.8)`;
         ctx.fill();
       }
       ctx.shadowBlur = 0;
