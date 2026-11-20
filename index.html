@@ -83,6 +83,7 @@
                 <h1 id="hero-names" class="font-dancing fs-60 mt-2">Aril &amp; Cici</h1>
                 <p id="hero-date" class="cover-date">Sabtu, 8 Februari 2025</p>
                 <div class="simply-countdown" id="countdown-wrap"></div>
+                <div id="page-turn-hint" class="page-turn-hint" aria-hidden="true">Geser atau ketuk Lanjut &rsaquo;</div>
               </div>
             </div>
           </div>
@@ -192,7 +193,9 @@
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-4">
-          <h1 class="font-dancing fs-40 text-white popup-layer" data-depth="front">Save The Date</h1>
+          <div class="diorama-title-ribbon popup-layer" data-depth="front">
+            <h1 class="font-dancing fs-40 m-0">Save The Date</h1>
+          </div>
         </div>
         <div class="col-md-6 col-12 py-2" id="card-1">
           <div class="diorama-module" data-backdrop="pavilion">
@@ -251,7 +254,9 @@
     <div class="container py-5">
       <div class="row text-center text-white">
         <div class="col-12 mb-4">
-          <h1 class="font-dancing fs-40 popup-layer" data-depth="front">Gallery Foto</h1>
+          <div class="diorama-title-ribbon popup-layer" data-depth="front">
+            <h1 class="font-dancing fs-40 m-0">Gallery Foto</h1>
+          </div>
         </div>
         <div class="col-12">
           <div class="diorama-module" data-backdrop="garden">
@@ -278,7 +283,9 @@
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-4">
-          <h1 class="font-dancing fs-40 popup-layer" data-depth="front">Amplop Digital</h1>
+          <div class="diorama-title-ribbon popup-layer" data-depth="front">
+            <h1 class="font-dancing fs-40 m-0">Amplop Digital</h1>
+          </div>
         </div>
         <div class="col-lg-8 col-md-10 col-12 mb-4">
           <div class="diorama-module" data-backdrop="trees">
@@ -326,8 +333,10 @@
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-12 mb-4">
-          <h1 class="font-dancing fs-40 popup-layer" data-depth="front">Wishes &amp; RSVP</h1>
-          <p class="p-0 m-0">Doa Restu Anda merupakan karunia yang sangat berarti bagi kami.</p>
+          <div class="diorama-title-ribbon popup-layer" data-depth="front">
+            <h1 class="font-dancing fs-40 m-0">Wishes &amp; RSVP</h1>
+          </div>
+          <p class="p-0 mt-2 mb-0">Doa Restu Anda merupakan karunia yang sangat berarti bagi kami.</p>
         </div>
         <div class="col-md-8 col-12">
           <div class="diorama-module" data-backdrop="city">
@@ -401,7 +410,9 @@
     <div class="container py-5">
       <div class="row text-center justify-content-center">
         <div class="col-lg-10 col-12">
-          <h1 class="font-dancing fs-40 text-white mb-4 popup-layer" data-depth="front">Turut Mengundang</h1>
+          <div class="diorama-title-ribbon popup-layer mb-4" data-depth="front">
+            <h1 class="font-dancing fs-40 m-0">Turut Mengundang</h1>
+          </div>
           <div class="diorama-module" data-backdrop="pavilion">
             <div class="card bg-fee p-4 rounded-4 popup-layer" data-depth="mid">
               <p class="mb-0" id="turut-mengundang-text">
@@ -428,61 +439,64 @@
     </div>
   </section>
 
-  <!-- HUD Navigasi Diorama -->
-  <div id="journey-hud" aria-label="Navigasi Halaman Buku Pop-Up">
-    <button type="button" id="journey-prev" class="journey-btn" title="Halaman Sebelumnya">&#8249;</button>
-    <span id="journey-label">1 / 9 &middot; Gerbang Taman</span>
-    <button type="button" id="journey-next" class="journey-btn journey-btn-next" title="Buka Halaman Berikutnya">Lanjut &#8250;</button>
-  </div>
+  <!-- Unified Floating Dock (Navigasi Halaman + Drawer Daftar Bab) -->
+  <div id="diorama-dock">
+    <div id="chapter-drawer" class="chapter-drawer" aria-hidden="true">
+      <div class="bottom-nav">
+        <a href="#cover" title="Beranda" class="active">
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M256 32L32 240h53.33v240h128V330.67h85.34V480h128V240H480L256 32z"></path>
+          </svg>
+        </a>
+        <a href="#profile" title="Profil">
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M256 256c53.02 0 96-42.98 96-96s-42.98-96-96-96-96 42.98-96 96 42.98 96 96 96zm135.53 42.67C351.48 274.67 298.53 256 256 256s-95.48 18.67-135.53 42.67C82.88 321.28 64 366.51 64 416v32h384v-32c0-49.49-18.88-94.72-56.47-117.33z">
+            </path>
+          </svg>
+        </a>
+        <a href="#events" title="Acara" class="sec_events_v">
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M384 48h-32V16h-64v32H224V16h-64v32H128C92.65 48 64 76.65 64 112v336c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V112c0-35.35-28.65-64-64-64zm-16 352H144V208h224v192z">
+            </path>
+          </svg>
+        </a>
+        <a href="#gallery" title="Galeri" class="sec_gallery_v">
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+            xmlns="http://www.w3.org/2000/svg">
+            <rect width="384" height="256" x="64" y="128" fill="none" stroke-linejoin="round" stroke-width="32" rx="48">
+            </rect>
+            <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
+              d="M64 288l102.08-102.08a48 48 0 0167.84 0l118.08 118.08"></path>
+            <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
+              d="M320 288l15.92-15.92a48 48 0 0167.84 0l44.24 44.24"></path>
+            <circle cx="336" cy="208" r="32" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32">
+            </circle>
+          </svg>
+        </a>
+        <a href="#rsvp" title="Ucapan" class="sec_wishes_v">
+          <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
+            xmlns="http://www.w3.org/2000/svg">
+            <path fill="none" stroke-linejoin="round" stroke-width="32"
+              d="M408 64H104a56.16 56.16 0 00-56 56v192a56.16 56.16 0 0056 56h40v80l93.72-78.14a8 8 0 015.13-1.86H408a56.16 56.16 0 0056-56V120a56.16 56.16 0 00-56-56z">
+            </path>
+            <circle cx="160" cy="216" r="32"></circle>
+            <circle cx="256" cy="216" r="32"></circle>
+            <circle cx="352" cy="216" r="32"></circle>
+          </svg>
+        </a>
+      </div>
+    </div>
 
-  <!-- Bottom Nav (Quick Section Jump) -->
-  <div class="bottom-nav">
-    <a href="#cover" title="Beranda" class="active">
-      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
-        xmlns="http://www.w3.org/2000/svg">
-        <path d="M256 32L32 240h53.33v240h128V330.67h85.34V480h128V240H480L256 32z"></path>
-      </svg>
-    </a>
-    <a href="#profile" title="Profil">
-      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M256 256c53.02 0 96-42.98 96-96s-42.98-96-96-96-96 42.98-96 96 42.98 96 96 96zm135.53 42.67C351.48 274.67 298.53 256 256 256s-95.48 18.67-135.53 42.67C82.88 321.28 64 366.51 64 416v32h384v-32c0-49.49-18.88-94.72-56.47-117.33z">
-        </path>
-      </svg>
-    </a>
-    <a href="#events" title="Acara" class="sec_events_v">
-      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M384 48h-32V16h-64v32H224V16h-64v32H128C92.65 48 64 76.65 64 112v336c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V112c0-35.35-28.65-64-64-64zm-16 352H144V208h224v192z">
-        </path>
-      </svg>
-    </a>
-    <a href="#gallery" title="Galeri" class="sec_gallery_v">
-      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
-        xmlns="http://www.w3.org/2000/svg">
-        <rect width="384" height="256" x="64" y="128" fill="none" stroke-linejoin="round" stroke-width="32" rx="48">
-        </rect>
-        <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
-          d="M64 288l102.08-102.08a48 48 0 0167.84 0l118.08 118.08"></path>
-        <path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32"
-          d="M320 288l15.92-15.92a48 48 0 0167.84 0l44.24 44.24"></path>
-        <circle cx="336" cy="208" r="32" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="32">
-        </circle>
-      </svg>
-    </a>
-    <a href="#rsvp" title="Ucapan" class="sec_wishes_v">
-      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em"
-        xmlns="http://www.w3.org/2000/svg">
-        <path fill="none" stroke-linejoin="round" stroke-width="32"
-          d="M408 64H104a56.16 56.16 0 00-56 56v192a56.16 56.16 0 0056 56h40v80l93.72-78.14a8 8 0 015.13-1.86H408a56.16 56.16 0 0056-56V120a56.16 56.16 0 00-56-56z">
-        </path>
-        <circle cx="160" cy="216" r="32"></circle>
-        <circle cx="256" cy="216" r="32"></circle>
-        <circle cx="352" cy="216" r="32"></circle>
-      </svg>
-    </a>
+    <div id="journey-hud" aria-label="Navigasi Halaman Buku Pop-Up">
+      <button type="button" id="journey-prev" class="journey-btn" title="Halaman Sebelumnya">&#8249;</button>
+      <button type="button" id="journey-label" class="journey-label-btn" title="Daftar Bab" aria-expanded="false">1 / 9 &middot; Gerbang Taman</button>
+      <button type="button" id="journey-next" class="journey-btn journey-btn-next" title="Buka Halaman Berikutnya">Lanjut &#8250;</button>
+    </div>
   </div>
 
   <!-- Kontrol Musik -->
