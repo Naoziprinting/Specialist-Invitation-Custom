@@ -8,13 +8,29 @@
   --font-heading: "Dancing Script", cursive;
   --font-body: "Open Sans", sans-serif;
 
-  /* Backward-compatible aliases */
+  /* Backward-compatible theme aliases */
   --berem: var(--color-primary);
   --berem-text: var(--color-primary);
   --wakwak: var(--color-bg);
   --fee: var(--color-surface);
   --kulit: var(--color-secondary);
-  --pink: rgba(255, 199, 199, 0.9);
+
+  /* Handcrafted Cardstock & Diorama Material Tokens */
+  --paper-ivory: #fbf7f0;
+  --paper-warm: #f3eadc;
+  --paper-edge-1: #ebe0cf;
+  --paper-edge-2: #d8c8b1;
+  --paper-edge-3: #bfac91;
+  --paper-ink: #342923;
+  --tilt-x: 0;
+  --tilt-y: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  font-family: var(--font-body);
 }
 
 html {
@@ -24,13 +40,10 @@ html {
 
 body {
   background-color: var(--wakwak);
+  color: var(--paper-ink);
   overflow-x: hidden;
   -webkit-text-size-adjust: 100%;
-  font-family: var(--font-body);
-}
-
-* {
-  font-family: var(--font-body);
+  margin: 0;
 }
 
 .font-dancing {
@@ -39,9 +52,6 @@ body {
 
 .bg-berem {
   background-color: var(--berem) !important;
-  background-image:
-    radial-gradient(circle at 50% 18%, rgba(255, 255, 255, 0.14) 0%, transparent 62%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.06) 0%, transparent 22%, transparent 78%, rgba(0, 0, 0, 0.14) 100%) !important;
 }
 
 .text-berem {
@@ -50,9 +60,6 @@ body {
 
 .bg-wakwak {
   background-color: var(--wakwak) !important;
-  background-image:
-    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.42) 0%, transparent 68%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 45%, rgba(0, 0, 0, 0.025) 100%) !important;
 }
 
 .bg-fee {
@@ -63,19 +70,24 @@ body {
   background-color: var(--kulit) !important;
 }
 
+.hidden {
+  display: none !important;
+}
+
+/* Fluid Mobile-First Typography */
 .fs-60 {
-  font-size: 3.5rem;
-  line-height: 1.2;
+  font-size: clamp(2.1rem, 6.2vw, 3.6rem);
+  line-height: 1.18;
 }
 
 .fs-45 {
-  font-size: 2.6rem;
-  line-height: 1.25;
+  font-size: clamp(1.75rem, 4.8vw, 2.65rem);
+  line-height: 1.22;
 }
 
 .fs-40 {
-  font-size: 2.4rem;
-  line-height: 1.25;
+  font-size: clamp(1.65rem, 4.4vw, 2.4rem);
+  line-height: 1.24;
 }
 
 .norek {
@@ -84,69 +96,97 @@ body {
   outline: none;
   text-align: center;
   font-weight: 700;
-  color: #333;
+  color: var(--paper-ink);
   width: 100%;
   max-width: 240px;
 }
 
-.hidden {
-  display: none !important;
-}
-
-/* Profile & Closing circular images */
 .profile-circle {
-  width: 190px;
-  height: 190px;
+  width: clamp(136px, 34vw, 186px);
+  height: clamp(136px, 34vw, 186px);
   object-fit: cover;
-  border: 5px solid #ffffff;
+  border: 6px solid var(--paper-ivory);
+  box-shadow:
+    0 0 0 2px var(--paper-edge-2),
+    0 4px 0 var(--paper-edge-3),
+    calc(var(--tilt-y) * -8px) calc(14px + var(--tilt-x) * 5px) 22px rgba(28, 18, 12, 0.25);
 }
 
-/* SimplyCountdown Responsive Layout */
+/* Touch-Friendly Interactive Controls (min 44x44px) */
+.btn,
+.journey-btn,
+.bottom-nav a,
+.audio-floating .btn {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+}
+
+.btn:active,
+.journey-btn:active,
+.bottom-nav a:active {
+  transform: scale(0.96) translateY(2px);
+}
+
+.form-control,
+.form-select {
+  font-size: 16px !important;
+  min-height: 44px;
+}
+
+/* SimplyCountdown Paper-Cut Medallions */
 .simply-countdown {
   display: flex !important;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin: 1.5rem auto 0;
+  gap: clamp(8px, 2.2vw, 14px);
+  margin: 1.25rem auto 0;
 }
 
 .simply-countdown > .simply-section {
   float: none !important;
-  width: 95px !important;
-  height: 95px !important;
+  width: clamp(66px, 16vw, 92px) !important;
+  height: clamp(66px, 16vw, 92px) !important;
   padding: 0 !important;
   margin: 0 !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--pink);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  background: var(--paper-ivory) !important;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  border: 2px solid #ffffff !important;
+  box-shadow:
+    0 2px 0 var(--paper-edge-1),
+    0 4px 0 var(--paper-edge-2),
+    0 10px 18px rgba(28, 18, 12, 0.2);
 }
 
 .simply-countdown > .simply-section .simply-amount {
-  font-size: 1.5rem !important;
+  font-size: clamp(1.1rem, 3.2vw, 1.5rem) !important;
   font-weight: 700;
   line-height: 1.1;
-  color: #2d2d2d;
+  color: var(--paper-ink);
 }
 
 .simply-countdown > .simply-section .simply-word {
-  font-size: 0.78rem !important;
+  font-size: clamp(0.65rem, 1.8vw, 0.78rem) !important;
   text-transform: capitalize;
-  color: #444;
+  color: #5c4c42;
 }
 
-/* Map Responsive */
+/* Map & Gallery */
 .map-responsive {
   overflow: hidden;
-  padding-bottom: 65%;
+  padding-bottom: clamp(58%, 12vw, 78%);
   position: relative;
   height: 0;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-radius: 14px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 8px 20px rgba(28, 18, 12, 0.16);
 }
 
 .map-responsive iframe {
@@ -157,51 +197,39 @@ body {
   position: absolute;
 }
 
-/* Owl Carousel items */
 .owl-carousel .item img {
   width: 100%;
-  height: 300px;
+  height: clamp(220px, 42vw, 300px);
   object-fit: cover;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  border: 3px solid var(--paper-ivory);
+  box-shadow: 0 6px 16px rgba(28, 18, 12, 0.18);
 }
 
 /* Wishes List */
 .wish-list {
-  margin-top: 25px;
-  max-height: 420px;
+  margin-top: 22px;
+  max-height: 380px;
   overflow-y: auto;
   text-align: left;
   padding-right: 4px;
 }
 
-.wish-list::-webkit-scrollbar {
-  width: 5px;
-}
-
-.wish-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 10px;
-}
-
-.wish-list::-webkit-scrollbar-thumb {
-  background: var(--berem);
-  border-radius: 10px;
-}
-
 .wish-box {
-  background: var(--fee);
+  background: var(--paper-ivory);
   padding: 14px 16px;
   border-radius: 12px;
   margin-bottom: 12px;
   border-left: 5px solid var(--berem);
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 2px 0 var(--paper-edge-1),
+    0 6px 14px rgba(28, 18, 12, 0.08);
 }
 
 .wish-box h4 {
   font-size: 0.98rem;
   font-weight: 700;
-  color: #333;
+  color: var(--paper-ink);
   margin-bottom: 4px;
   display: flex;
   align-items: center;
@@ -211,7 +239,7 @@ body {
 
 .wish-box p {
   font-size: 0.9rem;
-  color: #555;
+  color: #52433a;
   margin: 0;
   line-height: 1.5;
 }
@@ -225,182 +253,12 @@ body {
   color: #fff;
 }
 
-/* Floating Bottom Navigation */
-.bottom-nav {
-  position: fixed;
-  bottom: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 7px 16px;
-  border-radius: 40px;
-  display: flex;
-  gap: 12px;
-  box-shadow: 0 8px 25px rgba(135, 133, 162, 0.32);
-  z-index: 1030;
-  border: 1px solid rgba(135, 133, 162, 0.25);
-}
-
-.bottom-nav a {
-  color: var(--berem-text);
-  font-size: 1.15rem;
-  text-decoration: none;
-  transition: all 0.25s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-}
-
-.bottom-nav a:hover,
-.bottom-nav a.active {
-  color: #fff;
-  background: var(--berem);
-  transform: translateY(-3px);
-}
-
-/* Floating Audio Control */
-.audio-floating {
-  position: fixed;
-  bottom: 74px;
-  right: 16px;
-  z-index: 1035;
-}
-
-.audio-floating .btn.active-audio {
-  background-color: #5c5a78 !important;
-  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25);
-}
-
-/* Modal Cover Styling */
-#front-image img {
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  object-fit: cover;
-}
-
-#front-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  min-height: 100dvh;
-  padding: 2rem 1.25rem;
-}
-
-/* Tablet & Smartphone Adaptation */
-@media (max-width: 767.98px) {
-  #front-image {
-    display: none;
-  }
-
-  #front-text {
-    background-image: linear-gradient(
-        to bottom,
-        rgba(255, 226, 226, 0.65),
-        rgba(255, 226, 226, 0.88)
-      ),
-      url(../img/img3-foreground.jpg);
-    background-size: cover;
-    background-position: center;
-  }
-
-  .fs-60 {
-    font-size: 2.5rem;
-  }
-
-  .fs-45 {
-    font-size: 2.1rem;
-  }
-
-  .fs-40 {
-    font-size: 2rem;
-  }
-}
-
-/* Smartphone Portrait (< 576px) */
-@media (max-width: 576px) {
-  html {
-    font-size: 15px;
-  }
-
-  .fs-60 {
-    font-size: 2.2rem !important;
-  }
-
-  .fs-45 {
-    font-size: 1.95rem !important;
-  }
-
-  .fs-40 {
-    font-size: 1.85rem !important;
-  }
-
-  .profile-circle {
-    width: 160px;
-    height: 160px;
-  }
-
-  .simply-countdown {
-    gap: 8px;
-    flex-wrap: nowrap;
-  }
-
-  .simply-countdown > .simply-section {
-    width: 70px !important;
-    height: 70px !important;
-  }
-
-  .simply-countdown > .simply-section .simply-amount {
-    font-size: 1.25rem !important;
-  }
-
-  .simply-countdown > .simply-section .simply-word {
-    font-size: 0.7rem !important;
-  }
-
-  .owl-carousel .item img {
-    height: 250px;
-  }
-
-  .map-responsive {
-    padding-bottom: 80%;
-  }
-
-  .form-control,
-  .form-select {
-    font-size: 16px !important;
-  }
-
-  .bottom-nav {
-    padding: 6px 14px;
-    gap: 10px;
-    bottom: 12px;
-  }
-
-  .bottom-nav a {
-    width: 36px;
-    height: 36px;
-  }
-
-  .audio-floating {
-    bottom: 66px;
-    right: 12px;
-  }
-}
-
-/* Preloader / Sinkronisasi Backend */
+/* Preloader */
 #app-loading {
   position: fixed;
   inset: 0;
   z-index: 999999;
-  background-color: var(--fee, #f6f6f6);
+  background-color: var(--paper-ivory);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -418,191 +276,71 @@ body {
   width: 48px;
   height: 48px;
   border: 4px solid rgba(135, 133, 162, 0.2);
-  border-top-color: var(--berem, #8785a2);
+  border-top-color: var(--berem);
   border-radius: 50%;
   animation: app-spin 0.85s linear infinite;
 }
 
 @keyframes app-spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 
 .loading-text {
-  margin-top: 18px;
-  font-family: 'Open Sans', sans-serif;
+  margin-top: 16px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--berem, #8785a2);
-  letter-spacing: 0.5px;
-  animation: pulse-text 1.6s ease-in-out infinite alternate;
-}
-
-@keyframes pulse-text {
-  from {
-    opacity: 0.6;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Modular Ornament & Divider Themes */
-.ornament-divider {
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.ornament-divider .divider-svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.divider-minimal {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  padding: 22px 15%;
-  background: var(--wakwak);
-}
-
-.divider-minimal span {
-  flex: 1;
-  height: 1px;
-  background: var(--color-primary);
-  opacity: 0.35;
-}
-
-.divider-minimal i {
-  font-style: normal;
-  color: var(--color-primary);
-  font-size: 1.1rem;
-  line-height: 1;
-}
-
-/* Preset Ornamen: Islamic Arch */
-body.theme-islamic-arch .profile-circle {
-  border-radius: 50% 50% 18px 18px !important;
-  border: 4px solid var(--color-secondary);
-}
-
-body.theme-islamic-arch .card {
-  border-top: 4px solid var(--color-secondary);
-}
-
-/* Preset Ornamen: Floral Botanical */
-body.theme-floral-botanical .card {
-  border: 1px solid rgba(135, 133, 162, 0.22);
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06) !important;
-}
-
-/* Preset Ornamen: Minimal Line */
-body.theme-minimal-line .profile-circle {
-  border: 3px solid var(--color-primary);
-}
-
-body.theme-minimal-line .card {
-  border-radius: 8px !important;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-/* Preset Luxury, Sakral & Romantic Card/Frame Accents */
-body.theme-royal-crest .profile-circle,
-body.theme-art-deco-gold .profile-circle,
-body.theme-diamond-lattice .profile-circle {
-  border: 4px solid var(--color-secondary);
-  box-shadow: 0 0 0 3px var(--color-primary), 0 12px 26px rgba(0, 0, 0, 0.16) !important;
-}
-
-body.theme-sacred-dome .profile-circle,
-body.theme-javanese-gunungan .profile-circle {
-  border-radius: 50% 50% 16px 16px !important;
-  border: 4px solid var(--color-secondary);
-}
-
-body.theme-double-frame .card,
-body.theme-art-deco-gold .card {
-  outline: 1px solid var(--color-secondary);
-  outline-offset: -8px;
-}
-
-body.theme-pearl-beads .profile-circle,
-body.theme-heart-filigree .profile-circle,
-body.theme-ribbon-scallop .profile-circle {
-  border: 5px solid #ffffff;
-  box-shadow: 0 0 0 2px var(--color-secondary), 0 10px 24px rgba(0, 0, 0, 0.12) !important;
+  color: var(--berem);
 }
 
 /* =========================================================
-   3D Realistic Pop-Up Book Engine (Paper-Cut & Fold Physics)
+   Sampul Depan Buku Diorama (#exampleModal)
    ========================================================= */
-:root {
-  --paper-ivory: #fbf7f0;
-  --paper-warm: #f3eadc;
-  --paper-edge-1: #ebe0cf;
-  --paper-edge-2: #d8c8b1;
-  --paper-edge-3: #bfac91;
-  --paper-ink: #342923;
-  --book-cover-rim: #4b392e;
-  --tilt-x: 0;
-  --tilt-y: 0;
-}
-
-.ornament-divider {
-  margin-top: -1px;
-  margin-bottom: -1px;
-  position: relative;
-  z-index: 2;
-}
-
-/* 1. Sampul Depan Buku Hardcover 3D (#exampleModal) */
 #exampleModal .modal-body {
-  perspective: 1800px;
+  perspective: 1600px;
   transform-style: preserve-3d;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 45%, #3f332b 0%, #1d1612 100%) !important;
+  background: radial-gradient(circle at 50% 45%, #3d3128 0%, #1d1612 100%) !important;
 }
 
 #exampleModal #front-image,
 #exampleModal #front-text {
-  transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.85s ease;
+  transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
   backface-visibility: hidden;
   will-change: transform, opacity;
+  transform-origin: bottom center;
 }
 
-#exampleModal #front-image {
-  transform-origin: left center;
-  position: relative;
-  box-shadow: inset -18px 0 36px rgba(25, 16, 10, 0.32);
+#exampleModal #front-image img {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  object-fit: cover;
 }
 
 #exampleModal #front-text.book-cover-face {
-  transform-origin: left center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: clamp(1rem, 4vw, 2.2rem);
   background-color: var(--wakwak);
   background-image:
-    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.55) 0%, transparent 65%),
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.055'/%3E%3C/svg%3E");
-  box-shadow:
-    inset 18px 0 30px -12px rgba(45, 30, 18, 0.22),
-    inset 0 0 0 14px rgba(255, 252, 245, 0.45);
-  position: relative;
+    radial-gradient(circle at 50% 25%, rgba(255, 255, 255, 0.5) 0%, transparent 65%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.055'/%3E%3C/svg%3E");
 }
 
 .book-cover-inner {
-  width: min(440px, 92%);
-  padding: 2.25rem 1.75rem;
+  width: min(440px, 94%);
+  padding: clamp(1.5rem, 4vw, 2.25rem) clamp(1.1rem, 3.5vw, 1.75rem);
   border-radius: 16px;
-  background: rgba(251, 247, 240, 0.86);
-  border: 1px solid rgba(168, 145, 120, 0.32);
+  background: rgba(251, 247, 240, 0.9);
+  border: 1.5px solid #ffffff;
   box-shadow:
-    0 2px 0 #ffffff,
-    0 4px 0 var(--paper-edge-1),
-    0 6px 0 var(--paper-edge-2),
-    0 18px 36px rgba(34, 24, 16, 0.2);
+    0 2px 0 var(--paper-edge-1),
+    0 5px 0 var(--paper-edge-2),
+    0 18px 36px rgba(26, 18, 12, 0.22);
 }
 
 .book-cover-crest {
@@ -615,69 +353,159 @@ body.theme-ribbon-scallop .profile-circle {
   border: 1px solid currentColor;
   padding: 4px 14px;
   border-radius: 999px;
-  margin-bottom: 14px;
-  background: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .book-clasp-btn {
-  border: 2px solid rgba(255, 255, 255, 0.75) !important;
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
   box-shadow:
-    0 2px 0 rgba(255, 255, 255, 0.35),
-    0 4px 0 rgba(45, 32, 24, 0.25),
-    0 12px 24px rgba(30, 20, 14, 0.28) !important;
-  transition: transform 0.28s cubic-bezier(0.22, 1.2, 0.36, 1), box-shadow 0.28s ease !important;
-}
-
-.book-clasp-btn:hover {
-  transform: translateY(-3px) scale(1.02);
+    0 3px 0 rgba(45, 32, 24, 0.24),
+    0 10px 22px rgba(28, 18, 12, 0.26) !important;
 }
 
 #exampleModal.stage-doors-opening {
   pointer-events: none;
 }
 
-#exampleModal.stage-doors-opening #front-image {
-  transform: rotateY(-108deg) translateZ(24px);
-  opacity: 0.12;
-}
-
+#exampleModal.stage-doors-opening #front-image,
 #exampleModal.stage-doors-opening #front-text {
-  transform: rotateY(-102deg) translateZ(16px);
-  opacity: 0.08;
+  transform: rotateX(75deg) translateY(-10%) scale(0.92);
+  opacity: 0;
 }
 
 @media (max-width: 767.98px) {
+  #front-image {
+    display: none;
+  }
   #exampleModal #front-text.book-cover-face {
-    transform-origin: left center;
     background-image:
-      linear-gradient(to bottom, rgba(251, 247, 240, 0.74), rgba(243, 234, 220, 0.88)),
+      linear-gradient(to bottom, rgba(251, 247, 240, 0.74), rgba(243, 234, 220, 0.9)),
       url(../img/img3-foreground.jpg);
     background-size: cover;
     background-position: center;
   }
-  #exampleModal.stage-doors-opening #front-text {
-    transform: rotateY(-96deg) scale(0.96);
-    opacity: 0.06;
+}
+
+/* =========================================================
+   3D Low-Angle Pop-Up Book Diorama Engine (No Center Spine)
+   ========================================================= */
+body.diorama-book-mode {
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+  perspective: clamp(820px, 110vw, 1350px);
+  perspective-origin: 50% 88%;
+  background-color: #241d18;
+  background-image: radial-gradient(circle at 50% 75%, #3f332a 0%, #211a15 62%, #140f0c 100%);
+}
+
+body.diorama-book-mode .journey-scene {
+  position: fixed !important;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 136px;
+  margin: 0 auto;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  perspective: clamp(780px, 105vw, 1280px);
+  perspective-origin: 50% 88%;
+  transform-origin: bottom center;
+  transform: rotateX(22deg) translateY(28px) scale(0.94);
+  transition:
+    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.92s;
+  will-change: transform, opacity;
+  z-index: 1;
+}
+
+/* Tekstur Kertas Cardstock & Watercolor di Permukaan Panggung */
+body.diorama-book-mode .journey-scene::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.065;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+/* Bingkai Panggung Buku Terbuka Tanpa Garis Lipatan Tengah */
+@media (min-width: 992px) {
+  body.diorama-book-mode .journey-scene {
+    max-width: 1080px;
+    max-height: calc(100dvh - 36px);
+    margin: 18px auto;
+    border-radius: 16px;
+    box-shadow:
+      inset 0 0 0 10px rgba(251, 247, 240, 0.32),
+      inset 0 -36px 64px rgba(34, 24, 16, 0.14),
+      0 4px 0 var(--paper-edge-1),
+      0 8px 0 var(--paper-edge-2),
+      0 12px 0 var(--paper-edge-3),
+      0 26px 64px rgba(0, 0, 0, 0.52);
   }
 }
 
-/* 2. Halaman Pembuka (#cover) sebagai Lembar Pop-Up Pertama */
+/* Halaman Aktif */
+body.diorama-book-mode .journey-scene.scene-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: rotateX(0deg) translateY(0) scale(1);
+  transition:
+    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0s;
+  z-index: 10;
+}
+
+body.diorama-book-mode .journey-scene.scene-exit-fold {
+  opacity: 0;
+  visibility: visible;
+  pointer-events: none;
+  transform: rotateX(-24deg) translateY(-24px) scale(0.92);
+  z-index: 9;
+}
+
+body.diorama-book-mode .journey-scene.scene-enter-rise {
+  opacity: 0;
+  visibility: visible;
+  transform: rotateX(24deg) translateY(28px) scale(0.94);
+  transition: none !important;
+  z-index: 11;
+}
+
+/* Sudut Kamera dari Bawah Permukaan Buku (Low-Angle Stage Tilt) */
+body.diorama-book-mode .journey-scene > .container,
+body.diorama-book-mode #hero-bg > .container {
+  position: relative;
+  z-index: 2;
+  transform-style: preserve-3d;
+  perspective: clamp(780px, 105vw, 1280px);
+  perspective-origin: 50% 88%;
+  transform: rotateX(calc(7deg + var(--tilt-x) * 3deg)) rotateY(calc(var(--tilt-y) * 3.5deg));
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hero Cover Stage */
 #cover {
   position: relative;
-  overflow: hidden;
-  perspective: 1600px;
+  overflow-x: hidden;
 }
 
 #hero-bg {
   position: relative;
-  min-height: 100%;
-  transform: scale(1.06) translateZ(-40px);
-  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-#cover.hero-entered #hero-bg {
-  transform: scale(var(--hero-zoom, 1)) translateY(var(--hero-shift, 0px));
+  padding: clamp(2.5rem, 6vh, 4.5rem) 0;
 }
 
 #hero-bg::before {
@@ -685,35 +513,22 @@ body.theme-ribbon-scallop .profile-circle {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 42%, rgba(251, 247, 240, 0.28) 0%, rgba(251, 247, 240, 0.08) 52%, rgba(28, 20, 14, 0.38) 100%),
-    linear-gradient(to bottom, rgba(28, 20, 14, 0.08) 0%, transparent 35%, rgba(28, 20, 14, 0.25) 100%);
+    radial-gradient(circle at 50% 55%, rgba(251, 247, 240, 0.25) 0%, rgba(28, 20, 14, 0.42) 100%);
   pointer-events: none;
-}
-
-#hero-bg > .container {
-  position: relative;
-  z-index: 2;
 }
 
 .cover-popup-card {
   position: relative;
-  padding: 2rem 1.5rem 2.2rem;
+  padding: clamp(1.35rem, 4vw, 2.2rem) clamp(1rem, 3.5vw, 1.75rem);
   border-radius: 18px;
-  background: rgba(251, 247, 240, 0.88);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  background: rgba(251, 247, 240, 0.9);
+  border: 1.5px solid #ffffff;
   color: var(--paper-ink);
-  box-shadow:
-    0 2px 0 #ffffff,
-    0 5px 0 var(--paper-edge-1),
-    0 8px 0 var(--paper-edge-2),
-    0 20px 42px rgba(26, 18, 12, 0.28);
 }
 
 .cover-subtitle {
   display: inline-block;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 1.8px;
   text-transform: uppercase;
@@ -726,312 +541,139 @@ body.theme-ribbon-scallop .profile-circle {
   margin-bottom: 0.25rem;
 }
 
-/* Medali Countdown ala Paper-Cut Layered Art */
-.simply-countdown > .simply-section {
-  background: var(--paper-ivory) !important;
-  border: 2px solid #ffffff !important;
-  box-shadow:
-    0 2px 0 var(--paper-edge-1),
-    0 4px 0 var(--paper-edge-2),
-    0 10px 18px rgba(34, 24, 16, 0.2) !important;
-  transition: transform 0.3s cubic-bezier(0.22, 1.2, 0.36, 1), box-shadow 0.3s ease;
-}
-
-.simply-countdown > .simply-section:hover {
-  transform: translateY(-4px) translateZ(12px);
-}
-
-/* 3. Mode Buku Pop-Up 3D (.journey-3d-mode) */
-body.journey-3d-mode {
-  overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
-  perspective: 1800px;
-  background-color: #29211c;
-  background-image:
-    radial-gradient(circle at 50% 42%, #42352c 0%, #261e19 58%, #17120f 100%);
-}
-
-body.journey-3d-mode .ornament-divider,
-body.journey-3d-mode footer {
-  display: none !important;
-}
-
-body.journey-3d-mode .journey-scene {
-  position: fixed !important;
-  inset: 0;
-  width: 100%;
-  height: 100vh;
-  height: 100dvh;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 128px;
-  margin: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  backface-visibility: hidden;
+/* =========================================================
+   Modul Diorama & Siluet Arsitektur Kertas (Pop-Up Backdrop)
+   ========================================================= */
+.diorama-module {
+  position: relative;
   transform-style: preserve-3d;
-  perspective: 1200px;
-  perspective-origin: 50% 82%;
-  transform-origin: left center;
-  transform: rotateY(76deg) translateZ(-80px);
-  transition:
-    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0.92s;
-  will-change: transform, opacity;
-  z-index: 1;
-  box-shadow:
-    inset 0 0 0 10px rgba(255, 252, 245, 0.28),
-    inset 0 0 56px rgba(42, 30, 20, 0.16);
+  perspective: 1000px;
+  perspective-origin: 50% 92%;
+  padding-top: clamp(54px, 12vw, 92px);
+  margin-bottom: 10px;
 }
 
-/* Tekstur Serat Kertas Watercolor & Matte Cardstock (Ringan 60fps) */
-body.journey-3d-mode .journey-scene::before {
+/* Garis Lipatan & Penyangga Kertas di Dasar Komponen */
+.diorama-module::after {
   content: "";
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -4px;
+  height: 10px;
+  background: linear-gradient(to bottom, rgba(34, 24, 16, 0.16), transparent);
+  border-top: 1.5px dashed rgba(120, 96, 76, 0.34);
   pointer-events: none;
-  opacity: 0.065;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   z-index: 0;
 }
 
-/* Halaman Aktif (Terbuka Datar di Atas Meja) */
-body.journey-3d-mode .journey-scene.scene-active {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: rotateY(0deg) rotateX(0deg) translate3d(0, 0, 0);
+/* Siluet Latar Belakang (Bangunan, Gapura, Pepohonan, Perbukitan) */
+.diorama-backdrop {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(104%, 560px);
+  transform-origin: bottom center;
+  transform: translate3d(-50%, 0, -44px) rotateX(88deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
   transition:
-    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
-    visibility 0s linear 0s;
-  z-index: 10;
+    transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.08s,
+    opacity 0.6s ease 0.08s;
+  will-change: transform, opacity;
+  filter: drop-shadow(
+    calc(var(--tilt-y) * -10px)
+    calc(10px + var(--tilt-x) * 4px)
+    10px rgba(24, 16, 10, 0.24)
+  );
 }
 
-/* Transisi Membalik Halaman ke Kiri (Maju ke Halaman Berikutnya) */
-body.journey-3d-mode .journey-scene.scene-exit-fold-left {
-  opacity: 0;
-  visibility: visible;
+.journey-scene.scene-active .diorama-backdrop {
+  transform: translate3d(
+    calc(-50% + var(--tilt-y) * -10px),
+    calc(var(--tilt-x) * 4px),
+    -44px
+  ) rotateX(0deg);
+  opacity: 0.96;
+}
+
+.diorama-backdrop svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Penyangga Segitiga Kertas (Paper Struts) */
+.paper-strut {
+  position: absolute;
+  bottom: 2px;
+  width: 24px;
+  height: 22px;
+  background: var(--paper-edge-1);
+  border-top: 1.5px solid #ffffff;
+  clip-path: polygon(0 100%, 100% 100%, 50% 0);
   pointer-events: none;
-  transform-origin: left center;
-  transform: rotateY(-84deg) translateX(-4%) translateZ(-40px);
-  z-index: 12;
+  z-index: 1;
+  opacity: 0.85;
 }
 
-body.journey-3d-mode .journey-scene.scene-enter-from-right {
-  opacity: 0;
-  visibility: visible;
-  transform-origin: right center;
-  transform: rotateY(72deg) translateX(4%) translateZ(-50px);
-  transition: none !important;
-  z-index: 11;
-}
+.paper-strut-left { left: 14%; transform: skewX(-12deg); }
+.paper-strut-right { right: 14%; transform: skewX(12deg); }
 
-/* Transisi Membalik Halaman ke Kanan (Kembali ke Halaman Sebelumnya) */
-body.journey-3d-mode .journey-scene.scene-exit-fold-right {
-  opacity: 0;
-  visibility: visible;
-  pointer-events: none;
-  transform-origin: right center;
-  transform: rotateY(84deg) translateX(4%) translateZ(-40px);
-  z-index: 12;
-}
-
-body.journey-3d-mode .journey-scene.scene-enter-from-left {
-  opacity: 0;
-  visibility: visible;
-  transform-origin: left center;
-  transform: rotateY(-72deg) translateX(-4%) translateZ(-50px);
-  transition: none !important;
-  z-index: 11;
-}
-
-/* Mobile (< 992px): Lipatan Buku Vertikal (Atas/Bawah) agar proporsional & mudah dibaca */
-@media (max-width: 991.98px) {
-  body.journey-3d-mode .journey-scene {
-    transform-origin: center top;
-    transform: rotateX(-68deg) translateZ(-40px);
-  }
-  body.journey-3d-mode .journey-scene.scene-exit-fold-left {
-    transform-origin: center top;
-    transform: rotateX(78deg) translateY(-4%) translateZ(-30px);
-  }
-  body.journey-3d-mode .journey-scene.scene-enter-from-right {
-    transform-origin: center bottom;
-    transform: rotateX(-72deg) translateY(4%) translateZ(-30px);
-  }
-  body.journey-3d-mode .journey-scene.scene-exit-fold-right {
-    transform-origin: center bottom;
-    transform: rotateX(-78deg) translateY(4%) translateZ(-30px);
-  }
-  body.journey-3d-mode .journey-scene.scene-enter-from-left {
-    transform-origin: center top;
-    transform: rotateX(72deg) translateY(-4%) translateZ(-30px);
-  }
-}
-
-/* Desktop Open-Book Spread: Tumpukan Kertas Tebal & Sampul Kulit di Pinggiran */
-@media (min-width: 992px) {
-  body.journey-3d-mode .journey-scene {
-    max-width: 1140px;
-    max-height: calc(100dvh - 44px);
-    margin: 22px auto;
-    border-radius: 14px;
-    box-shadow:
-      inset 0 0 0 12px rgba(251, 247, 240, 0.36),
-      inset 0 0 60px rgba(40, 28, 18, 0.16),
-      -5px 0 0 -1px var(--paper-ivory),
-      5px 0 0 -1px var(--paper-ivory),
-      -10px 0 0 -2px var(--paper-edge-1),
-      10px 0 0 -2px var(--paper-edge-1),
-      -15px 0 0 -3px var(--paper-edge-2),
-      15px 0 0 -3px var(--paper-edge-2),
-      -20px 2px 0 -4px var(--paper-edge-3),
-      20px 2px 0 -4px var(--paper-edge-3),
-      0 6px 0 2px var(--book-cover-rim),
-      -24px 6px 0 0 var(--book-cover-rim),
-      24px 6px 0 0 var(--book-cover-rim),
-      0 32px 72px rgba(0, 0, 0, 0.56);
-  }
-}
-
-/* Container Halaman + Tilt/Parallax 3D (Cursor & Gyroscope) */
-body.journey-3d-mode .journey-scene > .container {
-  transform-style: preserve-3d;
-  perspective: 1100px;
-  perspective-origin: 50% 84%;
-  transform: rotateX(10deg);
-  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+/* Mekanika Bangun Bertahap (Hinged Pop-Up Rise) */
+.popup-layer {
   position: relative;
+  transform-origin: bottom center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+
+.popup-layer[data-depth="mid"] {
+  --layer-z: 0px;
+  --layer-parallax: 6px;
+  transform: translate3d(0, 12px, 0px) rotateX(86deg);
+  transition:
+    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1) 0.22s,
+    opacity 0.55s ease 0.22s,
+    box-shadow 0.35s ease;
   z-index: 2;
 }
 
-body.journey-3d-mode .journey-scene.scene-active > .container {
-  transform: rotateX(calc(var(--tilt-x, 0) * 2.4deg)) rotateY(calc(var(--tilt-y, 0) * 2.8deg));
-}
-
-/* 4. Mekanisme Bangun & Lipat Pop-Up (Transform-Origin Dasar + Paper-Cut Thickness) */
-.popup-fold-item {
-  transform-origin: center bottom;
-  transform-style: preserve-3d;
-  transform: translate3d(0, 22px, var(--popup-z, 0px)) rotateX(86deg);
-  opacity: 0;
+.popup-layer[data-depth="front"] {
+  --layer-z: 28px;
+  --layer-parallax: 13px;
+  transform: translate3d(0, 14px, 28px) rotateX(86deg);
   transition:
-    transform 0.92s cubic-bezier(0.22, 1.16, 0.36, 1) var(--popup-delay, 0.14s),
-    opacity 0.48s ease var(--popup-delay, 0.14s),
-    box-shadow 0.4s ease,
-    filter 0.4s ease;
-  will-change: transform, opacity;
+    transform 0.88s cubic-bezier(0.22, 1, 0.36, 1) 0.36s,
+    opacity 0.52s ease 0.36s,
+    box-shadow 0.35s ease;
+  z-index: 3;
 }
 
-.journey-scene.scene-active .popup-fold-item {
-  transform: translate3d(
-    calc(var(--tilt-y, 0) * 7px),
-    calc(var(--tilt-x, 0) * -5px),
-    var(--popup-z, 0px)
-  ) rotateX(0deg);
+.journey-scene.scene-active .popup-layer {
   opacity: 1;
+  transform: translate3d(
+    calc(var(--tilt-y) * var(--layer-parallax, 6px)),
+    calc(var(--tilt-x) * -4px),
+    var(--layer-z, 0px)
+  ) rotateX(0deg);
 }
 
-/* Ketebalan Kertas & Bayangan Dinamis pada Kartu Pop-Up */
-.journey-scene.scene-active .card.popup-fold-item,
-.journey-scene.scene-active .cover-popup-card.popup-fold-item {
-  border: 1.5px solid rgba(255, 255, 255, 0.92);
+/* Ketebalan Kertas & Bayangan Jatuh pada Kartu & Foto */
+.journey-scene.scene-active .card.popup-layer,
+.journey-scene.scene-active .cover-popup-card.popup-layer {
+  border: 1.5px solid #ffffff;
   box-shadow:
-    0 2px 0 #ffffff,
+    0 2px 0 var(--paper-ivory),
     0 4px 0 var(--paper-edge-1),
     0 6px 0 var(--paper-edge-2),
-    calc(var(--tilt-y, 0) * -10px) calc(16px + var(--tilt-x, 0) * 7px) 28px -6px rgba(28, 18, 12, 0.26) !important;
+    calc(var(--tilt-y) * -10px) calc(16px + var(--tilt-x) * 6px) 26px -4px rgba(24, 16, 10, 0.28) !important;
 }
 
-/* Garis Engsel Lipatan Kertas di Dasar Kartu Pop-Up */
-.card.popup-fold-item::after,
-.cover-popup-card.popup-fold-item::after {
-  content: "";
-  position: absolute;
-  left: 12%;
-  right: 12%;
-  bottom: -6px;
-  height: 2px;
-  border-bottom: 1.5px dashed rgba(120, 96, 76, 0.28);
-  pointer-events: none;
-}
-
-/* Micro-Interaction Hover / Tap Lift pada Elemen Interaktif */
-.journey-scene.scene-active .card.popup-fold-item:hover,
-.journey-scene.scene-active .owl-carousel .item:hover {
-  transform: translate3d(
-    calc(var(--tilt-y, 0) * 7px),
-    calc(var(--tilt-x, 0) * -5px - 5px),
-    calc(var(--popup-z, 8px) + 12px)
-  ) rotateX(0deg);
-  box-shadow:
-    0 3px 0 #ffffff,
-    0 6px 0 var(--paper-edge-1),
-    0 9px 0 var(--paper-edge-2),
-    calc(var(--tilt-y, 0) * -14px) calc(22px + var(--tilt-x, 0) * 9px) 34px -6px rgba(28, 18, 12, 0.32) !important;
-}
-
-/* Bingkai Foto Pop-Up dengan Ketebalan Kertas & Drop Shadow Dinamis */
-.journey-scene.scene-active .profile-circle.popup-fold-item,
-.journey-scene.scene-active #closing-img.popup-fold-item {
-  border: 6px solid var(--paper-ivory);
-  box-shadow:
-    0 0 0 2px var(--paper-edge-2),
-    0 4px 0 var(--paper-edge-3);
-  filter: drop-shadow(
-    calc(var(--tilt-y, 0) * -9px)
-    calc(14px + var(--tilt-x, 0) * 6px)
-    16px rgba(28, 18, 12, 0.28)
-  );
-}
-
-/* 5. Garis Lipatan Tengah Buku (Center Spine Crease) */
-#book-spine-crease {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 52px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(28, 18, 12, 0.04) 28%,
-    rgba(28, 18, 12, 0.16) 49%,
-    rgba(255, 252, 245, 0.32) 52%,
-    rgba(28, 18, 12, 0.05) 70%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 14;
-}
-
-@media (max-width: 991.98px) {
-  #book-spine-crease {
-    top: 50%;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 38px;
-    transform: translateY(-50%);
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(28, 18, 12, 0.04) 36%,
-      rgba(28, 18, 12, 0.11) 50%,
-      rgba(255, 252, 245, 0.2) 54%,
-      transparent 100%
-    );
-  }
-}
-
-/* 6. Ornamen Kertas Pop-Up & Diorama Berlapis */
+/* Penanda Bab di Atas Panggung */
 .scene-chapter-crest {
   display: inline-flex;
   align-items: center;
@@ -1043,116 +685,15 @@ body.journey-3d-mode .journey-scene.scene-active > .container {
   padding: 5px 16px;
   border-radius: 999px;
   margin-bottom: 14px;
-  background: rgba(251, 247, 240, 0.85);
+  background: rgba(251, 247, 240, 0.92);
   color: var(--paper-ink);
-  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  border: 1.5px solid #ffffff;
   box-shadow:
     0 2px 0 var(--paper-edge-1),
-    0 4px 10px rgba(28, 18, 12, 0.14);
+    0 6px 14px rgba(24, 16, 10, 0.16);
 }
 
-.scene-ornament-corners {
-  position: fixed;
-  inset: 12px;
-  pointer-events: none;
-  z-index: 15;
-}
-
-.ornament-corner {
-  position: absolute;
-  width: 46px;
-  height: 46px;
-  color: var(--color-secondary);
-  opacity: 0.72;
-  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.16));
-}
-
-.ornament-corner-tl { top: 0; left: 0; }
-.ornament-corner-tr { top: 0; right: 0; transform: scaleX(-1); }
-.ornament-corner-bl { bottom: 0; left: 0; transform: scaleY(-1); }
-.ornament-corner-br { bottom: 0; right: 0; transform: scale(-1); }
-
-/* Ilustrasi Pop-Up Pelaminan / Archway & Klaster Bunga Kertas */
-.popup-stage-arch {
-  width: min(360px, 88%);
-  margin: 0 auto 12px;
-  pointer-events: none;
-  filter: drop-shadow(
-    calc(var(--tilt-y, 0) * -8px)
-    calc(12px + var(--tilt-x, 0) * 5px)
-    12px rgba(28, 18, 12, 0.22)
-  );
-}
-
-.popup-stage-arch svg,
-.popup-floral-cluster svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.popup-floral-cluster {
-  width: min(220px, 64%);
-  margin: 0 auto 8px;
-  pointer-events: none;
-  filter: drop-shadow(
-    calc(var(--tilt-y, 0) * -6px)
-    calc(8px + var(--tilt-x, 0) * 4px)
-    10px rgba(28, 18, 12, 0.2)
-  );
-}
-
-/* Lapisan Kertas Die-Cut (Paper Diorama) di Dasar Setiap Halaman */
-.popup-paper-diorama {
-  position: relative;
-  width: 100%;
-  margin-top: 24px;
-  pointer-events: none;
-  transform-origin: center bottom;
-  transform: perspective(900px) rotateX(82deg);
-  opacity: 0;
-  transition: transform 0.95s cubic-bezier(0.22, 1.18, 0.36, 1) 0.26s, opacity 0.55s ease 0.26s;
-}
-
-.journey-scene.scene-active .popup-paper-diorama {
-  transform: perspective(900px) rotateX(0deg);
-  opacity: 1;
-}
-
-.popup-paper-diorama svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 -3px 6px rgba(28, 18, 12, 0.14));
-}
-
-/* Partikel Cahaya Hangat */
-.ambient-motes {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 13;
-  overflow: hidden;
-}
-
-.ambient-mote {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 250, 235, 0.95) 0%, var(--color-secondary) 60%, transparent 100%);
-  opacity: 0;
-  animation: mote-float 9s ease-in-out infinite;
-}
-
-@keyframes mote-float {
-  0% { transform: translateY(20px) scale(0.6); opacity: 0; }
-  30% { opacity: 0.65; }
-  70% { opacity: 0.55; }
-  100% { transform: translateY(-90px) scale(1.1); opacity: 0; }
-}
-
-/* Journey HUD (Penanda Halaman Buku) */
+/* HUD Navigasi & Bottom Nav (Thumb-Friendly Zone) */
 #journey-hud {
   position: fixed;
   bottom: 72px;
@@ -1161,25 +702,27 @@ body.journey-3d-mode .journey-scene.scene-active > .container {
   z-index: 1032;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(251, 247, 240, 0.94);
+  gap: 6px;
+  background: rgba(251, 247, 240, 0.95);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 999px;
   box-shadow:
-    0 2px 0 #ffffff,
-    0 4px 0 var(--paper-edge-1),
-    0 10px 24px rgba(24, 16, 10, 0.22);
-  border: 1px solid rgba(168, 145, 120, 0.32);
+    0 2px 0 var(--paper-edge-1),
+    0 10px 24px rgba(24, 16, 10, 0.24);
+  border: 1px solid rgba(168, 145, 120, 0.35);
   font-size: 12px;
   white-space: nowrap;
+  max-width: calc(100vw - 24px);
 }
 
 #journey-label {
   font-weight: 700;
   color: var(--paper-ink);
-  padding: 0 6px;
+  padding: 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .journey-btn {
@@ -1187,17 +730,15 @@ body.journey-3d-mode .journey-scene.scene-active > .container {
   background: rgba(135, 133, 162, 0.14);
   color: var(--berem-text);
   border-radius: 999px;
-  padding: 4px 12px;
+  padding: 6px 12px;
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .journey-btn:hover:not(:disabled) {
   background: var(--berem);
   color: #fff;
-  transform: translateY(-1px);
 }
 
 .journey-btn:disabled {
@@ -1210,34 +751,70 @@ body.journey-3d-mode .journey-scene.scene-active > .container {
   color: #fff;
 }
 
-.card {
-  transition: transform 0.35s cubic-bezier(0.22, 1.15, 0.36, 1), box-shadow 0.35s ease;
+.bottom-nav {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(251, 247, 240, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 5px 12px;
+  border-radius: 40px;
+  display: flex;
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(24, 16, 10, 0.22);
+  z-index: 1030;
+  border: 1px solid rgba(168, 145, 120, 0.3);
 }
 
-@media (max-width: 576px) {
+.bottom-nav a {
+  color: var(--berem-text);
+  font-size: 1.1rem;
+  text-decoration: none;
+  border-radius: 50%;
+}
+
+.bottom-nav a:hover,
+.bottom-nav a.active {
+  color: #fff;
+  background: var(--berem);
+}
+
+.audio-floating {
+  position: fixed;
+  bottom: 124px;
+  right: 12px;
+  z-index: 1035;
+}
+
+.audio-floating .btn.active-audio {
+  background-color: #5c5a78 !important;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+@media (max-width: 380px) {
   #journey-hud {
-    bottom: 66px;
     font-size: 11px;
-    padding: 4px 9px;
+    padding: 3px 6px;
   }
-  .audio-floating {
-    bottom: 114px;
+  .journey-btn {
+    padding: 6px 10px;
+    font-size: 11px;
   }
-  .cover-popup-card {
-    padding: 1.4rem 1rem 1.6rem;
+  .diorama-module {
+    padding-top: 48px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .journey-scene,
-  .popup-fold-item,
-  .popup-paper-diorama,
-  #hero-bg,
+  .popup-layer,
+  .diorama-backdrop,
   #exampleModal #front-image,
   #exampleModal #front-text {
     transition: none !important;
     transform: none !important;
     opacity: 1 !important;
-    filter: none !important;
   }
 }
