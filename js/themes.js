@@ -456,6 +456,38 @@ function getRelativeLuminance(rgb) {
   return (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
 }
 
+function mixHex(rgbA, rgbB, ratio) {
+  if (!rgbA || !rgbB) return "#d4af37";
+  const t = Math.max(0, Math.min(1, ratio));
+  const r = Math.round(rgbA.r + (rgbB.r - rgbA.r) * t);
+  const g = Math.round(rgbA.g + (rgbB.g - rgbA.g) * t);
+  const b = Math.round(rgbA.b + (rgbB.b - rgbA.b) * t);
+  return `#${[r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
+}
+
+function ensureReadableOnDark(hex, minLum) {
+  const targetLum = typeof minLum === "number" ? minLum : 0.55;
+  const rgb = hexToRgbObj(hex);
+  if (!rgb) return "#f6e05e";
+  if (getRelativeLuminance(rgb) >= targetLum) return hex;
+  const white = { r: 255, g: 250, b: 235 };
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 10; i++) {
+    const mid = (lo + hi) / 2;
+    const mixed = hexToRgbObj(mixHex(rgb, white, mid));
+    if (getRelativeLuminance(mixed) < targetLum) lo = mid;
+    else hi = mid;
+  }
+  return mixHex(rgb, white, hi);
+}
+
+function getContrastTextColor(hex) {
+  const rgb = hexToRgbObj(hex);
+  if (!rgb) return "#121618";
+  return getRelativeLuminance(rgb) > 0.48 ? "#121618" : "#ffffff";
+}
+
 function mixDarkHex(rgb, factor) {
   if (!rgb) return "#12181b";
   const r = Math.max(8, Math.min(255, Math.round(rgb.r * factor)));
@@ -517,22 +549,35 @@ function applyThemeFromSettings(settings) {
   root.style.setProperty("--color-bg", bg);
   root.style.setProperty("--color-surface", surface);
 
-  // Sinkronisasi ke CSS Variables Adventure Game UI
+  // Sinkronisasi ke CSS Variables Adventure Game UI dengan Auto-Contrast
   const primaryRgb = hexToRgbObj(primary);
   const secondaryRgb = hexToRgbObj(secondary);
   const bgRgb = hexToRgbObj(bg);
   const surfaceRgb = hexToRgbObj(surface);
 
-  const accentMain = getRelativeLuminance(primaryRgb) < 0.35 && getRelativeLuminance(secondaryRgb) > 0.45 ? secondary : primary;
-  const accentSub = accentMain === primary ? secondary : primary;
+  const primaryLum = getRelativeLuminance(primaryRgb);
+  const secondaryLum = getRelativeLuminance(secondaryRgb);
 
-  root.style.setProperty("--gold-antique", accentMain);
-  root.style.setProperty("--gold-bright", accentSub);
-  root.style.setProperty("--cyan-ethereal", secondary);
+  // Pilih aksen utama yang paling cerah antara primary & secondary, lalu pastikan readable di background gelap
+  const rawAccent = primaryLum < 0.35 && secondaryLum > primaryLum ? secondary : primary;
+  const rawSubAccent = rawAccent === primary ? secondary : primary;
+
+  const readableGold = ensureReadableOnDark(rawAccent, 0.56);
+  const readableBright = ensureReadableOnDark(rawSubAccent, 0.68);
+  const readableCyan = ensureReadableOnDark(secondary, 0.60);
+  const textOnAccent = getContrastTextColor(readableGold);
+
+  root.style.setProperty("--gold-antique", readableGold);
+  root.style.setProperty("--gold-bright", readableBright);
+  root.style.setProperty("--cyan-ethereal", readableCyan);
+  root.style.setProperty("--text-on-accent", textOnAccent);
+  root.style.setProperty("--text-primary", "#f5efe6");
+  root.style.setProperty("--text-secondary", "#d6cab6");
+  root.style.setProperty("--text-muted", "#a89f91");
 
   if (bgRgb) {
     const bgLum = getRelativeLuminance(bgRgb);
-    if (bgLum <= 0.25) {
+    if (bgLum <= 0.20) {
       root.style.setProperty("--bg-slate", bg);
       root.style.setProperty("--bg-void", mixDarkHex(bgRgb, 0.72));
     } else {
@@ -544,7 +589,7 @@ function applyThemeFromSettings(settings) {
 
   if (surfaceRgb) {
     const surfLum = getRelativeLuminance(surfaceRgb);
-    if (surfLum <= 0.28) {
+    if (surfLum <= 0.22) {
       root.style.setProperty("--bg-parchment-dark", surface);
     } else {
       root.style.setProperty("--bg-parchment-dark", mixDarkHex(primaryRgb || surfaceRgb, 0.26));
