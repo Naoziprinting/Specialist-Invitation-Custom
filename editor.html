@@ -89,6 +89,10 @@
         <h2>Tampilan &amp; Tema</h2>
         <div class="card">
             <div class="form-group">
+                <label>Genre UI/UX Pengalaman Undangan (15 Tema)</label>
+                <select id="game_genre"></select>
+            </div>
+            <div class="form-group">
                 <label>Preset Palet Warna</label>
                 <select id="theme_preset" onchange="applyPalettePreset(this.value)">
                     <option value="lilac-pink">Lilac Pink (Default)</option>
@@ -308,6 +312,7 @@
         document.getElementById('nav-view-inv').href = `index.html?event=${encodeURIComponent(EVENT_ID)}`;
         document.getElementById('nav-guests').href = `guest.html?event=${encodeURIComponent(EVENT_ID)}`;
 
+        populateSelectFromMap(document.getElementById('game_genre'), window.NAOZI_THEMES.gameGenres, false);
         populateSelectFromMap(document.getElementById('theme_preset'), window.NAOZI_THEMES.palettes, true);
         populateSelectFromMap(document.getElementById('font_pairing_select'), window.NAOZI_THEMES.fontPairings, false);
         populateSelectFromMap(document.getElementById('theme_ornament'), window.NAOZI_THEMES.ornaments, false);
