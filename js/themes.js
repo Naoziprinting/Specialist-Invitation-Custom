@@ -361,7 +361,8 @@ window.NAOZI_THEMES = {
       particleAltRgb: "249, 168, 212",
     },
     "paris-atelier": {
-      label: "[Romantic] Parisian Atelier Romance",
+      label: "[Romantic Soft] Parisian Ivory Atelier",
+      isLight: true,
       crest: "✿ L'Amour Éternel ✿",
       startBtn: "Begin Romance",
       guildTag: "The Couple",
@@ -376,17 +377,18 @@ window.NAOZI_THEMES = {
       chestTitle: "Wedding Gift",
       rsvpTag: "Guestbook",
       rsvpTitle: "RSVP & Wishes",
-      bg: "#211916",
-      bgVoid: "#120d0b",
-      surface: "#2b201c",
-      accent: "#f3d078",
-      accentBright: "#fef3c7",
-      secondary: "#fda4af",
-      particleRgb: "253, 164, 175",
-      particleAltRgb: "243, 208, 120",
+      bg: "#faf6f0",
+      bgVoid: "#f2ebe0",
+      surface: "#ffffff",
+      accent: "#9e7b4f",
+      accentBright: "#b8925a",
+      secondary: "#b85d6f",
+      particleRgb: "184, 146, 90",
+      particleAltRgb: "184, 93, 111",
     },
     "cherry-blossom": {
-      label: "[Romantic] Sakura & Spring Tale",
+      label: "[Romantic Soft] Sakura & Spring Pastel",
+      isLight: true,
       crest: "❀ Spring Blossom Tale ❀",
       startBtn: "Unfold The Tale",
       guildTag: "Beloved Pair",
@@ -401,14 +403,66 @@ window.NAOZI_THEMES = {
       chestTitle: "Gift of Love",
       rsvpTag: "Blessings",
       rsvpTitle: "Guest Wishes & RSVP",
-      bg: "#1f1524",
-      bgVoid: "#110b14",
-      surface: "#2a1c30",
-      accent: "#fbcfe8",
-      accentBright: "#fdf2f8",
-      secondary: "#fef08a",
-      particleRgb: "251, 207, 232",
-      particleAltRgb: "254, 240, 138",
+      bg: "#fdf4f7",
+      bgVoid: "#f7e6ec",
+      surface: "#ffffff",
+      accent: "#b84b72",
+      accentBright: "#d1638a",
+      secondary: "#a67c52",
+      particleRgb: "209, 99, 138",
+      particleAltRgb: "184, 146, 90",
+    },
+    "sage-daylight": {
+      label: "[Nature Soft] Sage Botanical Daylight",
+      isLight: true,
+      crest: "❦ Botanical Sanctuary ❦",
+      startBtn: "Enter Garden",
+      guildTag: "Beloved Pair",
+      guildTitle: "The Bride & Groom",
+      loreTag: "Garden Path",
+      loreTitle: "Our Story",
+      questTag: "Celebration",
+      questTitle: "Date & Venue",
+      relicTag: "Garden Frames",
+      relicTitle: "Photo Gallery",
+      chestTag: "Keepsake",
+      chestTitle: "Wedding Gift",
+      rsvpTag: "Guestbook",
+      rsvpTitle: "Wishes & RSVP",
+      bg: "#f1f6f2",
+      bgVoid: "#e5efe7",
+      surface: "#ffffff",
+      accent: "#3f6b52",
+      accentBright: "#528568",
+      secondary: "#8a6f3d",
+      particleRgb: "82, 133, 104",
+      particleAltRgb: "138, 111, 61",
+    },
+    "ivory-parchment": {
+      label: "[Luxury Soft] Ivory & Champagne Parchment",
+      isLight: true,
+      crest: "◈ Ivory & Champagne ◈",
+      startBtn: "Open Invitation",
+      guildTag: "The Honored Pair",
+      guildTitle: "The Bride & Groom",
+      loreTag: "Chronicle",
+      loreTitle: "Our Journey",
+      questTag: "Itinerary",
+      questTitle: "Ceremony & Reception",
+      relicTag: "Gallery",
+      relicTitle: "Captured Moments",
+      chestTag: "Treasury",
+      chestTitle: "Digital Envelope",
+      rsvpTag: "Registry",
+      rsvpTitle: "RSVP & Blessings",
+      bg: "#f9f5ec",
+      bgVoid: "#efe8d8",
+      surface: "#fffdf8",
+      accent: "#8c6835",
+      accentBright: "#a87e43",
+      secondary: "#4b6584",
+      particleRgb: "168, 126, 67",
+      particleAltRgb: "75, 101, 132",
     },
     "royal-palace": {
       label: "[Luxury] Royal Palace Gala",
@@ -860,6 +914,23 @@ function ensureReadableOnDark(hex, minLum) {
   return mixHex(rgb, white, hi);
 }
 
+function ensureReadableOnLight(hex, maxLum) {
+  const targetLum = typeof maxLum === "number" ? maxLum : 0.36;
+  const rgb = hexToRgbObj(hex);
+  if (!rgb) return "#8c6835";
+  if (getRelativeLuminance(rgb) <= targetLum) return hex;
+  const darkInk = { r: 30, g: 26, b: 24 };
+  let lo = 0;
+  let hi = 1;
+  for (let i = 0; i < 10; i++) {
+    const mid = (lo + hi) / 2;
+    const mixed = hexToRgbObj(mixHex(rgb, darkInk, mid));
+    if (getRelativeLuminance(mixed) > targetLum) lo = mid;
+    else hi = mid;
+  }
+  return mixHex(rgb, darkInk, hi);
+}
+
 function getContrastTextColor(hex) {
   const rgb = hexToRgbObj(hex);
   if (!rgb) return "#121618";
@@ -1007,50 +1078,81 @@ function applyThemeFromSettings(settings) {
   root.style.setProperty("--color-bg", bg);
   root.style.setProperty("--color-surface", surface);
 
-  // Sinkronisasi ke CSS Variables Adventure Game UI dengan Auto-Contrast
-  const primaryRgb = hexToRgbObj(primary);
-  const secondaryRgb = hexToRgbObj(secondary);
+  // Tentukan apakah tema berjalan di Light/Soft Mode atau Dark Mode
+  const genreKey = (s.game_genre && s.game_genre.value) || "rpg-explorer";
+  const genreCfg = window.NAOZI_THEMES.gameGenres[genreKey];
+  const presetVal = (s.theme_preset && s.theme_preset.value) || "";
+  const isDefaultPreset = !presetVal || presetVal === "lilac-pink" || presetVal === "ancient-explorer";
+
   const bgRgb = hexToRgbObj(bg);
   const surfaceRgb = hexToRgbObj(surface);
+  const primaryRgb = hexToRgbObj(primary);
+  const secondaryRgb = hexToRgbObj(secondary);
 
-  const primaryLum = getRelativeLuminance(primaryRgb);
-  const secondaryLum = getRelativeLuminance(secondaryRgb);
+  const isLightMode = Boolean(
+    (isDefaultPreset && genreCfg && genreCfg.isLight) ||
+    (!isDefaultPreset && bgRgb && getRelativeLuminance(bgRgb) > 0.60)
+  );
 
-  // Pilih aksen utama yang paling cerah antara primary & secondary, lalu pastikan readable di background gelap
-  const rawAccent = primaryLum < 0.35 && secondaryLum > primaryLum ? secondary : primary;
-  const rawSubAccent = rawAccent === primary ? secondary : primary;
+  document.body.classList.toggle("theme-light-mode", isLightMode);
 
-  const readableGold = ensureReadableOnDark(rawAccent, 0.56);
-  const readableBright = ensureReadableOnDark(rawSubAccent, 0.68);
-  const readableCyan = ensureReadableOnDark(secondary, 0.60);
-  const textOnAccent = getContrastTextColor(readableGold);
+  if (isLightMode) {
+    const activeBg = isDefaultPreset && genreCfg ? genreCfg.bg : bg;
+    const activeVoid = isDefaultPreset && genreCfg ? genreCfg.bgVoid : mixHex(bgRgb || { r: 248, g: 244, b: 238 }, { r: 225, g: 218, b: 208 }, 0.35);
+    const activeSurface = isDefaultPreset && genreCfg ? genreCfg.surface : surface;
+    const rawAccent = isDefaultPreset && genreCfg ? genreCfg.accent : primary;
+    const rawSecondary = isDefaultPreset && genreCfg ? genreCfg.secondary : secondary;
 
-  root.style.setProperty("--gold-antique", readableGold);
-  root.style.setProperty("--gold-bright", readableBright);
-  root.style.setProperty("--cyan-ethereal", readableCyan);
-  root.style.setProperty("--text-on-accent", textOnAccent);
-  root.style.setProperty("--text-primary", "#f5efe6");
-  root.style.setProperty("--text-secondary", "#d6cab6");
-  root.style.setProperty("--text-muted", "#a89f91");
+    const readableAccent = ensureReadableOnLight(rawAccent, 0.36);
+    const readableBright = ensureReadableOnLight(rawAccent, 0.44);
+    const readableSecondary = ensureReadableOnLight(rawSecondary, 0.38);
 
-  if (bgRgb) {
-    const bgLum = getRelativeLuminance(bgRgb);
-    if (bgLum <= 0.20) {
-      root.style.setProperty("--bg-slate", bg);
-      root.style.setProperty("--bg-void", mixDarkHex(bgRgb, 0.72));
-    } else {
-      // Jika editor memilih palet terang, pertahankan atmosfer game gelap bernuansa warna tsb agar kontras terjaga
-      root.style.setProperty("--bg-slate", mixDarkHex(primaryRgb || bgRgb, 0.22));
-      root.style.setProperty("--bg-void", mixDarkHex(primaryRgb || bgRgb, 0.14));
+    root.style.setProperty("--bg-slate", activeBg);
+    root.style.setProperty("--bg-void", activeVoid);
+    root.style.setProperty("--bg-parchment-dark", activeSurface);
+    root.style.setProperty("--gold-antique", readableAccent);
+    root.style.setProperty("--gold-bright", readableBright);
+    root.style.setProperty("--cyan-ethereal", readableSecondary);
+    root.style.setProperty("--text-on-accent", getContrastTextColor(readableAccent));
+    root.style.setProperty("--text-primary", "#231f20");
+    root.style.setProperty("--text-secondary", "#524b47");
+    root.style.setProperty("--text-muted", "#7a726c");
+  } else {
+    const primaryLum = getRelativeLuminance(primaryRgb);
+    const secondaryLum = getRelativeLuminance(secondaryRgb);
+    const rawAccent = primaryLum < 0.35 && secondaryLum > primaryLum ? secondary : primary;
+    const rawSubAccent = rawAccent === primary ? secondary : primary;
+
+    const readableGold = ensureReadableOnDark(rawAccent, 0.56);
+    const readableBright = ensureReadableOnDark(rawSubAccent, 0.68);
+    const readableCyan = ensureReadableOnDark(secondary, 0.60);
+
+    root.style.setProperty("--gold-antique", readableGold);
+    root.style.setProperty("--gold-bright", readableBright);
+    root.style.setProperty("--cyan-ethereal", readableCyan);
+    root.style.setProperty("--text-on-accent", getContrastTextColor(readableGold));
+    root.style.setProperty("--text-primary", "#f5efe6");
+    root.style.setProperty("--text-secondary", "#d6cab6");
+    root.style.setProperty("--text-muted", "#a89f91");
+
+    if (bgRgb) {
+      const bgLum = getRelativeLuminance(bgRgb);
+      if (bgLum <= 0.20) {
+        root.style.setProperty("--bg-slate", bg);
+        root.style.setProperty("--bg-void", mixDarkHex(bgRgb, 0.72));
+      } else {
+        root.style.setProperty("--bg-slate", mixDarkHex(primaryRgb || bgRgb, 0.22));
+        root.style.setProperty("--bg-void", mixDarkHex(primaryRgb || bgRgb, 0.14));
+      }
     }
-  }
 
-  if (surfaceRgb) {
-    const surfLum = getRelativeLuminance(surfaceRgb);
-    if (surfLum <= 0.22) {
-      root.style.setProperty("--bg-parchment-dark", surface);
-    } else {
-      root.style.setProperty("--bg-parchment-dark", mixDarkHex(primaryRgb || surfaceRgb, 0.26));
+    if (surfaceRgb) {
+      const surfLum = getRelativeLuminance(surfaceRgb);
+      if (surfLum <= 0.22) {
+        root.style.setProperty("--bg-parchment-dark", surface);
+      } else {
+        root.style.setProperty("--bg-parchment-dark", mixDarkHex(primaryRgb || surfaceRgb, 0.26));
+      }
     }
   }
 
@@ -1062,17 +1164,12 @@ function applyThemeFromSettings(settings) {
   renderOrnamentDividers(ornament);
 
   // Terapkan Genre UI/UX (Adventure / Romantic / Luxury / Sacral / Culture)
-  const genreKey = (s.game_genre && s.game_genre.value) || "rpg-explorer";
   const allGenreClasses = Object.keys(window.NAOZI_THEMES.gameGenres).map((k) => "genre-" + k);
   document.body.classList.remove(...allGenreClasses);
   document.body.classList.add("genre-" + genreKey);
 
-  const genreCfg = window.NAOZI_THEMES.gameGenres[genreKey];
   if (genreCfg) {
-    // Jika preset warna masih default (lilac-pink/ancient-explorer/kosong), gunakan palet atmosfer milik genre!
-    const presetVal = (s.theme_preset && s.theme_preset.value) || "";
-    const isDefaultPreset = !presetVal || presetVal === "lilac-pink" || presetVal === "ancient-explorer";
-    if (isDefaultPreset) {
+    if (isDefaultPreset && !isLightMode) {
       root.style.setProperty("--bg-slate", genreCfg.bg);
       root.style.setProperty("--bg-void", genreCfg.bgVoid);
       root.style.setProperty("--bg-parchment-dark", genreCfg.surface);
