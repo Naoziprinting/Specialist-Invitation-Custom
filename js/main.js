@@ -26,15 +26,6 @@ function initGalleryCarousel() {
 
 $(document).ready(function () {
   initGalleryCarousel();
-
-  // Hover blur effect pada kartu amplop
-  $(".blur").mouseenter(function () {
-    $(".blur").css("filter", "blur(5px)");
-    $(this).css("filter", "blur(0px)");
-  });
-  $(".blur").mouseleave(function () {
-    $(".blur").css("filter", "blur(0px)");
-  });
 });
 
 // Helper salin teks ke clipboard dengan fallback aman untuk mobile & desktop

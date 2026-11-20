@@ -63,10 +63,7 @@
         const instance = bootstrap.Modal.getOrCreateInstance(modalEl);
         instance.hide();
         modalEl.classList.remove("stage-doors-opening");
-        if (typeof AOS !== "undefined") AOS.refresh();
       }, 780);
-    } else if (typeof AOS !== "undefined") {
-      setTimeout(() => AOS.refresh(), 300);
     }
   };
 
@@ -525,12 +522,8 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    if (typeof AOS !== "undefined") {
-      AOS.init({ once: true });
-    }
-
-    // Aktifkan Mode Perjalanan Video 3D (Focal-Point Zoom-In Fly-Through)
-    document.body.classList.add("journey-3d-mode");
+    // Aktifkan Mode 3D Realistic Pop-Up Book Diorama (Low-Angle POV)
+    document.body.classList.add("diorama-book-mode");
     let currentSceneIdx = 0;
     let isTransitioning3D = false;
 
@@ -562,161 +555,101 @@
       });
     }
 
-    function injectRealisticOrnaments() {
-      if (!document.getElementById("scene-ornament-corners")) {
-        const cornerWrap = document.createElement("div");
-        cornerWrap.id = "scene-ornament-corners";
-        cornerWrap.className = "scene-ornament-corners";
-        const cornerSvg =
-          '<svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-          '<path d="M4 40 C4 18, 18 4, 40 4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>' +
-          '<path d="M12 34 C12 20, 20 12, 34 12" stroke="currentColor" stroke-width="1.2" stroke-opacity="0.65"/>' +
-          '<circle cx="40" cy="4" r="2.5" fill="currentColor"/>' +
-          '<circle cx="4" cy="40" r="2.5" fill="currentColor"/>' +
-          '<circle cx="10" cy="10" r="3" fill="currentColor" fill-opacity="0.7"/>' +
-          "</svg>";
-        ["tl", "tr", "bl", "br"].forEach((pos) => {
-          const holder = document.createElement("div");
-          holder.className = `ornament-corner ornament-corner-${pos}`;
-          const parsed = new DOMParser().parseFromString(cornerSvg, "image/svg+xml");
-          if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
-            holder.appendChild(document.importNode(parsed.documentElement, true));
-          }
-          cornerWrap.appendChild(holder);
-        });
-        document.body.appendChild(cornerWrap);
-      }
+    const BACKDROP_SVGS = {
+      gate:
+        '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M18,146 Q90,92 175,112 T340,98 T542,146 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<path d="M195,146 L195,62 C195,22 235,12 280,12 C325,12 365,22 365,62 L365,146 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/>' +
+        '<path d="M222,146 L222,72 C222,44 248,34 280,34 C312,34 338,44 338,72 L338,146 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/>' +
+        '<circle cx="110" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<circle cx="144" cy="108" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '<circle cx="450" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<circle cx="416" cy="108" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '</svg>',
+      garden:
+        '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M14,136 Q130,68 270,96 T546,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<ellipse cx="95" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<ellipse cx="465" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<circle cx="280" cy="64" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<path d="M238,136 C252,96 308,96 322,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '</svg>',
+      arch:
+        '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M30,144 Q140,86 280,104 T530,144 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<path d="M165,144 L165,54 C165,18 215,10 280,10 C345,10 395,18 395,54 L395,144 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/>' +
+        '<path d="M196,144 L196,66 C196,38 232,28 280,28 C328,28 364,38 364,66 L364,144 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/>' +
+        '<circle cx="132" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '<circle cx="428" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '</svg>',
+      trees:
+        '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M20,136 Q150,82 280,104 T540,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<circle cx="115" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<circle cx="155" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '<circle cx="445" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<circle cx="405" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '<path d="M235,136 L280,52 L325,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '</svg>',
+      pavilion:
+        '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M20,142 Q150,92 280,108 T540,142 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<path d="M160,64 L280,16 L400,64 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<rect x="182" y="64" width="196" height="78" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<rect x="242" y="84" width="76" height="58" rx="38" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/>' +
+        '<circle cx="118" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '<circle cx="442" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
+        '</svg>',
+      city:
+        '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<rect x="74" y="54" width="58" height="88" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<rect x="142" y="34" width="72" height="108" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<path d="M232,142 L232,48 L280,18 L328,48 L328,142 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<rect x="346" y="38" width="72" height="104" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '<rect x="428" y="58" width="58" height="84" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
+        '</svg>',
+    };
 
-      if (!document.getElementById("ambient-motes")) {
-        const motes = document.createElement("div");
-        motes.id = "ambient-motes";
-        motes.className = "ambient-motes";
-        for (let i = 0; i < 12; i++) {
-          const dot = document.createElement("span");
-          dot.className = "ambient-mote";
-          dot.style.left = `${8 + ((i * 7.8) % 86)}%`;
-          dot.style.top = `${15 + ((i * 13) % 72)}%`;
-          dot.style.animationDelay = `${(i * 0.75).toFixed(2)}s`;
-          dot.style.animationDuration = `${7 + (i % 4)}s`;
-          motes.appendChild(dot);
-        }
-        document.body.appendChild(motes);
-      }
-
-      // Garis lipatan tengah buku pop-up (book spine crease)
-      if (!document.getElementById("book-spine-crease")) {
-        const spine = document.createElement("div");
-        spine.id = "book-spine-crease";
-        document.body.appendChild(spine);
-      }
-
-      // Tambahkan plakat bab legenda, engsel lipatan pop-up, & diorama kertas 3 lapis di setiap halaman
-      const dioramaSvg =
-        '<svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">' +
-        '<path fill="var(--color-surface)" fill-opacity="0.72" d="M0,70 Q240,18 520,62 T1020,44 T1440,68 L1440,120 L0,120 Z"/>' +
-        '<path fill="var(--color-secondary)" fill-opacity="0.6" d="M0,84 Q220,30 480,74 T960,58 T1440,80 L1440,120 L0,120 Z"/>' +
-        '<path fill="var(--color-primary)" fill-opacity="0.36" d="M0,98 Q320,52 680,90 T1440,74 L1440,120 L0,120 Z"/>' +
-        "</svg>";
-
-      // Klaster bunga kertas berlapis (paper-cut botanical pop-up)
-      const floralSvg =
-        '<svg viewBox="0 0 240 76" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M120,68 C94,68 74,48 52,52 C72,38 96,42 120,68 Z" fill="var(--color-primary)" fill-opacity="0.72"/>' +
-        '<path d="M120,68 C146,68 166,48 188,52 C168,38 144,42 120,68 Z" fill="var(--color-primary)" fill-opacity="0.72"/>' +
-        '<circle cx="96" cy="42" r="13" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2.5"/>' +
-        '<circle cx="144" cy="42" r="13" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2.5"/>' +
-        '<circle cx="120" cy="30" r="17" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="2.5"/>' +
-        '<circle cx="120" cy="30" r="7" fill="var(--color-secondary)"/>' +
-        "</svg>";
-
-      // Tambahkan diorama kertas bertumpuk + ilustrasi pelaminan/bunga pop-up di dasar halaman
-      const archSvg =
-        '<svg viewBox="0 0 360 116" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M46,112 L46,56 C46,20 105,10 180,10 C255,10 314,20 314,56 L314,112" stroke="var(--color-primary)" stroke-width="3.5" fill="var(--color-surface)" fill-opacity="0.82"/>' +
-        '<path d="M78,112 L78,64 C78,36 120,26 180,26 C240,26 282,36 282,64 L282,112" stroke="var(--color-secondary)" stroke-width="2.5" fill="none"/>' +
-        '<circle cx="180" cy="14" r="8" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2"/>' +
-        '<ellipse cx="150" cy="18" rx="15" ry="6.5" transform="rotate(-15 150 18)" fill="var(--color-primary)" fill-opacity="0.82"/>' +
-        '<ellipse cx="210" cy="18" rx="15" ry="6.5" transform="rotate(15 210 18)" fill="var(--color-primary)" fill-opacity="0.82"/>' +
-        '<circle cx="46" cy="70" r="7" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2"/>' +
-        '<circle cx="314" cy="70" r="7" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2"/>' +
-        "</svg>";
-
-      const profileScene = document.getElementById("profile");
-      if (profileScene && !profileScene.querySelector(".popup-stage-arch")) {
-        const profContainer = profileScene.querySelector(".container");
-        if (profContainer) {
-          const archWrap = document.createElement("div");
-          archWrap.className = "popup-stage-arch popup-fold-item";
-          archWrap.style.setProperty("--popup-z", "28px");
-          archWrap.style.setProperty("--popup-delay", "0.20s");
-          const parsedArch = new DOMParser().parseFromString(archSvg, "image/svg+xml");
-          if (parsedArch.documentElement && parsedArch.documentElement.nodeName === "svg") {
-            archWrap.appendChild(document.importNode(parsedArch.documentElement, true));
-          }
-          profContainer.insertBefore(archWrap, profContainer.firstChild);
-        }
-      }
-
-      ["events", "gift", "closing-section"].forEach((sceneId) => {
-        const targetScene = document.getElementById(sceneId);
-        if (!targetScene || targetScene.querySelector(".popup-floral-cluster")) return;
-        const targetContainer = targetScene.querySelector(".container");
-        if (!targetContainer) return;
-        const floralWrap = document.createElement("div");
-        floralWrap.className = "popup-floral-cluster popup-fold-item";
-        floralWrap.style.setProperty("--popup-z", "24px");
-        floralWrap.style.setProperty("--popup-delay", "0.18s");
-        const parsedFloral = new DOMParser().parseFromString(floralSvg, "image/svg+xml");
-        if (parsedFloral.documentElement && parsedFloral.documentElement.nodeName === "svg") {
-          floralWrap.appendChild(document.importNode(parsedFloral.documentElement, true));
-        }
-        targetContainer.insertBefore(floralWrap, targetContainer.firstChild);
-      });
-
+    function injectDioramaBackdrops() {
       document.querySelectorAll(".journey-scene").forEach((scene) => {
-        const container = scene.querySelector(".container");
-
         if (scene.id !== "cover" && !scene.querySelector(".scene-chapter-crest")) {
+          const container = scene.querySelector(".container");
           const chapter = scene.getAttribute("data-chapter") || "";
           const title = scene.getAttribute("data-scene-title") || "";
           if (chapter && title && container) {
             const crestWrap = document.createElement("div");
             crestWrap.className = "text-center";
             const crest = document.createElement("span");
-            crest.className = "scene-chapter-crest";
+            crest.className = "scene-chapter-crest popup-layer";
+            crest.setAttribute("data-depth", "front");
             crest.textContent = `✦ ${chapter} · ${title} ✦`;
             crestWrap.appendChild(crest);
             container.insertBefore(crestWrap, container.firstChild);
           }
         }
 
-        // Tandai elemen utama (foto & wadah tulisan) berurutan dalam hierarki kedalaman 3D pop-up
-        const depthPlanes = [
-          { selector: ".scene-chapter-crest, .simply-countdown", z: "42px", delay: 0.14 },
-          { selector: ".cover-popup-card, .profile-circle, #closing-img, h1.font-dancing", z: "26px", delay: 0.26 },
-          { selector: ".card, #ayat-text, #my-form, .owl-carousel, #turut-mengundang-text", z: "12px", delay: 0.40 },
-          { selector: ".map-responsive, #wishes-container, #disp-address", z: "-8px", delay: 0.54 },
-        ];
-
-        depthPlanes.forEach((plane) => {
-          scene.querySelectorAll(plane.selector).forEach((el, idx) => {
-            if (el.classList.contains("popup-fold-item")) return;
-            el.classList.add("popup-fold-item");
-            el.style.setProperty("--popup-z", plane.z);
-            el.style.setProperty("--popup-delay", `${(plane.delay + Math.min(idx, 3) * 0.09).toFixed(2)}s`);
-          });
-        });
-
-        // Tambahkan diorama kertas bertumpuk di dasar halaman
-        if (scene.id !== "cover" && !scene.querySelector(".popup-paper-diorama")) {
-          const diorama = document.createElement("div");
-          diorama.className = "popup-paper-diorama";
-          const parsed = new DOMParser().parseFromString(dioramaSvg, "image/svg+xml");
-          if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
-            diorama.appendChild(document.importNode(parsed.documentElement, true));
+        scene.querySelectorAll(".diorama-module").forEach((mod) => {
+          if (!mod.querySelector(".diorama-backdrop")) {
+            const key = mod.getAttribute("data-backdrop") || "garden";
+            const svgStr = BACKDROP_SVGS[key] || BACKDROP_SVGS.garden;
+            const backdrop = document.createElement("div");
+            backdrop.className = "diorama-backdrop";
+            const parsed = new DOMParser().parseFromString(svgStr, "image/svg+xml");
+            if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
+              backdrop.appendChild(document.importNode(parsed.documentElement, true));
+            }
+            mod.insertBefore(backdrop, mod.firstChild);
           }
-          scene.appendChild(diorama);
-        }
+
+          if (!mod.querySelector(".paper-strut")) {
+            const leftStrut = document.createElement("span");
+            leftStrut.className = "paper-strut paper-strut-left";
+            const rightStrut = document.createElement("span");
+            rightStrut.className = "paper-strut paper-strut-right";
+            mod.appendChild(leftStrut);
+            mod.appendChild(rightStrut);
+          }
+        });
       });
     }
 
@@ -737,21 +670,20 @@
       const isForward = targetIdx > currentSceneIdx;
       isTransitioning3D = true;
 
-      toEl.classList.remove("scene-exit-fold-left", "scene-exit-fold-right", "scene-active");
-      toEl.classList.add(isForward ? "scene-enter-from-right" : "scene-enter-from-left");
+      toEl.classList.remove("scene-exit-fold", "scene-active");
+      toEl.classList.add("scene-enter-rise");
       toEl.scrollTop = 0;
 
-      // Force reflow agar animasi balik halaman buku berjalan mulus
+      // Force reflow agar animasi bangun diorama berjalan mulus
       void toEl.offsetWidth;
 
       if (fromEl) {
         fromEl.classList.remove("scene-active");
-        fromEl.classList.add(isForward ? "scene-exit-fold-left" : "scene-exit-fold-right");
+        fromEl.classList.add("scene-exit-fold");
       }
 
-      toEl.classList.remove("scene-enter-from-right", "scene-enter-from-left");
-      toEl.classList.add("scene-active", "is-entered");
-      toEl.querySelectorAll("[data-aos]").forEach((node) => node.classList.add("aos-animate"));
+      toEl.classList.remove("scene-enter-rise");
+      toEl.classList.add("scene-active");
 
       currentSceneIdx = targetIdx;
       updateJourneyHud(scenes, currentSceneIdx);
@@ -762,7 +694,7 @@
 
       setTimeout(() => {
         if (fromEl) {
-          fromEl.classList.remove("scene-exit-fold-left", "scene-exit-fold-right");
+          fromEl.classList.remove("scene-exit-fold");
         }
         isTransitioning3D = false;
       }, 920);
@@ -773,12 +705,11 @@
       if (currentSceneIdx >= scenes.length) currentSceneIdx = 0;
       scenes.forEach((s, i) => {
         s.classList.toggle("scene-active", i === currentSceneIdx);
-        if (i === currentSceneIdx) s.classList.add("is-entered");
       });
       updateJourneyHud(scenes, currentSceneIdx);
     };
 
-    injectRealisticOrnaments();
+    injectDioramaBackdrops();
 
     const prevBtn = document.getElementById("journey-prev");
     const nextBtn = document.getElementById("journey-next");
@@ -918,38 +849,48 @@
       });
   });
 
-  // 60fps Mouse-Move & Gyroscope 3D Pop-Up Book Tilt / Parallax
-  let mouseTicking = false;
+  // 60fps Low-Angle Diorama Parallax (Desktop Mouse + Mobile Touch & Gyroscope)
+  let tiltTicking = false;
+  function applyTilt(nx, ny) {
+    if (tiltTicking) return;
+    tiltTicking = true;
+    window.requestAnimationFrame(function () {
+      document.documentElement.style.setProperty("--tilt-y", nx.toFixed(3));
+      document.documentElement.style.setProperty("--tilt-x", ny.toFixed(3));
+      tiltTicking = false;
+    });
+  }
+
   window.addEventListener(
     "mousemove",
     function (e) {
-      if (mouseTicking || window.innerWidth < 992) return;
-      mouseTicking = true;
-      window.requestAnimationFrame(function () {
-        const nx = (e.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2;
-        const ny = (e.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2;
-        document.documentElement.style.setProperty("--tilt-y", nx.toFixed(3));
-        document.documentElement.style.setProperty("--tilt-x", (-ny).toFixed(3));
-        mouseTicking = false;
-      });
+      if (window.innerWidth < 992) return;
+      const nx = (e.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2;
+      const ny = -(e.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2;
+      applyTilt(nx, ny);
     },
     { passive: true }
   );
 
-  let gyroTicking = false;
+  window.addEventListener(
+    "touchmove",
+    function (e) {
+      if (!e.touches || !e.touches[0]) return;
+      const nx = (e.touches[0].clientX / Math.max(window.innerWidth, 1) - 0.5) * 1.4;
+      const ny = -(e.touches[0].clientY / Math.max(window.innerHeight, 1) - 0.5) * 1.4;
+      applyTilt(nx, ny);
+    },
+    { passive: true }
+  );
+
   window.addEventListener(
     "deviceorientation",
     function (e) {
-      if (gyroTicking || e.gamma === null || e.beta === null) return;
-      gyroTicking = true;
-      window.requestAnimationFrame(function () {
-        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-        const nx = clamp(e.gamma / 30, -1, 1);
-        const ny = clamp((e.beta - 35) / 30, -1, 1);
-        document.documentElement.style.setProperty("--tilt-y", nx.toFixed(3));
-        document.documentElement.style.setProperty("--tilt-x", (-ny).toFixed(3));
-        gyroTicking = false;
-      });
+      if (e.gamma === null || e.beta === null) return;
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const nx = clamp(e.gamma / 30, -1, 1);
+      const ny = -clamp((e.beta - 35) / 30, -1, 1);
+      applyTilt(nx, ny);
     },
     { passive: true }
   );
