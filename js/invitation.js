@@ -554,7 +554,7 @@
       if (prevBtn) prevBtn.disabled = idx <= 0;
       if (nextBtn) {
         nextBtn.disabled = idx >= scenes.length - 1;
-        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Lanjut ↓";
+        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Lanjut ›";
       }
 
       document.querySelectorAll(".bottom-nav a").forEach((link) => {
@@ -610,23 +610,35 @@
         document.body.appendChild(spine);
       }
 
-      // Tambahkan plakat bab legenda, engsel lipatan pop-up, & diorama kertas di setiap ruangan
+      // Tambahkan plakat bab legenda, engsel lipatan pop-up, & diorama kertas 3 lapis di setiap halaman
       const dioramaSvg =
-        '<svg viewBox="0 0 1440 110" xmlns="http://www.w3.org/2000/svg">' +
-        '<path fill="var(--color-secondary)" fill-opacity="0.55" d="M0,78 Q220,24 480,68 T960,52 T1440,74 L1440,110 L0,110 Z"/>' +
-        '<path fill="var(--color-primary)" fill-opacity="0.32" d="M0,92 Q320,46 680,84 T1440,68 L1440,110 L0,110 Z"/>' +
+        '<svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">' +
+        '<path fill="var(--color-surface)" fill-opacity="0.72" d="M0,70 Q240,18 520,62 T1020,44 T1440,68 L1440,120 L0,120 Z"/>' +
+        '<path fill="var(--color-secondary)" fill-opacity="0.6" d="M0,84 Q220,30 480,74 T960,58 T1440,80 L1440,120 L0,120 Z"/>' +
+        '<path fill="var(--color-primary)" fill-opacity="0.36" d="M0,98 Q320,52 680,90 T1440,74 L1440,120 L0,120 Z"/>' +
+        "</svg>";
+
+      // Klaster bunga kertas berlapis (paper-cut botanical pop-up)
+      const floralSvg =
+        '<svg viewBox="0 0 240 76" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M120,68 C94,68 74,48 52,52 C72,38 96,42 120,68 Z" fill="var(--color-primary)" fill-opacity="0.72"/>' +
+        '<path d="M120,68 C146,68 166,48 188,52 C168,38 144,42 120,68 Z" fill="var(--color-primary)" fill-opacity="0.72"/>' +
+        '<circle cx="96" cy="42" r="13" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2.5"/>' +
+        '<circle cx="144" cy="42" r="13" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2.5"/>' +
+        '<circle cx="120" cy="30" r="17" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="2.5"/>' +
+        '<circle cx="120" cy="30" r="7" fill="var(--color-secondary)"/>' +
         "</svg>";
 
       // Tambahkan diorama kertas bertumpuk + ilustrasi pelaminan/bunga pop-up di dasar halaman
       const archSvg =
-        '<svg viewBox="0 0 360 110" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M55,106 L55,58 C55,22 110,12 180,12 C250,12 305,22 305,58 L305,106" stroke="var(--color-primary)" stroke-width="3" fill="var(--color-surface)" fill-opacity="0.7"/>' +
-        '<path d="M85,106 L85,64 C85,38 125,28 180,28 C235,28 275,38 275,64 L275,106" stroke="var(--color-secondary)" stroke-width="2.5" fill="none"/>' +
-        '<circle cx="180" cy="14" r="7" fill="var(--color-secondary)" stroke="var(--color-primary)" stroke-width="2"/>' +
-        '<ellipse cx="152" cy="18" rx="14" ry="6" transform="rotate(-15 152 18)" fill="var(--color-primary)" fill-opacity="0.75"/>' +
-        '<ellipse cx="208" cy="18" rx="14" ry="6" transform="rotate(15 208 18)" fill="var(--color-primary)" fill-opacity="0.75"/>' +
-        '<circle cx="55" cy="70" r="6" fill="var(--color-secondary)"/>' +
-        '<circle cx="305" cy="70" r="6" fill="var(--color-secondary)"/>' +
+        '<svg viewBox="0 0 360 116" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M46,112 L46,56 C46,20 105,10 180,10 C255,10 314,20 314,56 L314,112" stroke="var(--color-primary)" stroke-width="3.5" fill="var(--color-surface)" fill-opacity="0.82"/>' +
+        '<path d="M78,112 L78,64 C78,36 120,26 180,26 C240,26 282,36 282,64 L282,112" stroke="var(--color-secondary)" stroke-width="2.5" fill="none"/>' +
+        '<circle cx="180" cy="14" r="8" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2"/>' +
+        '<ellipse cx="150" cy="18" rx="15" ry="6.5" transform="rotate(-15 150 18)" fill="var(--color-primary)" fill-opacity="0.82"/>' +
+        '<ellipse cx="210" cy="18" rx="15" ry="6.5" transform="rotate(15 210 18)" fill="var(--color-primary)" fill-opacity="0.82"/>' +
+        '<circle cx="46" cy="70" r="7" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2"/>' +
+        '<circle cx="314" cy="70" r="7" fill="var(--color-secondary)" stroke="var(--color-surface)" stroke-width="2"/>' +
         "</svg>";
 
       const profileScene = document.getElementById("profile");
@@ -635,8 +647,8 @@
         if (profContainer) {
           const archWrap = document.createElement("div");
           archWrap.className = "popup-stage-arch popup-fold-item";
-          archWrap.style.setProperty("--popup-z", "18px");
-          archWrap.style.setProperty("--popup-delay", "0.22s");
+          archWrap.style.setProperty("--popup-z", "28px");
+          archWrap.style.setProperty("--popup-delay", "0.20s");
           const parsedArch = new DOMParser().parseFromString(archSvg, "image/svg+xml");
           if (parsedArch.documentElement && parsedArch.documentElement.nodeName === "svg") {
             archWrap.appendChild(document.importNode(parsedArch.documentElement, true));
@@ -645,11 +657,26 @@
         }
       }
 
+      ["events", "gift", "closing-section"].forEach((sceneId) => {
+        const targetScene = document.getElementById(sceneId);
+        if (!targetScene || targetScene.querySelector(".popup-floral-cluster")) return;
+        const targetContainer = targetScene.querySelector(".container");
+        if (!targetContainer) return;
+        const floralWrap = document.createElement("div");
+        floralWrap.className = "popup-floral-cluster popup-fold-item";
+        floralWrap.style.setProperty("--popup-z", "24px");
+        floralWrap.style.setProperty("--popup-delay", "0.18s");
+        const parsedFloral = new DOMParser().parseFromString(floralSvg, "image/svg+xml");
+        if (parsedFloral.documentElement && parsedFloral.documentElement.nodeName === "svg") {
+          floralWrap.appendChild(document.importNode(parsedFloral.documentElement, true));
+        }
+        targetContainer.insertBefore(floralWrap, targetContainer.firstChild);
+      });
+
       document.querySelectorAll(".journey-scene").forEach((scene) => {
-        if (scene.id === "cover") return;
         const container = scene.querySelector(".container");
 
-        if (!scene.querySelector(".scene-chapter-crest")) {
+        if (scene.id !== "cover" && !scene.querySelector(".scene-chapter-crest")) {
           const chapter = scene.getAttribute("data-chapter") || "";
           const title = scene.getAttribute("data-scene-title") || "";
           if (chapter && title && container) {
@@ -663,12 +690,12 @@
           }
         }
 
-        // Tandai elemen utama (foto & wadah tulisan) berurutan dari depan ke belakang (low-angle 3D pop-up)
+        // Tandai elemen utama (foto & wadah tulisan) berurutan dalam hierarki kedalaman 3D pop-up
         const depthPlanes = [
           { selector: ".scene-chapter-crest, .simply-countdown", z: "42px", delay: 0.14 },
-          { selector: ".profile-circle, #closing-img, h1.font-dancing", z: "24px", delay: 0.28 },
-          { selector: ".card, #ayat-text, #my-form, .owl-carousel, #turut-mengundang-text", z: "8px", delay: 0.44 },
-          { selector: ".map-responsive, #wishes-container, #disp-address", z: "-16px", delay: 0.60 },
+          { selector: ".cover-popup-card, .profile-circle, #closing-img, h1.font-dancing", z: "26px", delay: 0.26 },
+          { selector: ".card, #ayat-text, #my-form, .owl-carousel, #turut-mengundang-text", z: "12px", delay: 0.40 },
+          { selector: ".map-responsive, #wishes-container, #disp-address", z: "-8px", delay: 0.54 },
         ];
 
         depthPlanes.forEach((plane) => {
@@ -676,12 +703,12 @@
             if (el.classList.contains("popup-fold-item")) return;
             el.classList.add("popup-fold-item");
             el.style.setProperty("--popup-z", plane.z);
-            el.style.setProperty("--popup-delay", `${(plane.delay + Math.min(idx, 3) * 0.1).toFixed(2)}s`);
+            el.style.setProperty("--popup-delay", `${(plane.delay + Math.min(idx, 3) * 0.09).toFixed(2)}s`);
           });
         });
 
         // Tambahkan diorama kertas bertumpuk di dasar halaman
-        if (!scene.querySelector(".popup-paper-diorama")) {
+        if (scene.id !== "cover" && !scene.querySelector(".popup-paper-diorama")) {
           const diorama = document.createElement("div");
           diorama.className = "popup-paper-diorama";
           const parsed = new DOMParser().parseFromString(dioramaSvg, "image/svg+xml");
@@ -710,8 +737,8 @@
       const isForward = targetIdx > currentSceneIdx;
       isTransitioning3D = true;
 
-      toEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out", "scene-active");
-      toEl.classList.add(isForward ? "scene-enter-from-deep" : "scene-enter-from-front");
+      toEl.classList.remove("scene-exit-fold-left", "scene-exit-fold-right", "scene-active");
+      toEl.classList.add(isForward ? "scene-enter-from-right" : "scene-enter-from-left");
       toEl.scrollTop = 0;
 
       // Force reflow agar animasi balik halaman buku berjalan mulus
@@ -719,10 +746,10 @@
 
       if (fromEl) {
         fromEl.classList.remove("scene-active");
-        fromEl.classList.add(isForward ? "scene-exit-zoom-in" : "scene-exit-zoom-out");
+        fromEl.classList.add(isForward ? "scene-exit-fold-left" : "scene-exit-fold-right");
       }
 
-      toEl.classList.remove("scene-enter-from-deep", "scene-enter-from-front");
+      toEl.classList.remove("scene-enter-from-right", "scene-enter-from-left");
       toEl.classList.add("scene-active", "is-entered");
       toEl.querySelectorAll("[data-aos]").forEach((node) => node.classList.add("aos-animate"));
 
@@ -735,7 +762,7 @@
 
       setTimeout(() => {
         if (fromEl) {
-          fromEl.classList.remove("scene-exit-zoom-in", "scene-exit-zoom-out");
+          fromEl.classList.remove("scene-exit-fold-left", "scene-exit-fold-right");
         }
         isTransitioning3D = false;
       }, 920);
@@ -824,15 +851,15 @@
       { passive: true }
     );
 
-    // Navigasi Keyboard ArrowDown/ArrowUp
+    // Navigasi Keyboard ArrowDown/ArrowUp & ArrowLeft/ArrowRight
     window.addEventListener("keydown", (e) => {
       if (!isInvitationOpened || isTransitioning3D) return;
       const tag = (document.activeElement && document.activeElement.tagName) || "";
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-      if (e.key === "ArrowDown" || e.key === "PageDown") {
+      if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown") {
         e.preventDefault();
         goToScene(currentSceneIdx + 1);
-      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") {
         e.preventDefault();
         goToScene(currentSceneIdx - 1);
       }
@@ -891,7 +918,7 @@
       });
   });
 
-  // 60fps Mouse-Move 3D Diorama Parallax (Desktop)
+  // 60fps Mouse-Move & Gyroscope 3D Pop-Up Book Tilt / Parallax
   let mouseTicking = false;
   window.addEventListener(
     "mousemove",
@@ -904,6 +931,24 @@
         document.documentElement.style.setProperty("--tilt-y", nx.toFixed(3));
         document.documentElement.style.setProperty("--tilt-x", (-ny).toFixed(3));
         mouseTicking = false;
+      });
+    },
+    { passive: true }
+  );
+
+  let gyroTicking = false;
+  window.addEventListener(
+    "deviceorientation",
+    function (e) {
+      if (gyroTicking || e.gamma === null || e.beta === null) return;
+      gyroTicking = true;
+      window.requestAnimationFrame(function () {
+        const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+        const nx = clamp(e.gamma / 30, -1, 1);
+        const ny = clamp((e.beta - 35) / 30, -1, 1);
+        document.documentElement.style.setProperty("--tilt-y", nx.toFixed(3));
+        document.documentElement.style.setProperty("--tilt-x", (-ny).toFixed(3));
+        gyroTicking = false;
       });
     },
     { passive: true }
