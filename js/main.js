@@ -75,6 +75,7 @@ function copyAcc() {
 
 // Audio Player Control dengan Auto-Fallback Multi-Sumber
 window.currentInvitationType = "wedding";
+window.userMutedAudio = false;
 
 function getAudioCandidates(isWedding) {
   const defaults = isWedding
@@ -109,13 +110,17 @@ function setAudioTrackByType(isWedding, shouldAutoPlay, customUrl) {
   const currentAttrSrc = (lagu.getAttribute("src") || "").trim();
   const hasLoadError = Boolean(lagu.error) || lagu.networkState === 3;
 
-  if (currentAttrSrc !== targetSrc || hasLoadError) {
-    lagu.setAttribute("src", targetSrc);
-    lagu.load();
-    if (shouldAutoPlay) {
+  // Jangan mengganggu audio yang sudah berjalan jika sumbernya sama
+  if (currentAttrSrc === targetSrc && !hasLoadError) {
+    if (shouldAutoPlay && lagu.paused && !window.userMutedAudio) {
       playAudio(0);
     }
-  } else if (shouldAutoPlay && lagu.paused) {
+    return;
+  }
+
+  lagu.setAttribute("src", targetSrc);
+  lagu.load();
+  if (shouldAutoPlay && !window.userMutedAudio) {
     playAudio(0);
   }
 }
@@ -125,6 +130,7 @@ function playAudio(fallbackIndex) {
   const lagu = document.getElementById("lagu");
   if (!lagu) return;
 
+  window.userMutedAudio = false;
   const isWedding = window.currentInvitationType !== "khitan";
   const candidates = getAudioCandidates(isWedding);
   const currentAttrSrc = (lagu.getAttribute("src") || "").trim();
@@ -147,15 +153,26 @@ function playAudio(fallbackIndex) {
       .catch((err) => {
         const isSourceError =
           err.name === "NotSupportedError" ||
+          err.name === "AbortError" ||
           Boolean(lagu.error) ||
           lagu.networkState === 3;
 
         if (isSourceError && idx + 1 < candidates.length) {
           console.warn(
-            `Sumber audio "${lagu.getAttribute("src")}" tidak ditemukan/didukung, mencoba cadangan "${candidates[idx + 1]}"...`
+            `Sumber audio "${lagu.getAttribute("src")}" gagal dimuat, mencoba cadangan "${candidates[idx + 1]}"...`
           );
           playAudio(idx + 1);
           return;
+        }
+
+        // Jika diblokir autoplay policy browser, coba putar lagi pada interaksi sentuh/klik berikutnya
+        if (err.name === "NotAllowedError" && !window.userMutedAudio) {
+          const resumeOnce = () => {
+            if (!window.userMutedAudio && lagu.paused) {
+              lagu.play().then(() => updateAudioButtons(true)).catch(() => {});
+            }
+          };
+          document.addEventListener("pointerdown", resumeOnce, { once: true });
         }
 
         console.warn(
@@ -172,6 +189,7 @@ function playAudio(fallbackIndex) {
 function stopAudio() {
   const lagu = document.getElementById("lagu");
   if (!lagu) return;
+  window.userMutedAudio = true;
   lagu.pause();
   updateAudioButtons(false);
 }
