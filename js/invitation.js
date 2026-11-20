@@ -53,6 +53,14 @@
     isInvitationOpened = true;
     if (typeof playAudio === "function") playAudio();
 
+    // Izin sensor gyroscope untuk Safari iOS 13+ (wajib di dalam user gesture)
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      DeviceOrientationEvent.requestPermission().catch(() => {});
+    }
+
     const modalEl = document.getElementById("exampleModal");
     const coverEl = document.getElementById("cover");
     if (coverEl) coverEl.classList.add("hero-entered");
@@ -390,7 +398,11 @@
 
     // Turut Mengundang
     if (settings.turut_mengundang && settings.turut_mengundang.value) {
-      document.getElementById("turut-mengundang-text").innerText = settings.turut_mengundang.value;
+      const turutEl = document.getElementById("turut-mengundang-text");
+      if (turutEl) {
+        turutEl.innerText = settings.turut_mengundang.value;
+        formatTurutMengundang();
+      }
     }
 
     // Musik Latar
@@ -555,60 +567,59 @@
       });
     }
 
-    const BACKDROP_SVGS = {
-      gate:
-        '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M18,146 Q90,92 175,112 T340,98 T542,146 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<path d="M195,146 L195,62 C195,22 235,12 280,12 C325,12 365,22 365,62 L365,146 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/>' +
-        '<path d="M222,146 L222,72 C222,44 248,34 280,34 C312,34 338,44 338,72 L338,146 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/>' +
-        '<circle cx="110" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<circle cx="144" cy="108" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '<circle cx="450" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<circle cx="416" cy="108" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '</svg>',
-      garden:
-        '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M14,136 Q130,68 270,96 T546,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<ellipse cx="95" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<ellipse cx="465" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<circle cx="280" cy="64" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<path d="M238,136 C252,96 308,96 322,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '</svg>',
-      arch:
-        '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M30,144 Q140,86 280,104 T530,144 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<path d="M165,144 L165,54 C165,18 215,10 280,10 C345,10 395,18 395,54 L395,144 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/>' +
-        '<path d="M196,144 L196,66 C196,38 232,28 280,28 C328,28 364,38 364,66 L364,144 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/>' +
-        '<circle cx="132" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '<circle cx="428" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '</svg>',
-      trees:
-        '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M20,136 Q150,82 280,104 T540,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<circle cx="115" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<circle cx="155" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '<circle cx="445" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<circle cx="405" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '<path d="M235,136 L280,52 L325,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '</svg>',
-      pavilion:
-        '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M20,142 Q150,92 280,108 T540,142 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<path d="M160,64 L280,16 L400,64 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<rect x="182" y="64" width="196" height="78" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<rect x="242" y="84" width="76" height="58" rx="38" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/>' +
-        '<circle cx="118" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '<circle cx="442" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/>' +
-        '</svg>',
-      city:
-        '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-        '<rect x="74" y="54" width="58" height="88" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<rect x="142" y="34" width="72" height="108" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<path d="M232,142 L232,48 L280,18 L328,48 L328,142 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<rect x="346" y="38" width="72" height="104" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '<rect x="428" y="58" width="58" height="84" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/>' +
-        '</svg>',
+    const BACKDROP_PLANES = {
+      gate: {
+        far: '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18,146 Q110,84 210,108 T410,92 T542,146 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><ellipse cx="140" cy="48" rx="46" ry="18" fill="var(--paper-ivory)" opacity="0.88"/><ellipse cx="420" cy="42" rx="40" ry="15" fill="var(--paper-ivory)" opacity="0.82"/></svg>',
+        mid: '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M195,148 L195,62 C195,22 235,12 280,12 C325,12 365,22 365,62 L365,148 Z" fill="var(--paper-edge-2)" transform="translate(0,3)"/><path d="M195,146 L195,62 C195,22 235,12 280,12 C325,12 365,22 365,62 L365,146 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/><path d="M222,146 L222,72 C222,44 248,34 280,34 C312,34 338,44 338,72 L338,146 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/></svg>',
+        near: '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="106" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="142" cy="110" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="454" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="418" cy="110" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
+      },
+      garden: {
+        far: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14,136 Q130,68 270,96 T546,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+        mid: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="280" cy="64" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/><path d="M238,136 C252,96 308,96 322,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
+        near: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="92" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><ellipse cx="468" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+      },
+      arch: {
+        far: '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30,144 Q140,86 280,104 T530,144 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+        mid: '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M165,146 L165,54 C165,18 215,10 280,10 C345,10 395,18 395,54 L395,146 Z" fill="var(--paper-edge-2)" transform="translate(0,3)"/><path d="M165,144 L165,54 C165,18 215,10 280,10 C345,10 395,18 395,54 L395,144 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/><path d="M196,144 L196,66 C196,38 232,28 280,28 C328,28 364,38 364,66 L364,144 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/></svg>',
+        near: '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="128" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="432" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
+      },
+      trees: {
+        far: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20,136 Q150,82 280,104 T540,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+        mid: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M235,136 L280,52 L325,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+        near: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="115" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="155" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="445" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="405" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
+      },
+      pavilion: {
+        far: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20,142 Q150,92 280,108 T540,142 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+        mid: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M160,64 L280,16 L400,64 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="182" y="64" width="196" height="78" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="242" y="84" width="76" height="58" rx="38" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/></svg>',
+        near: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="114" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="446" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
+      },
+      city: {
+        far: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="142" y="34" width="72" height="108" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="346" y="38" width="72" height="104" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+        mid: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M232,142 L232,48 L280,18 L328,48 L328,142 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+        near: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="74" y="54" width="58" height="88" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="428" y="58" width="58" height="84" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+      },
     };
+
+    function formatTurutMengundang() {
+      const el = document.getElementById("turut-mengundang-text");
+      if (!el) return;
+      const raw = (el.textContent || "").trim();
+      if (!raw || !raw.includes("|")) return;
+      const parts = raw
+        .split("|")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (parts.length < 2) return;
+      const grid = document.createElement("div");
+      grid.className = "turut-grid";
+      parts.forEach((item) => {
+        const pill = document.createElement("div");
+        pill.className = "turut-pill";
+        pill.textContent = item;
+        grid.appendChild(pill);
+      });
+      el.replaceChildren(grid);
+    }
 
     function injectDioramaBackdrops() {
       document.querySelectorAll(".journey-scene").forEach((scene) => {
@@ -629,16 +640,18 @@
         }
 
         scene.querySelectorAll(".diorama-module").forEach((mod) => {
-          if (!mod.querySelector(".diorama-backdrop")) {
+          if (!mod.querySelector(".diorama-plane")) {
             const key = mod.getAttribute("data-backdrop") || "garden";
-            const svgStr = BACKDROP_SVGS[key] || BACKDROP_SVGS.garden;
-            const backdrop = document.createElement("div");
-            backdrop.className = "diorama-backdrop";
-            const parsed = new DOMParser().parseFromString(svgStr, "image/svg+xml");
-            if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
-              backdrop.appendChild(document.importNode(parsed.documentElement, true));
-            }
-            mod.insertBefore(backdrop, mod.firstChild);
+            const planes = BACKDROP_PLANES[key] || BACKDROP_PLANES.garden;
+            ["far", "mid", "near"].forEach((layerKey) => {
+              const planeDiv = document.createElement("div");
+              planeDiv.className = `diorama-plane diorama-plane-${layerKey}`;
+              const parsed = new DOMParser().parseFromString(planes[layerKey], "image/svg+xml");
+              if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
+                planeDiv.appendChild(document.importNode(parsed.documentElement, true));
+              }
+              mod.insertBefore(planeDiv, mod.querySelector(".popup-layer") || null);
+            });
           }
 
           if (!mod.querySelector(".paper-strut")) {
@@ -688,6 +701,11 @@
       currentSceneIdx = targetIdx;
       updateJourneyHud(scenes, currentSceneIdx);
 
+      const pageHint = document.getElementById("page-turn-hint");
+      if (pageHint && currentSceneIdx > 0) {
+        pageHint.style.display = "none";
+      }
+
       if (toEl.id === "gallery" && typeof initGalleryCarousel === "function") {
         setTimeout(() => initGalleryCarousel(), 120);
       }
@@ -710,11 +728,21 @@
     };
 
     injectDioramaBackdrops();
+    formatTurutMengundang();
 
     const prevBtn = document.getElementById("journey-prev");
     const nextBtn = document.getElementById("journey-next");
+    const labelBtn = document.getElementById("journey-label");
+    const chapterDrawer = document.getElementById("chapter-drawer");
     if (prevBtn) prevBtn.addEventListener("click", () => goToScene(currentSceneIdx - 1));
     if (nextBtn) nextBtn.addEventListener("click", () => goToScene(currentSceneIdx + 1));
+    if (labelBtn && chapterDrawer) {
+      labelBtn.addEventListener("click", () => {
+        const isOpen = chapterDrawer.classList.toggle("is-open");
+        labelBtn.setAttribute("aria-expanded", String(isOpen));
+        chapterDrawer.setAttribute("aria-hidden", String(!isOpen));
+      });
+    }
 
     document.querySelectorAll(".bottom-nav a").forEach((link) => {
       link.addEventListener("click", function (e) {
@@ -722,6 +750,11 @@
         if (!targetId) return;
         e.preventDefault();
         goToScene(targetId);
+        if (chapterDrawer) {
+          chapterDrawer.classList.remove("is-open");
+          chapterDrawer.setAttribute("aria-hidden", "true");
+          if (labelBtn) labelBtn.setAttribute("aria-expanded", "false");
+        }
       });
     });
 
@@ -879,6 +912,14 @@
       const nx = (e.touches[0].clientX / Math.max(window.innerWidth, 1) - 0.5) * 1.4;
       const ny = -(e.touches[0].clientY / Math.max(window.innerHeight, 1) - 0.5) * 1.4;
       applyTilt(nx, ny);
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "touchend",
+    function () {
+      applyTilt(0, 0);
     },
     { passive: true }
   );
