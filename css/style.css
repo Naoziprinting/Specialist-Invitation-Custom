@@ -49,7 +49,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: var(--font-sans);
-  background: radial-gradient(circle at 50% 0%, #1a2328 0%, var(--bg-slate) 45%, var(--bg-void) 100%);
+  background: radial-gradient(circle at 50% 0%, var(--bg-parchment-dark) 0%, var(--bg-slate) 45%, var(--bg-void) 100%);
   color: var(--text-primary);
   overflow-x: hidden;
   line-height: 1.65;
@@ -1474,3 +1474,76 @@ body.start-locked {
     font-size: 0.58rem;
   }
 }
+
+/* ==========================================================================
+   DYNAMIC ORNAMENT & ATMOSPHERE THEMES (FROM EDITOR theme_ornament)
+   ========================================================================== */
+body.theme-floral-botanical .realm-noise-overlay,
+body.theme-vine-wreath .realm-noise-overlay {
+  opacity: 0.08;
+  background-image:
+    radial-gradient(circle at 20% 25%, var(--cyan-ethereal) 1px, transparent 1.5px),
+    radial-gradient(circle at 80% 75%, var(--gold-antique) 1px, transparent 1.5px);
+  background-size: 36px 36px;
+}
+
+body.theme-islamic-arch .ornate-card,
+body.theme-sacred-dome .ornate-card {
+  border-top-left-radius: 32px;
+  border-top-right-radius: 32px;
+}
+
+body.theme-islamic-arch .realm-noise-overlay,
+body.theme-sacred-dome .realm-noise-overlay {
+  opacity: 0.07;
+  background-image: linear-gradient(30deg, var(--gold-antique) 12%, transparent 12.5%, transparent 87%, var(--gold-antique) 87.5%),
+    linear-gradient(150deg, var(--gold-antique) 12%, transparent 12.5%, transparent 87%, var(--gold-antique) 87.5%);
+  background-size: 40px 70px;
+}
+
+body.theme-art-deco-gold .ornate-card,
+body.theme-diamond-lattice .ornate-card {
+  border-radius: 4px;
+}
+
+body.theme-art-deco-gold .realm-noise-overlay,
+body.theme-diamond-lattice .realm-noise-overlay {
+  opacity: 0.06;
+  background-image: linear-gradient(45deg, var(--gold-antique) 1px, transparent 1px),
+    linear-gradient(-45deg, var(--gold-antique) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+body.theme-royal-crest .ornate-card,
+body.theme-double-frame .ornate-card {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), inset 0 0 0 3px rgba(212, 175, 55, 0.14);
+}
+
+body.theme-mandala-lotus .hero-astrolabe {
+  opacity: 0.22;
+  filter: drop-shadow(0 0 12px var(--gold-antique));
+}
+
+body.theme-javanese-gunungan .realm-noise-overlay {
+  opacity: 0.07;
+  background-image: repeating-linear-gradient(60deg, transparent, transparent 24px, rgba(212, 175, 55, 0.22) 24px, rgba(212, 175, 55, 0.22) 25px);
+}
+
+body.theme-minimal-line .ornate-corner {
+  display: none;
+}
+
+body.theme-minimal-line .ornate-card::before {
+  border-style: dashed;
+}
+
+body.theme-pearl-beads .ornate-card::before,
+body.theme-ribbon-scallop .ornate-card::before {
+  border-style: dotted;
+  border-width: 2px;
+}
+
+body.theme-heart-filigree .compass-divider-icon {
+  color: var(--cyan-ethereal);
+}
+
