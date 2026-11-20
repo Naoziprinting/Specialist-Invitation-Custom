@@ -874,6 +874,86 @@ function mixDarkHex(rgb, factor) {
   return `#${[r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
 }
 
+function getGenreCategory(genreKey) {
+  if (!genreKey) return "adventure";
+  if (["romantic-visual-novel", "moonlight-serenade", "paris-atelier", "cherry-blossom"].includes(genreKey)) return "romantic";
+  if (["royal-palace", "art-deco-gala", "diamond-monarch", "emerald-crown"].includes(genreKey)) return "luxury";
+  if (["sacral-sanctuary", "celestial-hymn"].includes(genreKey)) return "sacral";
+  if (["nusantara-keraton", "archipelago-heritage"].includes(genreKey)) return "culture";
+  return "adventure";
+}
+
+function buildGenreOrbInnerMarkup(category) {
+  if (category === "romantic") {
+    return `
+      <circle cx="200" cy="200" r="184" stroke="var(--gold-antique)" stroke-width="1" stroke-dasharray="3 7" />
+      <circle cx="200" cy="200" r="148" stroke="var(--cyan-ethereal)" stroke-width="1.2" opacity="0.85" />
+      <circle cx="200" cy="200" r="106" stroke="var(--gold-bright)" stroke-width="1" stroke-dasharray="10 5" />
+      <path d="M200,45 C228,125 275,172 355,200 C275,228 228,275 200,355 C172,275 125,228 45,200 C125,172 172,125 200,45 Z" stroke="var(--cyan-ethereal)" stroke-width="1.1" fill="none" opacity="0.7" />
+      <circle cx="200" cy="52" r="5" fill="var(--cyan-ethereal)" />
+      <circle cx="348" cy="200" r="5" fill="var(--cyan-ethereal)" />
+      <circle cx="200" cy="348" r="5" fill="var(--cyan-ethereal)" />
+      <circle cx="52" cy="200" r="5" fill="var(--cyan-ethereal)" />
+    `;
+  }
+  if (category === "luxury") {
+    return `
+      <circle cx="200" cy="200" r="186" stroke="var(--gold-bright)" stroke-width="1.5" />
+      <circle cx="200" cy="200" r="168" stroke="var(--gold-antique)" stroke-width="0.9" stroke-dasharray="2 6" />
+      <rect x="76" y="76" width="248" height="248" stroke="var(--gold-antique)" stroke-width="1.1" fill="none" />
+      <rect x="76" y="76" width="248" height="248" transform="rotate(45 200 200)" stroke="var(--gold-bright)" stroke-width="1.1" fill="none" />
+      <circle cx="200" cy="200" r="88" stroke="var(--cyan-ethereal)" stroke-width="1" />
+    `;
+  }
+  if (category === "sacral") {
+    return `
+      <circle cx="200" cy="200" r="186" stroke="var(--gold-antique)" stroke-width="1.2" stroke-dasharray="8 4" />
+      <rect x="82" y="82" width="236" height="236" rx="18" stroke="var(--cyan-ethereal)" stroke-width="1.2" fill="none" />
+      <rect x="82" y="82" width="236" height="236" rx="18" transform="rotate(45 200 200)" stroke="var(--gold-bright)" stroke-width="1.2" fill="none" />
+      <circle cx="200" cy="200" r="110" stroke="var(--gold-antique)" stroke-width="1" />
+      <circle cx="200" cy="200" r="64" stroke="var(--cyan-ethereal)" stroke-width="1" stroke-dasharray="4 4" />
+    `;
+  }
+  if (category === "culture") {
+    return `
+      <circle cx="200" cy="200" r="186" stroke="var(--gold-antique)" stroke-width="1.6" stroke-dasharray="12 4 3 4" />
+      <circle cx="200" cy="200" r="150" stroke="var(--gold-bright)" stroke-width="1" />
+      <polygon points="200,18 228,142 355,95 258,190 382,200 258,210 355,305 228,258 200,382 172,258 45,305 142,210 18,200 142,190 45,95 172,142" stroke="var(--gold-antique)" stroke-width="1.1" fill="none" />
+      <circle cx="200" cy="200" r="70" stroke="var(--cyan-ethereal)" stroke-width="1.2" />
+    `;
+  }
+  return `
+    <circle cx="200" cy="200" r="185" stroke="var(--gold-antique)" stroke-width="1.2" stroke-dasharray="6 6" />
+    <circle cx="200" cy="200" r="145" stroke="var(--cyan-ethereal)" stroke-width="1" />
+    <circle cx="200" cy="200" r="95" stroke="var(--gold-antique)" stroke-width="1.2" />
+    <polygon points="200,10 218,182 390,200 218,218 200,390 182,218 10,200 182,182" stroke="var(--gold-antique)" stroke-width="1" fill="none" />
+  `;
+}
+
+function renderGenreBackdropOrbs(genreKey) {
+  const category = getGenreCategory(genreKey);
+  const innerSvg = buildGenreOrbInnerMarkup(category);
+  const parsed = new DOMParser().parseFromString(`<svg xmlns="http://www.w3.org/2000/svg">${innerSvg}</svg>`, "image/svg+xml");
+  const srcRoot = parsed.documentElement;
+  if (!srcRoot) return;
+
+  document.querySelectorAll(".hero-astrolabe").forEach((svgEl) => {
+    svgEl.replaceChildren();
+    Array.from(srcRoot.childNodes).forEach((node) => {
+      svgEl.appendChild(document.importNode(node, true));
+    });
+  });
+
+  const styleMap = {
+    romantic: "petals",
+    luxury: "sparkles",
+    sacral: "lanterns",
+    culture: "embers",
+    adventure: "fireflies",
+  };
+  window.NAOZI_PARTICLE_STYLE = styleMap[category] || "fireflies";
+}
+
 function renderOrnamentDividers(ornamentType) {
   const type = ornamentType || "wave-soft";
   const allThemeClasses = Object.keys(window.NAOZI_THEMES.ornaments).map((k) => "theme-" + k);
@@ -1002,7 +1082,19 @@ function applyThemeFromSettings(settings) {
       root.style.setProperty("--text-on-accent", getContrastTextColor(genreCfg.accent));
     }
 
-    window.NAOZI_PARTICLE_COLORS = [genreCfg.particleRgb, genreCfg.particleAltRgb];
+    // Jika preset warna kustom dipakai, partikel mengikuti warna aksen yang aktif; jika default, pakai warna partikel genre
+    const activeGoldRgb = hexToRgbObj(root.style.getPropertyValue("--gold-bright"));
+    const activeCyanRgb = hexToRgbObj(root.style.getPropertyValue("--cyan-ethereal"));
+    if (!isDefaultPreset && activeGoldRgb && activeCyanRgb) {
+      window.NAOZI_PARTICLE_COLORS = [
+        `${activeGoldRgb.r}, ${activeGoldRgb.g}, ${activeGoldRgb.b}`,
+        `${activeCyanRgb.r}, ${activeCyanRgb.g}, ${activeCyanRgb.b}`,
+      ];
+    } else {
+      window.NAOZI_PARTICLE_COLORS = [genreCfg.particleRgb, genreCfg.particleAltRgb];
+    }
+
+    renderGenreBackdropOrbs(genreKey);
 
     const mapText = {
       "ui-crest-badge": genreCfg.crest,

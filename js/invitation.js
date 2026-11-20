@@ -670,28 +670,65 @@
 
     function tick() {
       ctx.clearRect(0, 0, width, height);
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.phase += 0.025;
-
-        if (p.y < -10) p.y = height + 10;
-        if (p.x < -10) p.x = width + 10;
-        if (p.x > width + 10) p.x = -10;
-
-        const palette = Array.isArray(window.NAOZI_PARTICLE_COLORS) && window.NAOZI_PARTICLE_COLORS.length === 2
+      const pStyle = window.NAOZI_PARTICLE_STYLE || "fireflies";
+      const palette =
+        Array.isArray(window.NAOZI_PARTICLE_COLORS) && window.NAOZI_PARTICLE_COLORS.length === 2
           ? window.NAOZI_PARTICLE_COLORS
           : ["246, 224, 94", "79, 209, 197"];
-        const activeColor = i % 4 === 0 ? palette[1] : palette[0];
 
-        const glowAlpha = p.alpha * (0.65 + 0.35 * Math.sin(p.phase));
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.phase += 0.028;
+
+        if (pStyle === "petals") {
+          p.x += Math.sin(p.phase) * 0.45 + 0.15;
+          p.y += Math.abs(p.vy) * 1.15;
+          if (p.y > height + 12) p.y = -12;
+        } else if (pStyle === "sparkles") {
+          p.x += p.vx * 0.35;
+          p.y += p.vy * 0.45;
+          if (p.y < -12) p.y = height + 12;
+        } else {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y < -12) p.y = height + 12;
+        }
+
+        if (p.x < -12) p.x = width + 12;
+        if (p.x > width + 12) p.x = -12;
+
+        const activeColor = i % 4 === 0 ? palette[1] : palette[0];
+        const glowAlpha = p.alpha * (0.55 + 0.45 * Math.sin(p.phase));
         ctx.fillStyle = `rgba(${activeColor}, ${glowAlpha.toFixed(2)})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `rgba(${activeColor}, 0.8)`;
-        ctx.fill();
+        ctx.shadowBlur = pStyle === "sparkles" ? 14 : 10;
+        ctx.shadowColor = `rgba(${activeColor}, 0.85)`;
+
+        if (pStyle === "sparkles") {
+          const s = p.r * 2.4;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y - s);
+          ctx.lineTo(p.x + s * 0.28, p.y - s * 0.28);
+          ctx.lineTo(p.x + s, p.y);
+          ctx.lineTo(p.x + s * 0.28, p.y + s * 0.28);
+          ctx.lineTo(p.x, p.y + s);
+          ctx.lineTo(p.x - s * 0.28, p.y + s * 0.28);
+          ctx.lineTo(p.x - s, p.y);
+          ctx.lineTo(p.x - s * 0.28, p.y - s * 0.28);
+          ctx.closePath();
+          ctx.fill();
+        } else if (pStyle === "petals") {
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.phase * 0.7);
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.r * 1.9, p.r * 0.95, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, pStyle === "lanterns" ? p.r * 1.35 : p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
       ctx.shadowBlur = 0;
       window.requestAnimationFrame(tick);
