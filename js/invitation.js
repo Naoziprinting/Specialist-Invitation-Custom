@@ -144,6 +144,27 @@
     return `Pukul ${time1} ${suffix}`.trim();
   }
 
+  function formatTurutMengundang() {
+    const el = document.getElementById("turut-mengundang-text");
+    if (!el) return;
+    const raw = (el.textContent || "").trim();
+    if (!raw || !raw.includes("|")) return;
+    const parts = raw
+      .split("|")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (parts.length < 2) return;
+    const grid = document.createElement("div");
+    grid.className = "turut-grid";
+    parts.forEach((item) => {
+      const pill = document.createElement("div");
+      pill.className = "turut-pill";
+      pill.textContent = item;
+      grid.appendChild(pill);
+    });
+    el.replaceChildren(grid);
+  }
+
   function finishLoadingAndShow() {
     const loader = document.getElementById("app-loading");
     if (loader) {
@@ -600,27 +621,6 @@
       },
     };
 
-    function formatTurutMengundang() {
-      const el = document.getElementById("turut-mengundang-text");
-      if (!el) return;
-      const raw = (el.textContent || "").trim();
-      if (!raw || !raw.includes("|")) return;
-      const parts = raw
-        .split("|")
-        .map((s) => s.trim())
-        .filter(Boolean);
-      if (parts.length < 2) return;
-      const grid = document.createElement("div");
-      grid.className = "turut-grid";
-      parts.forEach((item) => {
-        const pill = document.createElement("div");
-        pill.className = "turut-pill";
-        pill.textContent = item;
-        grid.appendChild(pill);
-      });
-      el.replaceChildren(grid);
-    }
-
     function injectDioramaBackdrops() {
       document.querySelectorAll(".journey-scene").forEach((scene) => {
         if (scene.id !== "cover" && !scene.querySelector(".scene-chapter-crest")) {
@@ -843,12 +843,21 @@
     }
 
     let isDone = false;
+    function completeInit() {
+      try {
+        renderPage();
+      } catch (e) {
+        console.error("Render error:", e);
+      } finally {
+        finishLoadingAndShow();
+        loadWishes();
+      }
+    }
+
     const safetyTimer = setTimeout(function () {
       if (!isDone) {
         isDone = true;
-        renderPage();
-        finishLoadingAndShow();
-        loadWishes();
+        completeInit();
       }
     }, 5000);
 
@@ -865,9 +874,7 @@
               // Abaikan jika storage penuh
             }
           }
-          renderPage();
-          finishLoadingAndShow();
-          loadWishes();
+          completeInit();
         }
       })
       .catch((err) => {
@@ -875,9 +882,7 @@
           isDone = true;
           clearTimeout(safetyTimer);
           console.warn("Menggunakan pengaturan bawaan tema:", err.message);
-          renderPage();
-          finishLoadingAndShow();
-          loadWishes();
+          completeInit();
         }
       });
   });
