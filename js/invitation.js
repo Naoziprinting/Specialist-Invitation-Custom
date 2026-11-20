@@ -1,5 +1,6 @@
 /**
- * Logika Halaman Undangan Digital Multi-Tenant (index.html)
+ * Interactive Adventure Game UI/UX Controller (index.html)
+ * Preserves Multi-Tenant Google Apps Script Backend & Dynamic Data Bindings
  */
 (function () {
   const EVENT_ID = getEventIdFromUrl();
@@ -20,7 +21,14 @@
 
   function showAlert(icon, title, text) {
     if (typeof Swal !== "undefined") {
-      Swal.fire({ icon: icon, title: title, text: text });
+      Swal.fire({
+        icon: icon,
+        title: title,
+        text: text,
+        background: "#181c1e",
+        color: "#f5efe6",
+        confirmButtonColor: "#d4af37",
+      });
     } else {
       alert(title + (text ? "\n" + text : ""));
     }
@@ -47,32 +55,64 @@
     });
   }
 
+  // =========================================================================
+  // START ADVENTURE (ENTER REALM)
+  // =========================================================================
   window.openInvitation = function () {
     const btn = document.getElementById("btn-open-invitation");
     if (btn) btn.blur();
     isInvitationOpened = true;
     if (typeof playAudio === "function") playAudio();
 
-    // Izin sensor gyroscope untuk Safari iOS 13+ (wajib di dalam user gesture)
-    if (
-      typeof DeviceOrientationEvent !== "undefined" &&
-      typeof DeviceOrientationEvent.requestPermission === "function"
-    ) {
-      DeviceOrientationEvent.requestPermission().catch(() => {});
-    }
+    const startScreen = document.getElementById("start-screen");
+    document.body.classList.remove("start-locked");
 
-    const modalEl = document.getElementById("exampleModal");
-    const coverEl = document.getElementById("cover");
-    if (coverEl) coverEl.classList.add("hero-entered");
-
-    if (modalEl && typeof bootstrap !== "undefined") {
-      modalEl.classList.add("stage-doors-opening");
+    if (startScreen) {
+      startScreen.classList.add("is-entering");
       setTimeout(() => {
-        const instance = bootstrap.Modal.getOrCreateInstance(modalEl);
-        instance.hide();
-        modalEl.classList.remove("stage-doors-opening");
-      }, 780);
+        startScreen.style.display = "none";
+      }, 850);
     }
+  };
+
+  // =========================================================================
+  // INTERACTIVE TREASURE CHEST (DIGITAL GIFT)
+  // =========================================================================
+  window.openTreasureChest = function () {
+    const closedEl = document.getElementById("chest-closed");
+    const openedEl = document.getElementById("chest-opened");
+    if (closedEl) closedEl.style.display = "none";
+    if (openedEl) openedEl.classList.add("is-open");
+  };
+
+  // =========================================================================
+  // ADD TO JOURNAL (GOOGLE CALENDAR INTEGRATION)
+  // =========================================================================
+  window.addToJournal = function (eventNum) {
+    const titleEl = document.getElementById(`event-${eventNum}-name`);
+    const locEl = document.getElementById(`event-${eventNum}-loc`);
+    const dateKey = eventNum === 2 ? "event_2_date" : "event_1_date";
+    const endKey = eventNum === 2 ? "event_2_date_end" : "event_1_date_end";
+
+    const rawStart = settings[dateKey] && settings[dateKey].value ? settings[dateKey].value : "2026-05-20T09:00";
+    const rawEnd = settings[endKey] && settings[endKey].value ? settings[endKey].value : "";
+
+    const startDate = new Date(rawStart);
+    const validStart = isNaN(startDate.getTime()) ? new Date(2026, 4, 20, 9, 0) : startDate;
+    const endDate = rawEnd ? new Date(rawEnd) : new Date(validStart.getTime() + 2 * 60 * 60 * 1000);
+    const validEnd = isNaN(endDate.getTime()) ? new Date(validStart.getTime() + 2 * 60 * 60 * 1000) : endDate;
+
+    const fmt = (d) => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const eventTitle = `${titleEl ? titleEl.innerText : "Acara"} — ${document.getElementById("hero-names").innerText}`;
+    const eventLoc = locEl ? locEl.innerText : "";
+
+    const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+      eventTitle
+    )}&dates=${fmt(validStart)}/${fmt(validEnd)}&location=${encodeURIComponent(
+      eventLoc
+    )}&details=${encodeURIComponent("Undangan Digital — Interactive Adventure Quest")}`;
+
+    window.open(calUrl, "_blank", "noopener,noreferrer");
   };
 
   function getBankLogo(bankName) {
@@ -165,26 +205,15 @@
     el.replaceChildren(grid);
   }
 
-  function finishLoadingAndShow() {
+  function finishLoading() {
     const loader = document.getElementById("app-loading");
     if (loader) {
       loader.classList.add("fade-out");
       setTimeout(() => loader.remove(), 550);
     }
-
-    const modalEl = document.getElementById("exampleModal");
-    if (modalEl && typeof bootstrap !== "undefined") {
-      const coverModal = bootstrap.Modal.getOrCreateInstance(modalEl);
-      coverModal.show();
-    }
   }
 
   function renderPage() {
-    // 1. Terapkan Tema (Warna, Font, Ornamen)
-    if (typeof applyThemeFromSettings === "function") {
-      applyThemeFromSettings(settings);
-    }
-
     const rawType = (settings.type && settings.type.value ? String(settings.type.value) : "wedding").trim().toLowerCase();
     const isWedding = rawType !== "khitan" && rawType !== "khitanan";
     const tzLabel = (settings.timezone_label && settings.timezone_label.value) || "WITA";
@@ -197,23 +226,11 @@
 
     const shortNames = isWedding ? `${groomNick} & ${brideNick}` : khitanName;
 
-    document.getElementById("page-title").innerText = `${shortNames} | Undangan Digital`;
-    const openNamesEl = document.getElementById("open-names");
-    if (isWedding) {
-      openNamesEl.replaceChildren(
-        document.createTextNode(groomNick + " "),
-        document.createElement("br"),
-        document.createTextNode("&"),
-        document.createElement("br"),
-        document.createTextNode(" " + brideNick)
-      );
-    } else {
-      openNamesEl.textContent = khitanName;
-    }
+    document.getElementById("page-title").innerText = `${shortNames} | Sacred Quest Invitation`;
+    document.getElementById("open-names").innerText = shortNames;
     document.getElementById("hero-names").innerText = shortNames;
     document.getElementById("footer-names").textContent = shortNames;
 
-    // Gambar Sampul, Hero & Penutup (tersanitasi)
     const heroImgUrl = sanitizeUrl(settings.hero_image && settings.hero_image.value, "img/img7.png");
     const coverImgUrl = sanitizeUrl(
       (settings.cover_image && settings.cover_image.value) || (settings.hero_image && settings.hero_image.value),
@@ -228,7 +245,6 @@
     document.getElementById("front-image-img").src = coverImgUrl;
     document.getElementById("closing-img").src = closingImgUrl;
 
-    // Mode Wedding vs Khitanan
     if (!isWedding) {
       document.getElementById("open-title").innerText = "Tasyakuran Khitanan";
       document.getElementById("hero-title").innerText = "Tasyakuran Khitanan";
@@ -341,7 +357,7 @@
       const entWrap = document.getElementById("event-2-entertainment-wrap");
       if (entVal && isEvent2Active) {
         document.getElementById("event-2-entertainment").innerText = entVal;
-        entWrap.style.display = "block";
+        entWrap.style.display = "flex";
       } else {
         entWrap.style.display = "none";
       }
@@ -389,7 +405,7 @@
       logoEl.style.display = "none";
     }
 
-    // Galeri Foto (DOM API aman anti-XSS)
+    // Galeri Foto
     const galleryUrls = ["gallery_1", "gallery_2", "gallery_3", "gallery_4"]
       .map((k) => (settings[k] && settings[k].value ? sanitizeUrl(settings[k].value, "") : ""))
       .filter(Boolean);
@@ -399,7 +415,7 @@
       galleryContainer.innerHTML = "";
       galleryUrls.forEach((safeUrl, idx) => {
         const itemDiv = document.createElement("div");
-        itemDiv.className = "item";
+        itemDiv.className = "item relic-item";
 
         const link = document.createElement("a");
         link.href = safeUrl;
@@ -440,10 +456,6 @@
         document.querySelectorAll("." + key).forEach((el) => el.classList.remove("hidden"));
       }
     });
-
-    if (typeof window.refresh3DJourneyState === "function") {
-      window.refresh3DJourneyState();
-    }
   }
 
   window.submitWish = function () {
@@ -458,7 +470,7 @@
       return;
     }
 
-    btn.innerText = "Mengirim...";
+    btn.innerText = "Mengirim ke Guild...";
     btn.disabled = true;
 
     apiPost("sendWish", {
@@ -472,15 +484,7 @@
         document.getElementById("wish-msg-input").value = "";
         btn.innerText = "Kirim RSVP & Ucapan";
         btn.disabled = false;
-        if (typeof Swal !== "undefined") {
-          Swal.fire({
-            icon: "success",
-            title: "Terima Kasih!",
-            text: "Ucapan & konfirmasi kehadiran Anda telah terkirim.",
-            showConfirmButton: false,
-            timer: 1800,
-          });
-        }
+        showAlert("success", "Quest Tercatat!", "Ucapan & konfirmasi kehadiran Anda telah tersimpan.");
         loadWishes();
       })
       .catch((err) => {
@@ -495,7 +499,7 @@
       .then((wishes) => {
         const container = document.getElementById("wishes-container");
         if (!Array.isArray(wishes) || wishes.length === 0) {
-          container.innerHTML = '<p class="text-center text-muted small py-3">Belum ada ucapan. Jadilah yang pertama memberikan doa restu!</p>';
+          container.innerHTML = '<p class="text-center small py-3" style="color: var(--text-muted);">Belum ada catatan petualang. Jadilah yang pertama menulis doa restu!</p>';
           return;
         }
         container.innerHTML = "";
@@ -505,10 +509,9 @@
           const gCount = Number(w.guestCount) || 1;
 
           if (statusText === "Hadir" && gCount > 1) {
-            statusText = `Hadir - ${gCount} Orang`;
+            statusText = `Hadir • ${gCount} Party`;
           }
 
-          // Dukungan backward-compatible untuk format lama "[Hadir]"
           if (!statusText) {
             const bracketMatch = cleanMsg.match(/\[(.*?)\]\s*$/);
             if (bracketMatch) {
@@ -530,12 +533,11 @@
             badge.className = "badge-attend";
             badge.textContent = statusText;
             if (statusText.startsWith("Hadir")) {
-              badge.style.background = "#34c759";
+              badge.style.background = "#1e7e68";
             } else if (statusText.includes("Tidak Hadir")) {
-              badge.style.background = "#ff3b30";
+              badge.style.background = "#9b2c2c";
             } else {
-              badge.style.background = "#ffcc00";
-              badge.style.color = "#333";
+              badge.style.background = "#b7791f";
             }
             h4.appendChild(badge);
           }
@@ -554,284 +556,178 @@
       });
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    // Aktifkan Mode 3D Realistic Pop-Up Book Diorama (Low-Angle POV)
-    document.body.classList.add("diorama-book-mode");
-    let currentSceneIdx = 0;
-    let isTransitioning3D = false;
-
-    function getActiveScenes() {
-      return Array.from(document.querySelectorAll(".journey-scene")).filter(
-        (el) => !el.classList.contains("hidden")
-      );
-    }
-
-    function updateJourneyHud(scenes, idx) {
-      const active = scenes[idx];
-      if (!active) return;
-      const labelEl = document.getElementById("journey-label");
-      const prevBtn = document.getElementById("journey-prev");
-      const nextBtn = document.getElementById("journey-next");
-
-      if (labelEl) {
-        const title = active.getAttribute("data-scene-title") || "";
-        labelEl.textContent = `${idx + 1} / ${scenes.length} · ${title}`;
-      }
-      if (prevBtn) prevBtn.disabled = idx <= 0;
-      if (nextBtn) {
-        nextBtn.disabled = idx >= scenes.length - 1;
-        nextBtn.textContent = idx >= scenes.length - 1 ? "Akhir" : "Lanjut ›";
-      }
-
-      document.querySelectorAll(".bottom-nav a").forEach((link) => {
-        link.classList.toggle("active", link.getAttribute("href") === "#" + active.id);
-      });
-    }
-
-    const BACKDROP_PLANES = {
-      gate: {
-        far: '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18,146 Q110,84 210,108 T410,92 T542,146 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><ellipse cx="140" cy="48" rx="46" ry="18" fill="var(--paper-ivory)" opacity="0.88"/><ellipse cx="420" cy="42" rx="40" ry="15" fill="var(--paper-ivory)" opacity="0.82"/></svg>',
-        mid: '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M195,148 L195,62 C195,22 235,12 280,12 C325,12 365,22 365,62 L365,148 Z" fill="var(--paper-edge-2)" transform="translate(0,3)"/><path d="M195,146 L195,62 C195,22 235,12 280,12 C325,12 365,22 365,62 L365,146 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/><path d="M222,146 L222,72 C222,44 248,34 280,34 C312,34 338,44 338,72 L338,146 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/></svg>',
-        near: '<svg viewBox="0 0 560 150" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="106" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="142" cy="110" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="454" cy="96" r="28" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="418" cy="110" r="22" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
+  // =========================================================================
+  // INTERACTIVE WORLD MAP & LORE WAYPOINTS
+  // =========================================================================
+  function initLoreMap() {
+    const chapters = [
+      {
+        tag: "Chapter I • First Encounter",
+        title: "Pertemuan Tak Terduga",
+        desc: "Setiap petualangan besar bermula dari satu langkah kecil. Di persimpangan waktu yang tak terduga, dua penjelajah saling bertukar sapa dan menyalakan lentera harapan yang pertama.",
+        img: "img/img2.jpg",
       },
-      garden: {
-        far: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14,136 Q130,68 270,96 T546,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-        mid: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="280" cy="64" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/><path d="M238,136 C252,96 308,96 322,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
-        near: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="92" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><ellipse cx="468" cy="84" rx="44" ry="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
+      {
+        tag: "Chapter II • The Journey Together",
+        title: "Menapaki Lembah & Waktu",
+        desc: "Melalui musim demi musim, tawa dan doa menjadi kompas penuntun. Bersama-sama kami belajar arti kesabaran, kepercayaan, dan keteguhan hati untuk melangkah seiring sejalan.",
+        img: "img/img12.jpg",
       },
-      arch: {
-        far: '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M30,144 Q140,86 280,104 T530,144 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-        mid: '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M165,146 L165,54 C165,18 215,10 280,10 C345,10 395,18 395,54 L395,146 Z" fill="var(--paper-edge-2)" transform="translate(0,3)"/><path d="M165,144 L165,54 C165,18 215,10 280,10 C345,10 395,18 395,54 L395,144 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="3"/><path d="M196,144 L196,66 C196,38 232,28 280,28 C328,28 364,38 364,66 L364,144 Z" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/></svg>',
-        near: '<svg viewBox="0 0 560 148" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="128" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="432" cy="96" r="24" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
+      {
+        tag: "Final Destination • The Sacred Vow",
+        title: "Gerbang Babak Baru",
+        desc: "Kini tiba saatnya mengikat janji suci di hadapan semesta dan keluarga tercinta. Sebuah awal dari petualangan abadi membangun mahligai rumah tangga yang penuh berkah.",
+        img: "img/img13.jpg",
       },
-      trees: {
-        far: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20,136 Q150,82 280,104 T540,136 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-        mid: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M235,136 L280,52 L325,136 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-        near: '<svg viewBox="0 0 560 140" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="115" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="155" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="445" cy="76" r="34" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><circle cx="405" cy="90" r="24" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
-      },
-      pavilion: {
-        far: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20,142 Q150,92 280,108 T540,142 Z" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-        mid: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M160,64 L280,16 L400,64 Z" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="182" y="64" width="196" height="78" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="242" y="84" width="76" height="58" rx="38" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="2"/></svg>',
-        near: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="114" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/><circle cx="446" cy="94" r="26" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2"/></svg>',
-      },
-      city: {
-        far: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="142" y="34" width="72" height="108" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="346" y="38" width="72" height="104" rx="4" fill="var(--color-secondary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-        mid: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M232,142 L232,48 L280,18 L328,48 L328,142 Z" fill="var(--color-surface)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-        near: '<svg viewBox="0 0 560 146" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="74" y="54" width="58" height="88" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/><rect x="428" y="58" width="58" height="84" rx="4" fill="var(--color-primary)" stroke="var(--paper-ivory)" stroke-width="2.5"/></svg>',
-      },
-    };
+    ];
 
-    function injectDioramaBackdrops() {
-      document.querySelectorAll(".journey-scene").forEach((scene) => {
-        if (scene.id !== "cover" && !scene.querySelector(".scene-chapter-crest")) {
-          const container = scene.querySelector(".container");
-          const chapter = scene.getAttribute("data-chapter") || "";
-          const title = scene.getAttribute("data-scene-title") || "";
-          if (chapter && title && container) {
-            const crestWrap = document.createElement("div");
-            crestWrap.className = "text-center";
-            const crest = document.createElement("span");
-            crest.className = "scene-chapter-crest popup-layer";
-            crest.setAttribute("data-depth", "front");
-            crest.textContent = `✦ ${chapter} · ${title} ✦`;
-            crestWrap.appendChild(crest);
-            container.insertBefore(crestWrap, container.firstChild);
-          }
-        }
+    const buttons = document.querySelectorAll(".waypoint-btn");
+    const imgEl = document.getElementById("lore-img");
+    const tagEl = document.getElementById("lore-tag");
+    const titleEl = document.getElementById("lore-title");
+    const descEl = document.getElementById("lore-desc");
 
-        scene.querySelectorAll(".diorama-module").forEach((mod) => {
-          if (!mod.querySelector(".diorama-plane")) {
-            const key = mod.getAttribute("data-backdrop") || "garden";
-            const planes = BACKDROP_PLANES[key] || BACKDROP_PLANES.garden;
-            ["far", "mid", "near"].forEach((layerKey) => {
-              const planeDiv = document.createElement("div");
-              planeDiv.className = `diorama-plane diorama-plane-${layerKey}`;
-              const parsed = new DOMParser().parseFromString(planes[layerKey], "image/svg+xml");
-              if (parsed.documentElement && parsed.documentElement.nodeName === "svg") {
-                planeDiv.appendChild(document.importNode(parsed.documentElement, true));
-              }
-              mod.insertBefore(planeDiv, mod.querySelector(".popup-layer") || null);
-            });
-          }
-
-          if (!mod.querySelector(".paper-strut")) {
-            const leftStrut = document.createElement("span");
-            leftStrut.className = "paper-strut paper-strut-left";
-            const rightStrut = document.createElement("span");
-            rightStrut.className = "paper-strut paper-strut-right";
-            mod.appendChild(leftStrut);
-            mod.appendChild(rightStrut);
-          }
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const idx = Number(btn.getAttribute("data-chapter-idx")) || 0;
+        const ch = chapters[idx] || chapters[0];
+        buttons.forEach((b) => {
+          b.classList.remove("active");
+          b.setAttribute("aria-selected", "false");
         });
+        btn.classList.add("active");
+        btn.setAttribute("aria-selected", "true");
+
+        if (imgEl) imgEl.src = ch.img;
+        if (tagEl) tagEl.textContent = ch.tag;
+        if (titleEl) titleEl.textContent = ch.title;
+        if (descEl) descEl.textContent = ch.desc;
       });
+    });
+  }
+
+  // =========================================================================
+  // CANVAS GOLDEN DUST & FIREFLIES (60FPS)
+  // =========================================================================
+  function initFirefliesCanvas() {
+    const canvas = document.getElementById("fireflies-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const count = Math.min(48, Math.max(20, Math.floor(width / 32)));
+    const particles = Array.from({ length: count }, (_, i) => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      r: Math.random() * 2 + 0.8,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: -(Math.random() * 0.4 + 0.15),
+      alpha: Math.random() * 0.6 + 0.25,
+      phase: Math.random() * Math.PI * 2,
+      color: i % 4 === 0 ? "79, 209, 197" : "246, 224, 94",
+    }));
+
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    function tick() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.phase += 0.025;
+
+        if (p.y < -10) p.y = height + 10;
+        if (p.x < -10) p.x = width + 10;
+        if (p.x > width + 10) p.x = -10;
+
+        const glowAlpha = p.alpha * (0.65 + 0.35 * Math.sin(p.phase));
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${p.color}, ${glowAlpha.toFixed(2)})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = `rgba(${p.color}, 0.8)`;
+        ctx.fill();
+      }
+      ctx.shadowBlur = 0;
+      window.requestAnimationFrame(tick);
+    }
+    window.requestAnimationFrame(tick);
+  }
+
+  // =========================================================================
+  // PARALLAX, REVEAL & HUD REGION TRACKING
+  // =========================================================================
+  function initScrollAndHud() {
+    const revealEls = document.querySelectorAll(".reveal-on-scroll");
+    if ("IntersectionObserver" in window) {
+      const revealObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              revealObs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      revealEls.forEach((el) => revealObs.observe(el));
+
+      const regionObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const label = entry.target.getAttribute("data-hud-label");
+              const id = entry.target.id;
+              const hudLabelEl = document.getElementById("hud-region-label");
+              if (label && hudLabelEl) hudLabelEl.textContent = label;
+              document.querySelectorAll(".dock-item").forEach((item) => {
+                item.classList.toggle("active", item.getAttribute("data-target") === id);
+              });
+            }
+          });
+        },
+        { rootMargin: "-35% 0px -45% 0px" }
+      );
+      document.querySelectorAll(".realm-hud-region").forEach((sec) => regionObs.observe(sec));
+    } else {
+      revealEls.forEach((el) => el.classList.add("is-visible"));
     }
 
-    function goToScene(targetIdxOrId) {
-      if (isTransitioning3D) return;
-      const scenes = getActiveScenes();
-      if (scenes.length === 0) return;
+    let scrollTick = false;
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (scrollTick) return;
+        scrollTick = true;
+        window.requestAnimationFrame(() => {
+          const y = window.scrollY || 0;
+          const progress = Math.min(y / Math.max(window.innerHeight, 1), 1.5);
+          document.documentElement.style.setProperty("--hero-parallax-y", `${(y * 0.24).toFixed(1)}px`);
+          document.documentElement.style.setProperty("--hero-zoom", (1.04 + progress * 0.08).toFixed(3));
+          scrollTick = false;
+        });
+      },
+      { passive: true }
+    );
+  }
 
-      let targetIdx =
-        typeof targetIdxOrId === "number"
-          ? targetIdxOrId
-          : scenes.findIndex((s) => s.id === targetIdxOrId);
-
-      if (targetIdx < 0 || targetIdx >= scenes.length || targetIdx === currentSceneIdx) return;
-
-      const fromEl = scenes[currentSceneIdx];
-      const toEl = scenes[targetIdx];
-      const isForward = targetIdx > currentSceneIdx;
-      isTransitioning3D = true;
-
-      toEl.classList.remove("scene-exit-fold", "scene-active");
-      toEl.classList.add("scene-enter-rise");
-      toEl.scrollTop = 0;
-
-      // Force reflow agar animasi bangun diorama berjalan mulus
-      void toEl.offsetWidth;
-
-      if (fromEl) {
-        fromEl.classList.remove("scene-active");
-        fromEl.classList.add("scene-exit-fold");
-      }
-
-      toEl.classList.remove("scene-enter-rise");
-      toEl.classList.add("scene-active");
-
-      currentSceneIdx = targetIdx;
-      updateJourneyHud(scenes, currentSceneIdx);
-
-      const pageHint = document.getElementById("page-turn-hint");
-      if (pageHint && currentSceneIdx > 0) {
-        pageHint.style.display = "none";
-      }
-
-      if (toEl.id === "gallery" && typeof initGalleryCarousel === "function") {
-        setTimeout(() => initGalleryCarousel(), 120);
-      }
-
-      setTimeout(() => {
-        if (fromEl) {
-          fromEl.classList.remove("scene-exit-fold");
-        }
-        isTransitioning3D = false;
-      }, 920);
-    }
-
-    window.refresh3DJourneyState = function () {
-      const scenes = getActiveScenes();
-      if (currentSceneIdx >= scenes.length) currentSceneIdx = 0;
-      scenes.forEach((s, i) => {
-        s.classList.toggle("scene-active", i === currentSceneIdx);
-      });
-      updateJourneyHud(scenes, currentSceneIdx);
-    };
-
-    injectDioramaBackdrops();
+  // =========================================================================
+  // BOOTSTRAP INITIALIZATION
+  // =========================================================================
+  document.addEventListener("DOMContentLoaded", function () {
     formatTurutMengundang();
+    initLoreMap();
+    initFirefliesCanvas();
+    initScrollAndHud();
 
-    const prevBtn = document.getElementById("journey-prev");
-    const nextBtn = document.getElementById("journey-next");
-    const labelBtn = document.getElementById("journey-label");
-    const chapterDrawer = document.getElementById("chapter-drawer");
-    if (prevBtn) prevBtn.addEventListener("click", () => goToScene(currentSceneIdx - 1));
-    if (nextBtn) nextBtn.addEventListener("click", () => goToScene(currentSceneIdx + 1));
-    if (labelBtn && chapterDrawer) {
-      labelBtn.addEventListener("click", () => {
-        const isOpen = chapterDrawer.classList.toggle("is-open");
-        labelBtn.setAttribute("aria-expanded", String(isOpen));
-        chapterDrawer.setAttribute("aria-hidden", String(!isOpen));
-      });
-    }
-
-    document.querySelectorAll(".bottom-nav a").forEach((link) => {
-      link.addEventListener("click", function (e) {
-        const targetId = (this.getAttribute("href") || "").replace("#", "");
-        if (!targetId) return;
-        e.preventDefault();
-        goToScene(targetId);
-        if (chapterDrawer) {
-          chapterDrawer.classList.remove("is-open");
-          chapterDrawer.setAttribute("aria-hidden", "true");
-          if (labelBtn) labelBtn.setAttribute("aria-expanded", "false");
-        }
-      });
-    });
-
-    // Navigasi Wheel (hanya pindah scene jika sudah di batas atas/bawah scene saat ini)
-    let wheelCooldown = 0;
-    window.addEventListener(
-      "wheel",
-      function (e) {
-        if (!isInvitationOpened || isTransitioning3D) return;
-        const now = Date.now();
-        if (now - wheelCooldown < 950) return;
-
-        const scenes = getActiveScenes();
-        const active = scenes[currentSceneIdx];
-        if (!active) return;
-
-        const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 8;
-        const atTop = active.scrollTop <= 4;
-
-        if (e.deltaY > 35 && atBottom) {
-          wheelCooldown = now;
-          goToScene(currentSceneIdx + 1);
-        } else if (e.deltaY < -35 && atTop) {
-          wheelCooldown = now;
-          goToScene(currentSceneIdx - 1);
-        }
-      },
-      { passive: true }
-    );
-
-    // Navigasi Touch Swipe di batas atas/bawah scene (Mobile)
-    let touchStartY = 0;
-    window.addEventListener(
-      "touchstart",
-      (e) => {
-        if (e.touches && e.touches[0]) touchStartY = e.touches[0].clientY;
-      },
-      { passive: true }
-    );
-    window.addEventListener(
-      "touchend",
-      (e) => {
-        if (!isInvitationOpened || isTransitioning3D || !e.changedTouches || !e.changedTouches[0]) return;
-        const dy = touchStartY - e.changedTouches[0].clientY;
-        const scenes = getActiveScenes();
-        const active = scenes[currentSceneIdx];
-        if (!active) return;
-
-        const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 10;
-        const atTop = active.scrollTop <= 6;
-
-        if (dy > 55 && atBottom) {
-          goToScene(currentSceneIdx + 1);
-        } else if (dy < -55 && atTop) {
-          goToScene(currentSceneIdx - 1);
-        }
-      },
-      { passive: true }
-    );
-
-    // Navigasi Keyboard ArrowDown/ArrowUp & ArrowLeft/ArrowRight
-    window.addEventListener("keydown", (e) => {
-      if (!isInvitationOpened || isTransitioning3D) return;
-      const tag = (document.activeElement && document.activeElement.tagName) || "";
-      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
-      if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === "PageDown") {
-        e.preventDefault();
-        goToScene(currentSceneIdx + 1);
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft" || e.key === "PageUp") {
-        e.preventDefault();
-        goToScene(currentSceneIdx - 1);
-      }
-    });
-
-    window.refresh3DJourneyState();
-
-    // Stale-while-revalidate: tampilkan cache lokal jika ada sambil sinkronisasi ke backend
     try {
       const cachedRaw = localStorage.getItem(CACHE_KEY);
       if (cachedRaw) {
@@ -849,7 +745,7 @@
       } catch (e) {
         console.error("Render error:", e);
       } finally {
-        finishLoadingAndShow();
+        finishLoading();
         loadWishes();
       }
     }
@@ -859,7 +755,7 @@
         isDone = true;
         completeInit();
       }
-    }, 5000);
+    }, 4500);
 
     apiGet("getSettings", { event: EVENT_ID })
       .then((data) => {
@@ -885,89 +781,5 @@
           completeInit();
         }
       });
-  });
-
-  // 60fps Low-Angle Diorama Parallax (Desktop Mouse + Mobile Touch & Gyroscope)
-  let tiltTicking = false;
-  function applyTilt(nx, ny) {
-    if (tiltTicking) return;
-    tiltTicking = true;
-    window.requestAnimationFrame(function () {
-      document.documentElement.style.setProperty("--tilt-y", nx.toFixed(3));
-      document.documentElement.style.setProperty("--tilt-x", ny.toFixed(3));
-      tiltTicking = false;
-    });
-  }
-
-  window.addEventListener(
-    "mousemove",
-    function (e) {
-      if (window.innerWidth < 992) return;
-      const nx = (e.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2;
-      const ny = -(e.clientY / Math.max(window.innerHeight, 1) - 0.5) * 2;
-      applyTilt(nx, ny);
-    },
-    { passive: true }
-  );
-
-  window.addEventListener(
-    "touchmove",
-    function (e) {
-      if (!e.touches || !e.touches[0]) return;
-      const nx = (e.touches[0].clientX / Math.max(window.innerWidth, 1) - 0.5) * 1.4;
-      const ny = -(e.touches[0].clientY / Math.max(window.innerHeight, 1) - 0.5) * 1.4;
-      applyTilt(nx, ny);
-    },
-    { passive: true }
-  );
-
-  window.addEventListener(
-    "touchend",
-    function () {
-      applyTilt(0, 0);
-    },
-    { passive: true }
-  );
-
-  window.addEventListener(
-    "deviceorientation",
-    function (e) {
-      if (e.gamma === null || e.beta === null) return;
-      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-      const nx = clamp(e.gamma / 30, -1, 1);
-      const ny = -clamp((e.beta - 35) / 30, -1, 1);
-      applyTilt(nx, ny);
-    },
-    { passive: true }
-  );
-
-  // Throttled Scroll Spy + 3D Depth Parallax pada Teras Depan
-  let scrollTicking = false;
-  window.addEventListener("scroll", function () {
-    if (scrollTicking) return;
-    scrollTicking = true;
-    window.requestAnimationFrame(function () {
-      const scrollY = window.scrollY || window.pageYOffset || 0;
-      const heroProgress = Math.min(Math.max(scrollY / Math.max(window.innerHeight, 1), 0), 1);
-      document.documentElement.style.setProperty("--hero-zoom", (1 + heroProgress * 0.08).toFixed(3));
-      document.documentElement.style.setProperty("--hero-shift", `${(heroProgress * 28).toFixed(1)}px`);
-
-      const sections = ["cover", "profile", "events", "gallery", "rsvp"];
-      let current = "cover";
-      sections.forEach((secId) => {
-        const sec = document.getElementById(secId);
-        if (sec && !sec.classList.contains("hidden")) {
-          const rect = sec.getBoundingClientRect();
-          if (rect.top <= window.innerHeight / 2) {
-            current = secId;
-          }
-        }
-      });
-
-      document.querySelectorAll(".bottom-nav a").forEach((link) => {
-        link.classList.toggle("active", link.getAttribute("href") === "#" + current);
-      });
-      scrollTicking = false;
-    });
   });
 })();
