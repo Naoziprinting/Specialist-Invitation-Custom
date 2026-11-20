@@ -18,8 +18,9 @@
   --cyan-glow: rgba(79, 209, 197, 0.35);
 
   --text-primary: #f5efe6;
-  --text-secondary: #cbbba0;
-  --text-muted: #938979;
+  --text-secondary: #d6cab6;
+  --text-muted: #a89f91;
+  --text-on-accent: #121618;
 
   --font-display: "Cinzel", "Cormorant Garamond", Georgia, serif;
   --font-serif: "Cormorant Garamond", Georgia, serif;
@@ -87,7 +88,7 @@ body.start-locked {
 }
 
 .text-gold-gradient {
-  background: linear-gradient(135deg, #fff3c4 0%, var(--gold-antique) 45%, var(--bronze) 75%, #ffe699 100%);
+  background: linear-gradient(135deg, #ffffff 0%, var(--gold-bright) 38%, var(--gold-antique) 72%, #ffffff 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
@@ -338,9 +339,9 @@ body.start-locked {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #121618;
-  background: linear-gradient(135deg, #f6e05e 0%, #d4af37 52%, #b8860b 100%);
-  border: 1px solid #fff0a8;
+  color: var(--text-on-accent);
+  background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold-antique) 100%);
+  border: 1px solid rgba(255, 240, 168, 0.75);
   border-radius: 8px;
   cursor: pointer;
   overflow: hidden;
@@ -364,7 +365,7 @@ body.start-locked {
 .btn-game:hover {
   transform: translateY(-2px) scale(1.03);
   box-shadow: 0 12px 32px rgba(212, 175, 55, 0.45), 0 0 18px rgba(246, 224, 94, 0.35);
-  color: #121618;
+  color: var(--text-on-accent);
 }
 
 .btn-game:hover::before {
@@ -686,7 +687,7 @@ body.start-locked {
 }
 
 .dock-item.active {
-  color: #121618;
+  color: var(--text-on-accent);
   background: linear-gradient(135deg, var(--gold-bright), var(--gold-antique));
   box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
   font-weight: 700;
@@ -1003,7 +1004,7 @@ body.start-locked {
 .waypoint-btn:hover .waypoint-node,
 .waypoint-btn.active .waypoint-node {
   background: linear-gradient(135deg, var(--gold-bright), var(--gold-antique));
-  color: #121618;
+  color: var(--text-on-accent);
   border-color: #fff3c4;
   transform: scale(1.12);
   box-shadow: 0 0 22px rgba(212, 175, 55, 0.6), 0 0 0 6px rgba(79, 209, 197, 0.16);
@@ -1290,7 +1291,7 @@ body.start-locked {
   gap: 8px;
   padding: 4px 14px;
   background: linear-gradient(135deg, var(--gold-bright), var(--gold-antique));
-  color: #121618;
+  color: var(--text-on-accent);
   font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 700;
