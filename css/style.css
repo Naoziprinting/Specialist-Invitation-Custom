@@ -553,55 +553,72 @@ body.diorama-book-mode #hero-bg > .container {
   margin-bottom: 10px;
 }
 
-/* Garis Lipatan & Penyangga Kertas di Dasar Komponen */
+/* Garis Lipatan, Penyangga Kertas & Ambient Occlusion di Dasar Komponen */
 .diorama-module::after {
   content: "";
   position: absolute;
-  left: 10%;
-  right: 10%;
-  bottom: -4px;
-  height: 10px;
-  background: linear-gradient(to bottom, rgba(34, 24, 16, 0.16), transparent);
-  border-top: 1.5px dashed rgba(120, 96, 76, 0.34);
+  left: 8%;
+  right: 8%;
+  bottom: -6px;
+  height: 14px;
+  background: linear-gradient(to bottom, rgba(24, 16, 10, 0.24), rgba(24, 16, 10, 0.06) 55%, transparent);
+  border-top: 1.5px dashed rgba(120, 96, 76, 0.36);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Siluet Latar Belakang (Bangunan, Gapura, Pepohonan, Perbukitan) */
-.diorama-backdrop {
+/* Multi-Plane Backdrop (3 Bidang Z Terpisah untuk Paralaks Nyata) */
+.diorama-plane {
   position: absolute;
   top: 0;
   left: 50%;
   width: min(104%, 560px);
   transform-origin: bottom center;
-  transform: translate3d(-50%, 0, -44px) rotateX(88deg);
   opacity: 0;
   pointer-events: none;
-  z-index: 0;
-  transition:
-    transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.08s,
-    opacity 0.6s ease 0.08s;
   will-change: transform, opacity;
-  filter: drop-shadow(
-    calc(var(--tilt-y) * -10px)
-    calc(10px + var(--tilt-x) * 4px)
-    10px rgba(24, 16, 10, 0.24)
-  );
 }
 
-.journey-scene.scene-active .diorama-backdrop {
-  transform: translate3d(
-    calc(-50% + var(--tilt-y) * -10px),
-    calc(var(--tilt-x) * 4px),
-    -44px
-  ) rotateX(0deg);
-  opacity: 0.96;
-}
-
-.diorama-backdrop svg {
+.diorama-plane svg {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.diorama-plane-far {
+  z-index: 0;
+  transform: translate3d(-50%, 0, -86px) rotateX(88deg);
+  transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.05s, opacity 0.6s ease 0.05s;
+  filter: drop-shadow(calc(var(--tilt-y) * -14px) calc(12px + var(--tilt-x) * 5px) 12px rgba(24, 16, 10, 0.2));
+}
+
+.diorama-plane-mid {
+  z-index: 1;
+  transform: translate3d(-50%, 0, -52px) rotateX(88deg);
+  transition: transform 0.98s cubic-bezier(0.22, 1, 0.36, 1) 0.12s, opacity 0.58s ease 0.12s;
+  filter: drop-shadow(calc(var(--tilt-y) * -10px) calc(10px + var(--tilt-x) * 4px) 10px rgba(24, 16, 10, 0.24));
+}
+
+.diorama-plane-near {
+  z-index: 1;
+  transform: translate3d(-50%, 0, -24px) rotateX(88deg);
+  transition: transform 0.92s cubic-bezier(0.22, 1, 0.36, 1) 0.18s, opacity 0.55s ease 0.18s;
+  filter: drop-shadow(calc(var(--tilt-y) * -6px) calc(8px + var(--tilt-x) * 3px) 8px rgba(24, 16, 10, 0.22));
+}
+
+.journey-scene.scene-active .diorama-plane-far {
+  transform: translate3d(calc(-50% + var(--tilt-y) * -16px), calc(var(--tilt-x) * 5px), -86px) rotateX(0deg);
+  opacity: 0.92;
+}
+
+.journey-scene.scene-active .diorama-plane-mid {
+  transform: translate3d(calc(-50% + var(--tilt-y) * -10px), calc(var(--tilt-x) * 3.5px), -52px) rotateX(0deg);
+  opacity: 0.98;
+}
+
+.journey-scene.scene-active .diorama-plane-near {
+  transform: translate3d(calc(-50% + var(--tilt-y) * -5px), calc(var(--tilt-x) * 2px), -24px) rotateX(0deg);
+  opacity: 1;
 }
 
 /* Penyangga Segitiga Kertas (Paper Struts) */
@@ -693,36 +710,125 @@ body.diorama-book-mode #hero-bg > .container {
     0 6px 14px rgba(24, 16, 10, 0.16);
 }
 
-/* HUD Navigasi & Bottom Nav (Thumb-Friendly Zone) */
-#journey-hud {
+/* Pita Judul Kertas (Kontras Tinggi di Semua 15 Tema) */
+.diorama-title-ribbon {
+  display: inline-block;
+  padding: 8px 26px;
+  border-radius: 999px;
+  background: var(--paper-ivory);
+  color: var(--paper-ink);
+  border: 1.5px solid #ffffff;
+  box-shadow:
+    0 2px 0 var(--paper-edge-1),
+    0 4px 0 var(--paper-edge-2),
+    0 12px 24px rgba(24, 16, 10, 0.22);
+}
+
+/* Optimasi Keterbacaan Teks Panjang & Grid Turut Mengundang */
+#ayat-text,
+#closing-section p {
+  max-width: 58ch;
+  margin-inline: auto;
+  line-height: 1.75;
+}
+
+.turut-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+  text-align: left;
+}
+
+.turut-pill {
+  background: rgba(251, 247, 240, 0.92);
+  border: 1px solid var(--paper-edge-1);
+  border-left: 3px solid var(--berem);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--paper-ink);
+}
+
+/* Isyarat Visual Halaman Pertama */
+.page-turn-hint {
+  margin-top: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--berem-text);
+  letter-spacing: 0.4px;
+  animation: hint-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes hint-pulse {
+  0%, 100% { opacity: 0.55; transform: translateX(0); }
+  50% { opacity: 1; transform: translateX(4px); }
+}
+
+.owl-carousel .item {
+  transition: transform 0.2s ease;
+}
+
+.owl-carousel .item:active {
+  transform: scale(0.97);
+}
+
+/* Unified Floating Dock (Navigasi + Drawer Daftar Bab) */
+#diorama-dock {
   position: fixed;
-  bottom: 72px;
+  bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1032;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  background: rgba(251, 247, 240, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  padding: 4px 10px;
-  border-radius: 999px;
-  box-shadow:
-    0 2px 0 var(--paper-edge-1),
-    0 10px 24px rgba(24, 16, 10, 0.24);
-  border: 1px solid rgba(168, 145, 120, 0.35);
-  font-size: 12px;
-  white-space: nowrap;
+  gap: 8px;
   max-width: calc(100vw - 24px);
 }
 
-#journey-label {
+.chapter-drawer {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.95);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.25s;
+}
+
+.chapter-drawer.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0s;
+}
+
+#journey-hud {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(251, 247, 240, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 4px 8px;
+  border-radius: 999px;
+  box-shadow:
+    0 2px 0 var(--paper-edge-1),
+    0 10px 26px rgba(24, 16, 10, 0.26);
+  border: 1px solid rgba(168, 145, 120, 0.35);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.journey-label-btn {
+  border: none;
+  background: transparent;
   font-weight: 700;
   color: var(--paper-ink);
-  padding: 0 4px;
+  padding: 6px 8px;
+  min-height: 44px;
+  cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 44vw;
 }
 
 .journey-btn {
@@ -752,19 +858,14 @@ body.diorama-book-mode #hero-bg > .container {
 }
 
 .bottom-nav {
-  position: fixed;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(251, 247, 240, 0.95);
+  background: rgba(251, 247, 240, 0.96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   padding: 5px 12px;
   border-radius: 40px;
   display: flex;
   gap: 8px;
-  box-shadow: 0 8px 24px rgba(24, 16, 10, 0.22);
-  z-index: 1030;
+  box-shadow: 0 8px 24px rgba(24, 16, 10, 0.24);
   border: 1px solid rgba(168, 145, 120, 0.3);
 }
 
@@ -781,10 +882,11 @@ body.diorama-book-mode #hero-bg > .container {
   background: var(--berem);
 }
 
+/* Kontrol Musik di Kanan Atas (Menghindari Penumpukan Bawah) */
 .audio-floating {
   position: fixed;
-  bottom: 124px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   z-index: 1035;
 }
 
@@ -810,10 +912,12 @@ body.diorama-book-mode #hero-bg > .container {
 @media (prefers-reduced-motion: reduce) {
   .journey-scene,
   .popup-layer,
-  .diorama-backdrop,
+  .diorama-plane,
+  .page-turn-hint,
   #exampleModal #front-image,
   #exampleModal #front-text {
     transition: none !important;
+    animation: none !important;
     transform: none !important;
     opacity: 1 !important;
   }
