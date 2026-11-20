@@ -721,10 +721,25 @@ body.start-locked {
   position: absolute;
   width: min(680px, 95vw);
   height: min(680px, 95vw);
-  opacity: 0.14;
+  opacity: 0.16;
   pointer-events: none;
   z-index: 1;
   animation: spinRune 90s linear infinite;
+}
+
+.start-screen-orb {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(720px, 96vw);
+  height: min(720px, 96vw);
+  opacity: 0.22;
+  animation: spinCenteredOrb 80s linear infinite;
+}
+
+@keyframes spinCenteredOrb {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 .hero-vignette {
