@@ -538,8 +538,20 @@ body.theme-ribbon-scallop .profile-circle {
 }
 
 /* =========================================================
-   Stage-Set Journey Transitions (Halaman Depan -> Ruang Dalam)
+   3D Realistic Pop-Up Book Engine (Paper-Cut & Fold Physics)
    ========================================================= */
+:root {
+  --paper-ivory: #fbf7f0;
+  --paper-warm: #f3eadc;
+  --paper-edge-1: #ebe0cf;
+  --paper-edge-2: #d8c8b1;
+  --paper-edge-3: #bfac91;
+  --paper-ink: #342923;
+  --book-cover-rim: #4b392e;
+  --tilt-x: 0;
+  --tilt-y: 0;
+}
+
 .ornament-divider {
   margin-top: -1px;
   margin-bottom: -1px;
@@ -547,26 +559,77 @@ body.theme-ribbon-scallop .profile-circle {
   z-index: 2;
 }
 
-/* 1. Pintu Gerbang Depan 3D (Daun Pintu Berengsel) */
+/* 1. Sampul Depan Buku Hardcover 3D (#exampleModal) */
 #exampleModal .modal-body {
-  perspective: 1600px;
+  perspective: 1800px;
   transform-style: preserve-3d;
   overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, #3f332b 0%, #1d1612 100%) !important;
 }
 
 #exampleModal #front-image,
 #exampleModal #front-text {
-  transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s ease;
+  transition: transform 1.05s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.85s ease;
   backface-visibility: hidden;
   will-change: transform, opacity;
 }
 
 #exampleModal #front-image {
   transform-origin: left center;
+  position: relative;
+  box-shadow: inset -18px 0 36px rgba(25, 16, 10, 0.32);
 }
 
-#exampleModal #front-text {
-  transform-origin: right center;
+#exampleModal #front-text.book-cover-face {
+  transform-origin: left center;
+  background-color: var(--wakwak);
+  background-image:
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.55) 0%, transparent 65%),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23p)' opacity='0.055'/%3E%3C/svg%3E");
+  box-shadow:
+    inset 18px 0 30px -12px rgba(45, 30, 18, 0.22),
+    inset 0 0 0 14px rgba(255, 252, 245, 0.45);
+  position: relative;
+}
+
+.book-cover-inner {
+  width: min(440px, 92%);
+  padding: 2.25rem 1.75rem;
+  border-radius: 16px;
+  background: rgba(251, 247, 240, 0.86);
+  border: 1px solid rgba(168, 145, 120, 0.32);
+  box-shadow:
+    0 2px 0 #ffffff,
+    0 4px 0 var(--paper-edge-1),
+    0 6px 0 var(--paper-edge-2),
+    0 18px 36px rgba(34, 24, 16, 0.2);
+}
+
+.book-cover-crest {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--berem-text);
+  border: 1px solid currentColor;
+  padding: 4px 14px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.book-clasp-btn {
+  border: 2px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.35),
+    0 4px 0 rgba(45, 32, 24, 0.25),
+    0 12px 24px rgba(30, 20, 14, 0.28) !important;
+  transition: transform 0.28s cubic-bezier(0.22, 1.2, 0.36, 1), box-shadow 0.28s ease !important;
+}
+
+.book-clasp-btn:hover {
+  transform: translateY(-3px) scale(1.02);
 }
 
 #exampleModal.stage-doors-opening {
@@ -574,36 +637,42 @@ body.theme-ribbon-scallop .profile-circle {
 }
 
 #exampleModal.stage-doors-opening #front-image {
-  transform: rotateY(-82deg) translateZ(30px) scale(0.95);
-  opacity: 0.15;
+  transform: rotateY(-108deg) translateZ(24px);
+  opacity: 0.12;
 }
 
 #exampleModal.stage-doors-opening #front-text {
-  transform: rotateY(82deg) translateZ(30px) scale(0.95);
-  opacity: 0.1;
+  transform: rotateY(-102deg) translateZ(16px);
+  opacity: 0.08;
 }
 
 @media (max-width: 767.98px) {
-  #exampleModal #front-text {
+  #exampleModal #front-text.book-cover-face {
     transform-origin: left center;
+    background-image:
+      linear-gradient(to bottom, rgba(251, 247, 240, 0.74), rgba(243, 234, 220, 0.88)),
+      url(../img/img3-foreground.jpg);
+    background-size: cover;
+    background-position: center;
   }
   #exampleModal.stage-doors-opening #front-text {
-    transform: rotateY(-84deg) scale(0.94);
-    opacity: 0.08;
+    transform: rotateY(-96deg) scale(0.96);
+    opacity: 0.06;
   }
 }
 
-/* 2. Halaman Depan / Teras (#cover) dengan Sorot Lampu Panggung & Kedalaman 3D */
+/* 2. Halaman Pembuka (#cover) sebagai Lembar Pop-Up Pertama */
 #cover {
   position: relative;
   overflow: hidden;
-  perspective: 1400px;
+  perspective: 1600px;
 }
 
 #hero-bg {
   position: relative;
-  transform: scale(1.12) translateZ(-90px);
-  transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1), filter 1.2s ease;
+  min-height: 100%;
+  transform: scale(1.06) translateZ(-40px);
+  transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform;
 }
 
@@ -616,8 +685,8 @@ body.theme-ribbon-scallop .profile-circle {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.04) 48%, rgba(18, 16, 24, 0.36) 100%),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 0%, transparent 35%, rgba(0, 0, 0, 0.2) 100%);
+    radial-gradient(circle at 50% 42%, rgba(251, 247, 240, 0.28) 0%, rgba(251, 247, 240, 0.08) 52%, rgba(28, 20, 14, 0.38) 100%),
+    linear-gradient(to bottom, rgba(28, 20, 14, 0.08) 0%, transparent 35%, rgba(28, 20, 14, 0.25) 100%);
   pointer-events: none;
 }
 
@@ -626,82 +695,61 @@ body.theme-ribbon-scallop .profile-circle {
   z-index: 2;
 }
 
-/* 3. Transisi 3D Pintu ke Pintu (.stage-room) */
-.stage-room {
+.cover-popup-card {
   position: relative;
-  transform-style: preserve-3d;
-  opacity: 0.12;
-  filter: blur(1.5px);
-  transform: perspective(1400px) translate3d(0, 48px, -130px) rotateX(5deg) scale(0.92);
-  transition:
-    opacity 1s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.9s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: opacity, transform, filter;
+  padding: 2rem 1.5rem 2.2rem;
+  border-radius: 18px;
+  background: rgba(251, 247, 240, 0.88);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  color: var(--paper-ink);
+  box-shadow:
+    0 2px 0 #ffffff,
+    0 5px 0 var(--paper-edge-1),
+    0 8px 0 var(--paper-edge-2),
+    0 20px 42px rgba(26, 18, 12, 0.28);
 }
 
-.stage-room.is-entered {
-  opacity: 1;
-  filter: blur(0);
-  transform: perspective(1400px) translate3d(0, 0, 0) rotateX(0deg) scale(1);
+.cover-subtitle {
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  color: var(--berem-text);
 }
 
-/* Bingkai sisi ruangan 3D (efek berada di dalam ruangan) */
-.stage-room::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  box-shadow: inset 18px 0 36px -22px rgba(0, 0, 0, 0.16), inset -18px 0 36px -22px rgba(0, 0, 0, 0.16);
+.cover-date {
+  font-weight: 600;
+  color: #52433a;
+  margin-bottom: 0.25rem;
 }
 
-/* 4. Efek 3D Portal Saat Melompat Antar-Ruang lewat Bottom Nav */
-#door-portal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 1045;
-  pointer-events: none;
-  opacity: 0;
-  background: radial-gradient(circle at 50% 50%, transparent 25%, rgba(20, 18, 28, 0.42) 100%);
-  transform: scale(1.25);
-  transition: opacity 0.32s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+/* Medali Countdown ala Paper-Cut Layered Art */
+.simply-countdown > .simply-section {
+  background: var(--paper-ivory) !important;
+  border: 2px solid #ffffff !important;
+  box-shadow:
+    0 2px 0 var(--paper-edge-1),
+    0 4px 0 var(--paper-edge-2),
+    0 10px 18px rgba(34, 24, 16, 0.2) !important;
+  transition: transform 0.3s cubic-bezier(0.22, 1.2, 0.36, 1), box-shadow 0.3s ease;
 }
 
-#door-portal-overlay.is-active {
-  opacity: 1;
-  transform: scale(1);
+.simply-countdown > .simply-section:hover {
+  transform: translateY(-4px) translateZ(12px);
 }
 
-/* Kedalaman pencahayaan panggung yang makin intim di ruang dalam */
-#profile::before,
-#gift::before,
-#rsvp::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.35) 0%, transparent 65%);
-  pointer-events: none;
-}
-
-#profile > .container,
-#gift > .container,
-#rsvp > .container {
-  position: relative;
-  z-index: 1;
-}
-
-.card {
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-}
-
-/* =========================================================
-   5. Mode Perjalanan Video 3D (Focal-Point Zoom-In Fly-Through)
-   ========================================================= */
+/* 3. Mode Buku Pop-Up 3D (.journey-3d-mode) */
 body.journey-3d-mode {
   overflow: hidden;
   height: 100vh;
   height: 100dvh;
-  perspective: 1400px;
+  perspective: 1800px;
+  background-color: #29211c;
+  background-image:
+    radial-gradient(circle at 50% 42%, #42352c 0%, #261e19 58%, #17120f 100%);
 }
 
 body.journey-3d-mode .ornament-divider,
@@ -718,77 +766,393 @@ body.journey-3d-mode .journey-scene {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 120px;
+  padding-bottom: 128px;
   margin: 0;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  filter: blur(4px);
-  transform-origin: var(--focal-origin, 50% 50%);
-  transform: scale(0.55) translateZ(-260px);
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  perspective-origin: 50% 82%;
+  transform-origin: left center;
+  transform: rotateY(76deg) translateZ(-80px);
   transition:
-    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.72s ease,
-    visibility 0s linear 0.95s;
-  will-change: transform, opacity, filter;
+    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.92s;
+  will-change: transform, opacity;
   z-index: 1;
+  box-shadow:
+    inset 0 0 0 10px rgba(255, 252, 245, 0.28),
+    inset 0 0 56px rgba(42, 30, 20, 0.16);
 }
 
+/* Tekstur Serat Kertas Watercolor & Matte Cardstock (Ringan 60fps) */
+body.journey-3d-mode .journey-scene::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.065;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+/* Halaman Aktif (Terbuka Datar di Atas Meja) */
 body.journey-3d-mode .journey-scene.scene-active {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
-  filter: blur(0);
-  transform: scale(1) translateZ(0);
+  transform: rotateY(0deg) rotateX(0deg) translate3d(0, 0, 0);
   transition:
-    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 0.72s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.72s ease,
+    transform 0.92s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
     visibility 0s linear 0s;
   z-index: 10;
 }
 
-/* Kamera drone terbang menembus titik fokus ruangan sebelumnya */
-body.journey-3d-mode .journey-scene.scene-exit-zoom-in {
+/* Transisi Membalik Halaman ke Kiri (Maju ke Halaman Berikutnya) */
+body.journey-3d-mode .journey-scene.scene-exit-fold-left {
   opacity: 0;
   visibility: visible;
   pointer-events: none;
-  filter: blur(7px);
-  transform: scale(1.92) translate3d(calc(var(--fly-x, 0px) * -0.4), -30px, 280px) rotateX(8deg);
+  transform-origin: left center;
+  transform: rotateY(-84deg) translateX(-4%) translateZ(-40px);
   z-index: 12;
 }
 
-/* Ruangan baru muncul dari kedalaman di balik titik fokus dengan banking sudut drone */
-body.journey-3d-mode .journey-scene.scene-enter-from-deep {
+body.journey-3d-mode .journey-scene.scene-enter-from-right {
   opacity: 0;
   visibility: visible;
-  filter: blur(5px);
-  transform: translate3d(var(--fly-x, 0px), var(--fly-y, 20px), -360px) rotateX(-10deg) rotateY(var(--fly-tilt, 0deg)) scale(0.42);
+  transform-origin: right center;
+  transform: rotateY(72deg) translateX(4%) translateZ(-50px);
   transition: none !important;
   z-index: 11;
 }
 
-/* Kamera drone mundur (zoom-out) saat kembali ke ruangan sebelumnya */
-body.journey-3d-mode .journey-scene.scene-exit-zoom-out {
+/* Transisi Membalik Halaman ke Kanan (Kembali ke Halaman Sebelumnya) */
+body.journey-3d-mode .journey-scene.scene-exit-fold-right {
   opacity: 0;
   visibility: visible;
   pointer-events: none;
-  filter: blur(5px);
-  transform: translate3d(var(--fly-x, 0px), var(--fly-y, 20px), -300px) rotateX(-8deg) rotateY(var(--fly-tilt, 0deg)) scale(0.45);
-  z-index: 9;
-}
-
-body.journey-3d-mode .journey-scene.scene-enter-from-front {
-  opacity: 0;
-  visibility: visible;
-  filter: blur(7px);
-  transform: scale(1.85) translate3d(0, -25px, 240px) rotateX(6deg);
-  transition: none !important;
+  transform-origin: right center;
+  transform: rotateY(84deg) translateX(4%) translateZ(-40px);
   z-index: 12;
 }
 
-/* Journey HUD (Indikator Ruang + Tombol Lanjut/Kembali) */
+body.journey-3d-mode .journey-scene.scene-enter-from-left {
+  opacity: 0;
+  visibility: visible;
+  transform-origin: left center;
+  transform: rotateY(-72deg) translateX(-4%) translateZ(-50px);
+  transition: none !important;
+  z-index: 11;
+}
+
+/* Mobile (< 992px): Lipatan Buku Vertikal (Atas/Bawah) agar proporsional & mudah dibaca */
+@media (max-width: 991.98px) {
+  body.journey-3d-mode .journey-scene {
+    transform-origin: center top;
+    transform: rotateX(-68deg) translateZ(-40px);
+  }
+  body.journey-3d-mode .journey-scene.scene-exit-fold-left {
+    transform-origin: center top;
+    transform: rotateX(78deg) translateY(-4%) translateZ(-30px);
+  }
+  body.journey-3d-mode .journey-scene.scene-enter-from-right {
+    transform-origin: center bottom;
+    transform: rotateX(-72deg) translateY(4%) translateZ(-30px);
+  }
+  body.journey-3d-mode .journey-scene.scene-exit-fold-right {
+    transform-origin: center bottom;
+    transform: rotateX(-78deg) translateY(4%) translateZ(-30px);
+  }
+  body.journey-3d-mode .journey-scene.scene-enter-from-left {
+    transform-origin: center top;
+    transform: rotateX(72deg) translateY(-4%) translateZ(-30px);
+  }
+}
+
+/* Desktop Open-Book Spread: Tumpukan Kertas Tebal & Sampul Kulit di Pinggiran */
+@media (min-width: 992px) {
+  body.journey-3d-mode .journey-scene {
+    max-width: 1140px;
+    max-height: calc(100dvh - 44px);
+    margin: 22px auto;
+    border-radius: 14px;
+    box-shadow:
+      inset 0 0 0 12px rgba(251, 247, 240, 0.36),
+      inset 0 0 60px rgba(40, 28, 18, 0.16),
+      -5px 0 0 -1px var(--paper-ivory),
+      5px 0 0 -1px var(--paper-ivory),
+      -10px 0 0 -2px var(--paper-edge-1),
+      10px 0 0 -2px var(--paper-edge-1),
+      -15px 0 0 -3px var(--paper-edge-2),
+      15px 0 0 -3px var(--paper-edge-2),
+      -20px 2px 0 -4px var(--paper-edge-3),
+      20px 2px 0 -4px var(--paper-edge-3),
+      0 6px 0 2px var(--book-cover-rim),
+      -24px 6px 0 0 var(--book-cover-rim),
+      24px 6px 0 0 var(--book-cover-rim),
+      0 32px 72px rgba(0, 0, 0, 0.56);
+  }
+}
+
+/* Container Halaman + Tilt/Parallax 3D (Cursor & Gyroscope) */
+body.journey-3d-mode .journey-scene > .container {
+  transform-style: preserve-3d;
+  perspective: 1100px;
+  perspective-origin: 50% 84%;
+  transform: rotateX(10deg);
+  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  z-index: 2;
+}
+
+body.journey-3d-mode .journey-scene.scene-active > .container {
+  transform: rotateX(calc(var(--tilt-x, 0) * 2.4deg)) rotateY(calc(var(--tilt-y, 0) * 2.8deg));
+}
+
+/* 4. Mekanisme Bangun & Lipat Pop-Up (Transform-Origin Dasar + Paper-Cut Thickness) */
+.popup-fold-item {
+  transform-origin: center bottom;
+  transform-style: preserve-3d;
+  transform: translate3d(0, 22px, var(--popup-z, 0px)) rotateX(86deg);
+  opacity: 0;
+  transition:
+    transform 0.92s cubic-bezier(0.22, 1.16, 0.36, 1) var(--popup-delay, 0.14s),
+    opacity 0.48s ease var(--popup-delay, 0.14s),
+    box-shadow 0.4s ease,
+    filter 0.4s ease;
+  will-change: transform, opacity;
+}
+
+.journey-scene.scene-active .popup-fold-item {
+  transform: translate3d(
+    calc(var(--tilt-y, 0) * 7px),
+    calc(var(--tilt-x, 0) * -5px),
+    var(--popup-z, 0px)
+  ) rotateX(0deg);
+  opacity: 1;
+}
+
+/* Ketebalan Kertas & Bayangan Dinamis pada Kartu Pop-Up */
+.journey-scene.scene-active .card.popup-fold-item,
+.journey-scene.scene-active .cover-popup-card.popup-fold-item {
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow:
+    0 2px 0 #ffffff,
+    0 4px 0 var(--paper-edge-1),
+    0 6px 0 var(--paper-edge-2),
+    calc(var(--tilt-y, 0) * -10px) calc(16px + var(--tilt-x, 0) * 7px) 28px -6px rgba(28, 18, 12, 0.26) !important;
+}
+
+/* Garis Engsel Lipatan Kertas di Dasar Kartu Pop-Up */
+.card.popup-fold-item::after,
+.cover-popup-card.popup-fold-item::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -6px;
+  height: 2px;
+  border-bottom: 1.5px dashed rgba(120, 96, 76, 0.28);
+  pointer-events: none;
+}
+
+/* Micro-Interaction Hover / Tap Lift pada Elemen Interaktif */
+.journey-scene.scene-active .card.popup-fold-item:hover,
+.journey-scene.scene-active .owl-carousel .item:hover {
+  transform: translate3d(
+    calc(var(--tilt-y, 0) * 7px),
+    calc(var(--tilt-x, 0) * -5px - 5px),
+    calc(var(--popup-z, 8px) + 12px)
+  ) rotateX(0deg);
+  box-shadow:
+    0 3px 0 #ffffff,
+    0 6px 0 var(--paper-edge-1),
+    0 9px 0 var(--paper-edge-2),
+    calc(var(--tilt-y, 0) * -14px) calc(22px + var(--tilt-x, 0) * 9px) 34px -6px rgba(28, 18, 12, 0.32) !important;
+}
+
+/* Bingkai Foto Pop-Up dengan Ketebalan Kertas & Drop Shadow Dinamis */
+.journey-scene.scene-active .profile-circle.popup-fold-item,
+.journey-scene.scene-active #closing-img.popup-fold-item {
+  border: 6px solid var(--paper-ivory);
+  box-shadow:
+    0 0 0 2px var(--paper-edge-2),
+    0 4px 0 var(--paper-edge-3);
+  filter: drop-shadow(
+    calc(var(--tilt-y, 0) * -9px)
+    calc(14px + var(--tilt-x, 0) * 6px)
+    16px rgba(28, 18, 12, 0.28)
+  );
+}
+
+/* 5. Garis Lipatan Tengah Buku (Center Spine Crease) */
+#book-spine-crease {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 52px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(28, 18, 12, 0.04) 28%,
+    rgba(28, 18, 12, 0.16) 49%,
+    rgba(255, 252, 245, 0.32) 52%,
+    rgba(28, 18, 12, 0.05) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 14;
+}
+
+@media (max-width: 991.98px) {
+  #book-spine-crease {
+    top: 50%;
+    bottom: auto;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 38px;
+    transform: translateY(-50%);
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(28, 18, 12, 0.04) 36%,
+      rgba(28, 18, 12, 0.11) 50%,
+      rgba(255, 252, 245, 0.2) 54%,
+      transparent 100%
+    );
+  }
+}
+
+/* 6. Ornamen Kertas Pop-Up & Diorama Berlapis */
+.scene-chapter-crest {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 16px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+  background: rgba(251, 247, 240, 0.85);
+  color: var(--paper-ink);
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 2px 0 var(--paper-edge-1),
+    0 4px 10px rgba(28, 18, 12, 0.14);
+}
+
+.scene-ornament-corners {
+  position: fixed;
+  inset: 12px;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.ornament-corner {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  color: var(--color-secondary);
+  opacity: 0.72;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.16));
+}
+
+.ornament-corner-tl { top: 0; left: 0; }
+.ornament-corner-tr { top: 0; right: 0; transform: scaleX(-1); }
+.ornament-corner-bl { bottom: 0; left: 0; transform: scaleY(-1); }
+.ornament-corner-br { bottom: 0; right: 0; transform: scale(-1); }
+
+/* Ilustrasi Pop-Up Pelaminan / Archway & Klaster Bunga Kertas */
+.popup-stage-arch {
+  width: min(360px, 88%);
+  margin: 0 auto 12px;
+  pointer-events: none;
+  filter: drop-shadow(
+    calc(var(--tilt-y, 0) * -8px)
+    calc(12px + var(--tilt-x, 0) * 5px)
+    12px rgba(28, 18, 12, 0.22)
+  );
+}
+
+.popup-stage-arch svg,
+.popup-floral-cluster svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.popup-floral-cluster {
+  width: min(220px, 64%);
+  margin: 0 auto 8px;
+  pointer-events: none;
+  filter: drop-shadow(
+    calc(var(--tilt-y, 0) * -6px)
+    calc(8px + var(--tilt-x, 0) * 4px)
+    10px rgba(28, 18, 12, 0.2)
+  );
+}
+
+/* Lapisan Kertas Die-Cut (Paper Diorama) di Dasar Setiap Halaman */
+.popup-paper-diorama {
+  position: relative;
+  width: 100%;
+  margin-top: 24px;
+  pointer-events: none;
+  transform-origin: center bottom;
+  transform: perspective(900px) rotateX(82deg);
+  opacity: 0;
+  transition: transform 0.95s cubic-bezier(0.22, 1.18, 0.36, 1) 0.26s, opacity 0.55s ease 0.26s;
+}
+
+.journey-scene.scene-active .popup-paper-diorama {
+  transform: perspective(900px) rotateX(0deg);
+  opacity: 1;
+}
+
+.popup-paper-diorama svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 -3px 6px rgba(28, 18, 12, 0.14));
+}
+
+/* Partikel Cahaya Hangat */
+.ambient-motes {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 13;
+  overflow: hidden;
+}
+
+.ambient-mote {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 250, 235, 0.95) 0%, var(--color-secondary) 60%, transparent 100%);
+  opacity: 0;
+  animation: mote-float 9s ease-in-out infinite;
+}
+
+@keyframes mote-float {
+  0% { transform: translateY(20px) scale(0.6); opacity: 0; }
+  30% { opacity: 0.65; }
+  70% { opacity: 0.55; }
+  100% { transform: translateY(-90px) scale(1.1); opacity: 0; }
+}
+
+/* Journey HUD (Penanda Halaman Buku) */
 #journey-hud {
   position: fixed;
   bottom: 72px;
@@ -798,21 +1162,24 @@ body.journey-3d-mode .journey-scene.scene-enter-from-front {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(251, 247, 240, 0.94);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 5px 10px;
+  padding: 5px 12px;
   border-radius: 999px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
-  border: 1px solid rgba(135, 133, 162, 0.25);
+  box-shadow:
+    0 2px 0 #ffffff,
+    0 4px 0 var(--paper-edge-1),
+    0 10px 24px rgba(24, 16, 10, 0.22);
+  border: 1px solid rgba(168, 145, 120, 0.32);
   font-size: 12px;
   white-space: nowrap;
 }
 
 #journey-label {
-  font-weight: 600;
-  color: #3a3a4c;
-  padding: 0 4px;
+  font-weight: 700;
+  color: var(--paper-ink);
+  padding: 0 6px;
 }
 
 .journey-btn {
@@ -820,16 +1187,17 @@ body.journey-3d-mode .journey-scene.scene-enter-from-front {
   background: rgba(135, 133, 162, 0.14);
   color: var(--berem-text);
   border-radius: 999px;
-  padding: 4px 10px;
+  padding: 4px 12px;
   font-size: 12px;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s ease, color 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .journey-btn:hover:not(:disabled) {
   background: var(--berem);
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .journey-btn:disabled {
@@ -842,259 +1210,34 @@ body.journey-3d-mode .journey-scene.scene-enter-from-front {
   color: #fff;
 }
 
-/* Ornamen Pendukung Realistis di Setiap Halaman Buku */
-.scene-chapter-crest {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-  padding: 4px 14px;
-  border-radius: 999px;
-  margin-bottom: 14px;
-  border: 1px solid currentColor;
-  opacity: 0.72;
-}
-
-.scene-ornament-corners {
-  position: fixed;
-  inset: 10px;
-  pointer-events: none;
-  z-index: 15;
-}
-
-.ornament-corner {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  color: var(--color-secondary);
-  opacity: 0.65;
-}
-
-.ornament-corner-tl { top: 0; left: 0; }
-.ornament-corner-tr { top: 0; right: 0; transform: scaleX(-1); }
-.ornament-corner-bl { bottom: 0; left: 0; transform: scaleY(-1); }
-.ornament-corner-br { bottom: 0; right: 0; transform: scale(-1); }
-
-/* Partikel Cahaya Melayang (Fireflies / Dust Motes) */
-.ambient-motes {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 14;
-  overflow: hidden;
-}
-
-.ambient-mote {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, var(--color-secondary) 60%, transparent 100%);
-  opacity: 0;
-  animation: mote-float 9s ease-in-out infinite;
-}
-
-@keyframes mote-float {
-  0% { transform: translateY(20px) scale(0.6); opacity: 0; }
-  30% { opacity: 0.65; }
-  70% { opacity: 0.55; }
-  100% { transform: translateY(-90px) scale(1.1); opacity: 0; }
-}
-
-/* =========================================================
-   7. Pop-Up Book Paper-Engineering Layer (Lipatan Kertas 3D)
-   ========================================================= */
-#book-spine-crease {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  width: 44px;
-  transform: translateX(-50%);
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(25, 20, 30, 0.05) 38%,
-    rgba(25, 20, 30, 0.14) 50%,
-    rgba(255, 255, 255, 0.18) 54%,
-    rgba(25, 20, 30, 0.03) 68%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 13;
-}
-
-/* Mobile: lipatan buku beradaptasi secara horizontal (flip atas/bawah) */
-@media (max-width: 991.98px) {
-  #book-spine-crease {
-    top: 50%;
-    bottom: auto;
-    left: 0;
-    right: 0;
-    width: 100%;
-    height: 36px;
-    transform: translateY(-50%);
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      rgba(25, 20, 30, 0.04) 40%,
-      rgba(25, 20, 30, 0.09) 50%,
-      rgba(255, 255, 255, 0.14) 55%,
-      transparent 100%
-    );
-  }
-}
-
-/* Tekstur Kertas Matte / Paper Grain & Tata Letak Buku Terbuka */
-body.journey-3d-mode {
-  background-color: #2b2623;
-  background-image: radial-gradient(circle at 50% 45%, #3d3530 0%, #1e1a18 100%);
-}
-
-body.journey-3d-mode .journey-scene {
-  box-shadow:
-    inset 0 0 0 10px rgba(255, 255, 255, 0.16),
-    inset 0 0 56px rgba(38, 28, 22, 0.14);
-  perspective: 950px;
-  perspective-origin: 50% 88%;
-}
-
-/* Tekstur serat kertas matte ringan (60fps, tanpa network request) */
-body.journey-3d-mode .journey-scene::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.045;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  z-index: 0;
-}
-
-/* Desktop Landscape Open-Book Spread */
-@media (min-width: 992px) {
-  body.journey-3d-mode .journey-scene {
-    max-width: 1120px;
-    max-height: calc(100dvh - 36px);
-    margin: 18px auto;
-    border-radius: 16px;
-    box-shadow:
-      inset 0 0 0 12px rgba(255, 252, 245, 0.25),
-      inset 0 0 54px rgba(35, 26, 20, 0.14),
-      -8px 0 0 -2px rgba(246, 240, 230, 0.88),
-      8px 0 0 -2px rgba(246, 240, 230, 0.88),
-      -14px 0 0 -4px rgba(226, 218, 205, 0.72),
-      14px 0 0 -4px rgba(226, 218, 205, 0.72),
-      0 26px 64px rgba(0, 0, 0, 0.48);
-  }
-}
-
-body.journey-3d-mode .journey-scene > .container {
-  transform-style: preserve-3d;
-  perspective: 950px;
-  perspective-origin: 50% 88%;
-  transform: rotateX(12deg);
-  transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-body.journey-3d-mode .journey-scene.scene-active > .container {
-  transform: rotateX(calc(var(--tilt-x, 0) * 2.2deg)) rotateY(calc(var(--tilt-y, 0) * 2.6deg));
-}
-
-/* Elemen Pop-Up (foto, ilustrasi & wadah tulisan) berdiri berurutan dari depan ke belakang + paralaks 3D */
-.popup-fold-item {
-  transform-origin: center bottom;
-  transform-style: preserve-3d;
-  transform: translate3d(0, 26px, var(--popup-z, 0px)) rotateX(88deg);
-  opacity: 0;
-  transition:
-    transform 0.9s cubic-bezier(0.22, 1.32, 0.54, 1) var(--popup-delay, 0.15s),
-    opacity 0.45s ease var(--popup-delay, 0.15s),
-    box-shadow 0.65s ease var(--popup-delay, 0.15s);
-  will-change: transform, opacity;
-}
-
-.journey-scene.scene-active .popup-fold-item {
-  transform: translate3d(
-    calc(var(--tilt-y, 0) * 6px),
-    calc(var(--tilt-x, 0) * -4px),
-    var(--popup-z, 0px)
-  ) rotateX(0deg);
-  opacity: 1;
-}
-
-/* Drop shadow dinamis di bawah elemen pop-up agar berjarak dari permukaan kertas */
-.journey-scene.scene-active .profile-circle.popup-fold-item,
-.journey-scene.scene-active #closing-img.popup-fold-item {
-  filter: drop-shadow(0 14px 18px rgba(30, 22, 32, 0.24));
-}
-
-/* Ilustrasi Pop-Up Pelaminan / Archway & Bunga */
-.popup-stage-arch {
-  width: min(340px, 86%);
-  margin: 0 auto 10px;
-  pointer-events: none;
-  filter: drop-shadow(0 10px 14px rgba(30, 22, 32, 0.18));
-}
-
-.popup-stage-arch svg {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* Efek bayangan kertas bertumpuk pada kartu & foto pop-up */
-.journey-scene.scene-active .card.popup-fold-item {
-  box-shadow:
-    0 14px 28px -8px rgba(30, 22, 38, 0.22),
-    0 4px 10px -2px rgba(30, 22, 38, 0.12) !important;
-}
-
-/* Lapisan kertas die-cut (paper diorama) di bagian bawah setiap halaman */
-.popup-paper-diorama {
-  position: relative;
-  width: 100%;
-  margin-top: 24px;
-  pointer-events: none;
-  transform-origin: center bottom;
-  transform: perspective(900px) rotateX(80deg);
-  opacity: 0;
-  transition: transform 0.9s cubic-bezier(0.34, 1.38, 0.64, 1) 0.28s, opacity 0.6s ease 0.28s;
-}
-
-.journey-scene.scene-active .popup-paper-diorama {
-  transform: perspective(900px) rotateX(0deg);
-  opacity: 1;
-}
-
-.popup-paper-diorama svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 -4px 8px rgba(0, 0, 0, 0.1));
+.card {
+  transition: transform 0.35s cubic-bezier(0.22, 1.15, 0.36, 1), box-shadow 0.35s ease;
 }
 
 @media (max-width: 576px) {
   #journey-hud {
     bottom: 66px;
     font-size: 11px;
-    padding: 4px 8px;
+    padding: 4px 9px;
   }
   .audio-floating {
     bottom: 114px;
   }
+  .cover-popup-card {
+    padding: 1.4rem 1rem 1.6rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .stage-room,
   .journey-scene,
+  .popup-fold-item,
+  .popup-paper-diorama,
   #hero-bg,
   #exampleModal #front-image,
   #exampleModal #front-text {
     transition: none !important;
     transform: none !important;
+    opacity: 1 !important;
     filter: none !important;
   }
 }
