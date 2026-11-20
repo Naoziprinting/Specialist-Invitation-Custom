@@ -1715,4 +1715,106 @@ body.genre-archipelago-heritage .start-screen-panel {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.78), inset 0 0 0 4px rgba(212, 175, 55, 0.11);
 }
 
+/* ==========================================================================
+   LIGHT / SOFT MODE OVERRIDES (PASTEL, IVORY, SAGE, DAYLIGHT)
+   ========================================================================== */
+body.theme-light-mode {
+  background: radial-gradient(circle at 50% 0%, var(--bg-parchment-dark) 0%, var(--bg-slate) 52%, var(--bg-void) 100%) !important;
+  color: var(--text-primary);
+}
+
+body.theme-light-mode .text-light {
+  color: var(--text-primary) !important;
+}
+
+body.theme-light-mode .text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-antique) 0%, var(--cyan-ethereal) 55%, var(--gold-antique) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+body.theme-light-mode .start-screen {
+  background: var(--bg-slate);
+}
+
+body.theme-light-mode .start-screen-bg img,
+body.theme-light-mode .hero-parallax-bg {
+  filter: brightness(0.88) contrast(0.96) saturate(0.92);
+}
+
+body.theme-light-mode .start-screen-vignette,
+body.theme-light-mode .hero-vignette {
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.28) 0%, rgba(250, 246, 240, 0.84) 72%, var(--bg-slate) 100%),
+    linear-gradient(180deg, rgba(250, 246, 240, 0.65) 0%, transparent 30%, var(--bg-slate) 100%);
+}
+
+body.theme-light-mode .start-screen-panel,
+body.theme-light-mode .ornate-card,
+body.theme-light-mode .world-map-board,
+body.theme-light-mode .rpg-dialogue-box {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(158, 123, 79, 0.28);
+  box-shadow: 0 14px 40px rgba(60, 48, 38, 0.09), inset 0 0 24px rgba(255, 255, 255, 0.6);
+}
+
+body.theme-light-mode .start-guest-scroll,
+body.theme-light-mode .lore-chronicle-card,
+body.theme-light-mode .stat-pill,
+body.theme-light-mode .wish-box,
+body.theme-light-mode .turut-pill,
+body.theme-light-mode .simply-countdown > .simply-section,
+body.theme-light-mode .hero-date-banner {
+  background: rgba(255, 255, 255, 0.78);
+  border-color: rgba(158, 123, 79, 0.25);
+  box-shadow: 0 6px 18px rgba(60, 48, 38, 0.06);
+}
+
+body.theme-light-mode .top-hud {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.65) 80%, transparent 100%);
+  border-bottom-color: rgba(158, 123, 79, 0.16);
+}
+
+body.theme-light-mode .hud-region-pill,
+body.theme-light-mode .hud-icon-btn,
+body.theme-light-mode .rpg-bottom-dock {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(158, 123, 79, 0.3);
+  color: var(--text-primary);
+  box-shadow: 0 10px 28px rgba(60, 48, 38, 0.12);
+}
+
+body.theme-light-mode .hud-region-text,
+body.theme-light-mode .simply-countdown > .simply-section .simply-amount,
+body.theme-light-mode .hero-date-banner,
+body.theme-light-mode .lore-title {
+  color: var(--gold-antique);
+}
+
+body.theme-light-mode .rpg-input,
+body.theme-light-mode .rpg-select,
+body.theme-light-mode .norek-input {
+  background: #ffffff !important;
+  color: var(--text-primary) !important;
+  border-color: rgba(158, 123, 79, 0.35) !important;
+}
+
+body.theme-light-mode .map-frame-wrap iframe {
+  filter: none;
+}
+
+body.theme-light-mode .chest-trigger-box {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, var(--bg-void) 100%);
+}
+
+body.theme-light-mode .hero-portrait-wrap img {
+  border-color: #ffffff;
+}
+
+body.theme-light-mode .hero-astrolabe {
+  opacity: 0.22;
+}
+
 
