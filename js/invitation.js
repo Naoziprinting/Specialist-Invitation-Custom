@@ -7,6 +7,41 @@
   const CACHE_KEY = `naozi_inv_settings_${EVENT_ID}`;
   let settings = {};
   let isInvitationOpened = false;
+  let activeLoreIdx = 0;
+  let loreChapters = [
+    {
+      tag: "Chapter I • First Encounter",
+      title: "Pertemuan Tak Terduga",
+      desc: "Setiap petualangan besar bermula dari satu langkah kecil. Di persimpangan waktu yang tak terduga, dua penjelajah saling bertukar sapa dan menyalakan lentera harapan yang pertama.",
+      img: "img/img2.jpg",
+    },
+    {
+      tag: "Chapter II • The Journey Together",
+      title: "Menapaki Lembah & Waktu",
+      desc: "Melalui musim demi musim, tawa dan doa menjadi kompas penuntun. Bersama-sama kami belajar arti kesabaran, kepercayaan, dan keteguhan hati untuk melangkah seiring sejalan.",
+      img: "img/img12.jpg",
+    },
+    {
+      tag: "Final Destination • The Sacred Vow",
+      title: "Gerbang Babak Baru",
+      desc: "Kini tiba saatnya mengikat janji suci di hadapan semesta dan keluarga tercinta. Sebuah awal dari petualangan abadi membangun mahligai rumah tangga yang penuh berkah.",
+      img: "img/img13.jpg",
+    },
+  ];
+
+  function renderLoreChapter(idx) {
+    activeLoreIdx = idx;
+    const ch = loreChapters[idx] || loreChapters[0];
+    const imgEl = document.getElementById("lore-img");
+    const tagEl = document.getElementById("lore-tag");
+    const titleEl = document.getElementById("lore-title");
+    const descEl = document.getElementById("lore-desc");
+
+    if (imgEl && ch.img) imgEl.src = ch.img;
+    if (tagEl) tagEl.textContent = ch.tag;
+    if (titleEl) titleEl.textContent = ch.title;
+    if (descEl) descEl.textContent = ch.desc;
+  }
 
   // Ambil nama tamu dari URL (?to= atau ?nama=)
   const urlParams = new URLSearchParams(window.location.search);
@@ -214,6 +249,11 @@
   }
 
   function renderPage() {
+    // Terapkan Tema (Warna Aksen, Font, Ornamen & Atmosfer) dari Editor
+    if (typeof applyThemeFromSettings === "function") {
+      applyThemeFromSettings(settings);
+    }
+
     const rawType = (settings.type && settings.type.value ? String(settings.type.value) : "wedding").trim().toLowerCase();
     const isWedding = rawType !== "khitan" && rawType !== "khitanan";
     const tzLabel = (settings.timezone_label && settings.timezone_label.value) || "WITA";
@@ -448,8 +488,31 @@
       setAudioTrackByType(isWedding, isInvitationOpened, customMusic);
     }
 
+    // World Map & Lore (Cerita Cinta Dinamis dari Editor)
+    loreChapters = [
+      {
+        tag: "Chapter I • First Encounter",
+        title: (settings.lore_1_title && settings.lore_1_title.value) || "Pertemuan Tak Terduga",
+        desc: (settings.lore_1_desc && settings.lore_1_desc.value) || "Setiap petualangan besar bermula dari satu langkah kecil. Di persimpangan waktu yang tak terduga, dua penjelajah saling bertukar sapa dan menyalakan lentera harapan yang pertama.",
+        img: sanitizeUrl(settings.lore_1_img && settings.lore_1_img.value, "img/img2.jpg"),
+      },
+      {
+        tag: "Chapter II • The Journey Together",
+        title: (settings.lore_2_title && settings.lore_2_title.value) || "Menapaki Lembah & Waktu",
+        desc: (settings.lore_2_desc && settings.lore_2_desc.value) || "Melalui musim demi musim, tawa dan doa menjadi kompas penuntun. Bersama-sama kami belajar arti kesabaran, kepercayaan, dan keteguhan hati untuk melangkah seiring sejalan.",
+        img: sanitizeUrl(settings.lore_2_img && settings.lore_2_img.value, "img/img12.jpg"),
+      },
+      {
+        tag: "Final Destination • The Sacred Vow",
+        title: (settings.lore_3_title && settings.lore_3_title.value) || "Gerbang Babak Baru",
+        desc: (settings.lore_3_desc && settings.lore_3_desc.value) || "Kini tiba saatnya mengikat janji suci di hadapan semesta dan keluarga tercinta. Sebuah awal dari petualangan abadi membangun mahligai rumah tangga yang penuh berkah.",
+        img: sanitizeUrl(settings.lore_3_img && settings.lore_3_img.value, "img/img13.jpg"),
+      },
+    ];
+    renderLoreChapter(activeLoreIdx);
+
     // Visibilitas Kolom
-    ["sec_events_v", "sec_event_2_v", "sec_gallery_v", "sec_gift_v", "sec_wishes_v", "sec_turut_v"].forEach((key) => {
+    ["sec_lore_v", "sec_events_v", "sec_event_2_v", "sec_gallery_v", "sec_gift_v", "sec_wishes_v", "sec_turut_v"].forEach((key) => {
       if (settings[key] && settings[key].visible === false) {
         document.querySelectorAll("." + key).forEach((el) => el.classList.add("hidden"));
       } else {
@@ -560,50 +623,20 @@
   // INTERACTIVE WORLD MAP & LORE WAYPOINTS
   // =========================================================================
   function initLoreMap() {
-    const chapters = [
-      {
-        tag: "Chapter I • First Encounter",
-        title: "Pertemuan Tak Terduga",
-        desc: "Setiap petualangan besar bermula dari satu langkah kecil. Di persimpangan waktu yang tak terduga, dua penjelajah saling bertukar sapa dan menyalakan lentera harapan yang pertama.",
-        img: "img/img2.jpg",
-      },
-      {
-        tag: "Chapter II • The Journey Together",
-        title: "Menapaki Lembah & Waktu",
-        desc: "Melalui musim demi musim, tawa dan doa menjadi kompas penuntun. Bersama-sama kami belajar arti kesabaran, kepercayaan, dan keteguhan hati untuk melangkah seiring sejalan.",
-        img: "img/img12.jpg",
-      },
-      {
-        tag: "Final Destination • The Sacred Vow",
-        title: "Gerbang Babak Baru",
-        desc: "Kini tiba saatnya mengikat janji suci di hadapan semesta dan keluarga tercinta. Sebuah awal dari petualangan abadi membangun mahligai rumah tangga yang penuh berkah.",
-        img: "img/img13.jpg",
-      },
-    ];
-
     const buttons = document.querySelectorAll(".waypoint-btn");
-    const imgEl = document.getElementById("lore-img");
-    const tagEl = document.getElementById("lore-tag");
-    const titleEl = document.getElementById("lore-title");
-    const descEl = document.getElementById("lore-desc");
-
     buttons.forEach((btn) => {
       btn.addEventListener("click", () => {
         const idx = Number(btn.getAttribute("data-chapter-idx")) || 0;
-        const ch = chapters[idx] || chapters[0];
         buttons.forEach((b) => {
           b.classList.remove("active");
           b.setAttribute("aria-selected", "false");
         });
         btn.classList.add("active");
         btn.setAttribute("aria-selected", "true");
-
-        if (imgEl) imgEl.src = ch.img;
-        if (tagEl) tagEl.textContent = ch.tag;
-        if (titleEl) titleEl.textContent = ch.title;
-        if (descEl) descEl.textContent = ch.desc;
+        renderLoreChapter(idx);
       });
     });
+    renderLoreChapter(0);
   }
 
   // =========================================================================

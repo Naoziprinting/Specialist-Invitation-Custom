@@ -3,6 +3,13 @@
  */
 window.NAOZI_THEMES = {
   palettes: {
+    "ancient-explorer": {
+      label: "Ancient Explorer (Game Default)",
+      primary: "#d4af37",
+      secondary: "#4fd1c5",
+      bg: "#12181b",
+      surface: "#1e1b18",
+    },
     "lilac-pink": {
       label: "Lilac Pink (Default)",
       primary: "#8785a2",
@@ -111,6 +118,12 @@ window.NAOZI_THEMES = {
   },
 
   fontPairings: {
+    "ancient-explorer": {
+      label: "Ancient Explorer (Cinzel + Plus Jakarta Sans)",
+      heading: "Cinzel",
+      body: "Plus Jakarta Sans",
+      googleUrl: "https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap",
+    },
     "romantic-classic": {
       label: "Romantic Classic (Dancing Script + Open Sans)",
       heading: "Dancing Script",
@@ -275,9 +288,11 @@ function loadDynamicFonts(headingFont, bodyFont) {
 
   if (headingFont) {
     document.documentElement.style.setProperty("--font-heading", `"${headingFont}", cursive, serif`);
+    document.documentElement.style.setProperty("--font-display", `"${headingFont}", "Cinzel", Georgia, serif`);
   }
   if (bodyFont) {
     document.documentElement.style.setProperty("--font-body", `"${bodyFont}", sans-serif`);
+    document.documentElement.style.setProperty("--font-sans", `"${bodyFont}", -apple-system, BlinkMacSystemFont, sans-serif`);
   }
 }
 
@@ -426,11 +441,56 @@ function buildDividerSvg(styleType, variant, flip) {
     </svg>`;
 }
 
+function hexToRgbObj(hex) {
+  const clean = String(hex || "").replace("#", "").trim();
+  if (!/^[0-9a-fA-F]{6}$/.test(clean)) return null;
+  return {
+    r: parseInt(clean.slice(0, 2), 16),
+    g: parseInt(clean.slice(2, 4), 16),
+    b: parseInt(clean.slice(4, 6), 16),
+  };
+}
+
+function getRelativeLuminance(rgb) {
+  if (!rgb) return 0;
+  return (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+}
+
+function mixDarkHex(rgb, factor) {
+  if (!rgb) return "#12181b";
+  const r = Math.max(8, Math.min(255, Math.round(rgb.r * factor)));
+  const g = Math.max(10, Math.min(255, Math.round(rgb.g * factor)));
+  const b = Math.max(12, Math.min(255, Math.round(rgb.b * factor)));
+  return `#${[r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
+}
+
 function renderOrnamentDividers(ornamentType) {
   const type = ornamentType || "wave-soft";
   const allThemeClasses = Object.keys(window.NAOZI_THEMES.ornaments).map((k) => "theme-" + k);
   document.body.classList.remove(...allThemeClasses);
   document.body.classList.add("theme-" + type);
+
+  const ORNAMENT_ICONS = {
+    "wave-soft": "✦",
+    "floral-botanical": "❦",
+    "islamic-arch": "🕌",
+    "minimal-line": "◈",
+    "royal-crest": "♛",
+    "art-deco-gold": "❖",
+    "sacred-dome": "✧",
+    "mandala-lotus": "❀",
+    "vine-wreath": "❧",
+    "heart-filigree": "♥",
+    "double-frame": "◈ ❖ ◈",
+    "diamond-lattice": "◆",
+    "ribbon-scallop": "✾",
+    "javanese-gunungan": "▲",
+    "pearl-beads": "••• ✦ •••",
+  };
+
+  document.querySelectorAll(".compass-divider-icon").forEach((el) => {
+    el.textContent = ORNAMENT_ICONS[type] || "✦";
+  });
 
   document.querySelectorAll(".ornament-divider").forEach((el) => {
     const variant = el.getAttribute("data-variant") || "primary";
@@ -446,28 +506,53 @@ function renderOrnamentDividers(ornamentType) {
 
 function applyThemeFromSettings(settings) {
   const s = settings || {};
-  const primary = (s.primary_color && s.primary_color.value) || "#8785a2";
-  const secondary = (s.secondary_color && s.secondary_color.value) || "#ffc7c7";
-  const bg = (s.bg_color && s.bg_color.value) || "#ffe2e2";
-  const surface = (s.surface_color && s.surface_color.value) || "#f6f6f6";
+  const primary = (s.primary_color && s.primary_color.value) || "#d4af37";
+  const secondary = (s.secondary_color && s.secondary_color.value) || "#4fd1c5";
+  const bg = (s.bg_color && s.bg_color.value) || "#12181b";
+  const surface = (s.surface_color && s.surface_color.value) || "#1e1b18";
 
   const root = document.documentElement;
   root.style.setProperty("--color-primary", primary);
   root.style.setProperty("--color-secondary", secondary);
   root.style.setProperty("--color-bg", bg);
   root.style.setProperty("--color-surface", surface);
-  root.style.setProperty("--berem", primary);
-  root.style.setProperty("--berem-text", primary);
-  root.style.setProperty("--kulit", secondary);
-  root.style.setProperty("--wakwak", bg);
-  root.style.setProperty("--fee", surface);
 
-  document.querySelectorAll(".wave-stop").forEach((stop) => {
-    stop.setAttribute("stop-color", primary);
-  });
+  // Sinkronisasi ke CSS Variables Adventure Game UI
+  const primaryRgb = hexToRgbObj(primary);
+  const secondaryRgb = hexToRgbObj(secondary);
+  const bgRgb = hexToRgbObj(bg);
+  const surfaceRgb = hexToRgbObj(surface);
 
-  const headingFont = (s.theme_font_heading && s.theme_font_heading.value) || "Dancing Script";
-  const bodyFont = (s.theme_font_body && s.theme_font_body.value) || "Open Sans";
+  const accentMain = getRelativeLuminance(primaryRgb) < 0.35 && getRelativeLuminance(secondaryRgb) > 0.45 ? secondary : primary;
+  const accentSub = accentMain === primary ? secondary : primary;
+
+  root.style.setProperty("--gold-antique", accentMain);
+  root.style.setProperty("--gold-bright", accentSub);
+  root.style.setProperty("--cyan-ethereal", secondary);
+
+  if (bgRgb) {
+    const bgLum = getRelativeLuminance(bgRgb);
+    if (bgLum <= 0.25) {
+      root.style.setProperty("--bg-slate", bg);
+      root.style.setProperty("--bg-void", mixDarkHex(bgRgb, 0.72));
+    } else {
+      // Jika editor memilih palet terang, pertahankan atmosfer game gelap bernuansa warna tsb agar kontras terjaga
+      root.style.setProperty("--bg-slate", mixDarkHex(primaryRgb || bgRgb, 0.22));
+      root.style.setProperty("--bg-void", mixDarkHex(primaryRgb || bgRgb, 0.14));
+    }
+  }
+
+  if (surfaceRgb) {
+    const surfLum = getRelativeLuminance(surfaceRgb);
+    if (surfLum <= 0.28) {
+      root.style.setProperty("--bg-parchment-dark", surface);
+    } else {
+      root.style.setProperty("--bg-parchment-dark", mixDarkHex(primaryRgb || surfaceRgb, 0.26));
+    }
+  }
+
+  const headingFont = (s.theme_font_heading && s.theme_font_heading.value) || "Cinzel";
+  const bodyFont = (s.theme_font_body && s.theme_font_body.value) || "Plus Jakarta Sans";
   loadDynamicFonts(headingFont, bodyFont);
 
   const ornament = (s.theme_ornament && s.theme_ornament.value) || "wave-soft";
