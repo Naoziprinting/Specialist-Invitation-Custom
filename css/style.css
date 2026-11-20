@@ -1551,43 +1551,153 @@ body.theme-heart-filigree .compass-divider-icon {
 /* ==========================================================================
    15 GAME GENRE UI/UX VARIATIONS (ROMANTIC, LUXURY, SACRAL, CULTURE, RPG)
    ========================================================================== */
+/* Romantic Genres: Dreamy Aurora Bokeh, Soft Rounded Cards & Pill Controls */
+body.genre-romantic-visual-novel,
+body.genre-moonlight-serenade,
+body.genre-paris-atelier,
+body.genre-cherry-blossom {
+  background:
+    radial-gradient(circle at 18% 15%, rgba(244, 114, 182, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 82% 75%, rgba(196, 181, 253, 0.14) 0%, transparent 50%),
+    radial-gradient(circle at 50% 0%, var(--bg-parchment-dark) 0%, var(--bg-slate) 48%, var(--bg-void) 100%);
+}
+
 body.genre-romantic-visual-novel .ornate-card,
 body.genre-moonlight-serenade .ornate-card,
 body.genre-paris-atelier .ornate-card,
-body.genre-cherry-blossom .ornate-card {
-  border-radius: 24px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55), 0 0 30px rgba(244, 114, 182, 0.12);
+body.genre-cherry-blossom .ornate-card,
+body.genre-romantic-visual-novel .start-screen-panel,
+body.genre-moonlight-serenade .start-screen-panel,
+body.genre-paris-atelier .start-screen-panel,
+body.genre-cherry-blossom .start-screen-panel {
+  border-radius: 26px;
+  background: linear-gradient(160deg, rgba(44, 24, 36, 0.88) 0%, rgba(22, 14, 20, 0.94) 100%);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55), 0 0 36px rgba(244, 114, 182, 0.14);
+}
+
+body.genre-romantic-visual-novel .ornate-corner,
+body.genre-moonlight-serenade .ornate-corner,
+body.genre-paris-atelier .ornate-corner,
+body.genre-cherry-blossom .ornate-corner {
+  border-radius: 50%;
+  opacity: 0.55;
 }
 
 body.genre-romantic-visual-novel .btn-game,
 body.genre-moonlight-serenade .btn-game,
 body.genre-paris-atelier .btn-game,
-body.genre-cherry-blossom .btn-game {
+body.genre-cherry-blossom .btn-game,
+body.genre-romantic-visual-novel .rpg-bottom-dock,
+body.genre-moonlight-serenade .rpg-bottom-dock,
+body.genre-paris-atelier .rpg-bottom-dock,
+body.genre-cherry-blossom .rpg-bottom-dock {
   border-radius: 999px;
+}
+
+body.genre-romantic-visual-novel .hero-astrolabe,
+body.genre-moonlight-serenade .hero-astrolabe,
+body.genre-paris-atelier .hero-astrolabe,
+body.genre-cherry-blossom .hero-astrolabe {
+  opacity: 0.08;
+  filter: blur(1px);
+}
+
+/* Luxury Genres: Spotlight Velvet, Art Deco Grid & Sharp Metallic Frames */
+body.genre-royal-palace,
+body.genre-art-deco-gala,
+body.genre-diamond-monarch,
+body.genre-emerald-crown {
+  background:
+    radial-gradient(ellipse at 50% 10%, rgba(251, 191, 36, 0.14) 0%, transparent 55%),
+    radial-gradient(circle at 50% 0%, var(--bg-parchment-dark) 0%, var(--bg-slate) 45%, var(--bg-void) 100%);
+}
+
+body.genre-royal-palace .realm-noise-overlay,
+body.genre-art-deco-gala .realm-noise-overlay,
+body.genre-diamond-monarch .realm-noise-overlay,
+body.genre-emerald-crown .realm-noise-overlay {
+  opacity: 0.07;
+  background-image:
+    linear-gradient(45deg, var(--gold-antique) 1px, transparent 1px),
+    linear-gradient(-45deg, var(--gold-antique) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
 body.genre-royal-palace .ornate-card,
 body.genre-art-deco-gala .ornate-card,
 body.genre-diamond-monarch .ornate-card,
-body.genre-emerald-crown .ornate-card {
-  border-radius: 6px;
+body.genre-emerald-crown .ornate-card,
+body.genre-royal-palace .start-screen-panel,
+body.genre-art-deco-gala .start-screen-panel,
+body.genre-diamond-monarch .start-screen-panel,
+body.genre-emerald-crown .start-screen-panel {
+  border-radius: 4px;
   border-width: 1.5px;
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.78), inset 0 0 28px rgba(212, 175, 55, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85), inset 0 0 32px rgba(212, 175, 55, 0.09);
+}
+
+body.genre-royal-palace .btn-game,
+body.genre-art-deco-gala .btn-game,
+body.genre-diamond-monarch .btn-game,
+body.genre-emerald-crown .btn-game {
+  border-radius: 2px;
+  letter-spacing: 0.2em;
+}
+
+/* Sacral Genres: Sanctuary Arch, Sacred Geometry & Serene Glow */
+body.genre-sacral-sanctuary,
+body.genre-celestial-hymn {
+  background:
+    radial-gradient(circle at 50% 20%, rgba(94, 234, 212, 0.12) 0%, transparent 55%),
+    radial-gradient(circle at 50% 0%, var(--bg-parchment-dark) 0%, var(--bg-slate) 45%, var(--bg-void) 100%);
+}
+
+body.genre-sacral-sanctuary .realm-noise-overlay,
+body.genre-celestial-hymn .realm-noise-overlay {
+  opacity: 0.07;
+  background-image:
+    linear-gradient(30deg, var(--gold-antique) 12%, transparent 12.5%, transparent 87%, var(--gold-antique) 87.5%),
+    linear-gradient(150deg, var(--gold-antique) 12%, transparent 12.5%, transparent 87%, var(--gold-antique) 87.5%);
+  background-size: 44px 76px;
 }
 
 body.genre-sacral-sanctuary .ornate-card,
-body.genre-celestial-hymn .ornate-card {
-  border-top-left-radius: 28px;
-  border-top-right-radius: 28px;
+body.genre-celestial-hymn .ornate-card,
+body.genre-sacral-sanctuary .start-screen-panel,
+body.genre-celestial-hymn .start-screen-panel {
+  border-top-left-radius: 38px;
+  border-top-right-radius: 38px;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
 }
 
+/* Culture / Nusantara Genres: Sogan / Songket Pattern & Heritage Warmth */
+body.genre-nusantara-keraton,
+body.genre-archipelago-heritage {
+  background:
+    radial-gradient(circle at 50% 15%, rgba(234, 179, 8, 0.14) 0%, transparent 55%),
+    radial-gradient(circle at 50% 0%, var(--bg-parchment-dark) 0%, var(--bg-slate) 45%, var(--bg-void) 100%);
+}
+
+body.genre-nusantara-keraton .realm-noise-overlay,
+body.genre-archipelago-heritage .realm-noise-overlay {
+  opacity: 0.08;
+  background-image: repeating-linear-gradient(
+    60deg,
+    transparent,
+    transparent 22px,
+    rgba(234, 179, 8, 0.25) 22px,
+    rgba(234, 179, 8, 0.25) 23px
+  );
+}
+
 body.genre-nusantara-keraton .ornate-card,
-body.genre-archipelago-heritage .ornate-card {
+body.genre-archipelago-heritage .ornate-card,
+body.genre-nusantara-keraton .start-screen-panel,
+body.genre-archipelago-heritage .start-screen-panel {
   border-radius: 10px;
   border-width: 2px;
-  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.75), inset 0 0 0 4px rgba(212, 175, 55, 0.09);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.78), inset 0 0 0 4px rgba(212, 175, 55, 0.11);
 }
 
 
