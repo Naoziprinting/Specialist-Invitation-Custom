@@ -226,6 +226,29 @@
             </div>
         </div>
 
+        <!-- World Map & Lore (Cerita Cinta) -->
+        <h2>World Map &amp; Lore (Cerita Cinta)</h2>
+        <div class="card" id="lore-fields">
+            <div class="form-group">
+                <label>Chapter I (Pertemuan Pertama)</label>
+                <input type="text" id="lore_1_title" placeholder="Judul Chapter I (Contoh: Pertemuan Tak Terduga)" style="margin-bottom: 6px;">
+                <textarea id="lore_1_desc" rows="2" placeholder="Kisah singkat Chapter I..." style="margin-bottom: 6px;"></textarea>
+                <input type="text" id="lore_1_img" placeholder="URL Foto Chapter I (Default: img/img2.jpg)" onchange="preview(this)">
+            </div>
+            <div class="form-group">
+                <label>Chapter II (Perjalanan Bersama)</label>
+                <input type="text" id="lore_2_title" placeholder="Judul Chapter II (Contoh: Menapaki Lembah &amp; Waktu)" style="margin-bottom: 6px;">
+                <textarea id="lore_2_desc" rows="2" placeholder="Kisah singkat Chapter II..." style="margin-bottom: 6px;"></textarea>
+                <input type="text" id="lore_2_img" placeholder="URL Foto Chapter II (Default: img/img12.jpg)" onchange="preview(this)">
+            </div>
+            <div class="form-group">
+                <label>Final Destination (Menuju Hari Bahagia)</label>
+                <input type="text" id="lore_3_title" placeholder="Judul Final Destination (Contoh: Gerbang Babak Baru)" style="margin-bottom: 6px;">
+                <textarea id="lore_3_desc" rows="2" placeholder="Kisah singkat Final Destination..." style="margin-bottom: 6px;"></textarea>
+                <input type="text" id="lore_3_img" placeholder="URL Foto Final Destination (Default: img/img13.jpg)" onchange="preview(this)">
+            </div>
+        </div>
+
         <!-- Gift Section -->
         <h2>Amplop Digital</h2>
         <div class="card">
@@ -246,6 +269,9 @@
         <!-- Settings Section -->
         <h2>Tampilkan Kolom</h2>
         <div class="card">
+            <div class="form-group">
+                <div class="row"><span>World Map &amp; Lore (Cerita Cinta)</span><label class="switch"><input type="checkbox" id="sec_lore_v" checked onchange="toggleLoreEditor()"><span class="slider"></span></label></div>
+            </div>
             <div class="form-group">
                 <div class="row"><span>Waktu &amp; Lokasi (Save The Date)</span><label class="switch"><input type="checkbox" id="sec_events_v" checked><span class="slider"></span></label></div>
             </div>
@@ -401,8 +427,17 @@
                     syncFontPairingDropdown();
                     toggleFields(false);
                     toggleEvent2Editor();
+                    toggleLoreEditor();
                 })
                 .catch(err => alert('Gagal memuat pengaturan: ' + err.message));
+        }
+
+        function toggleLoreEditor() {
+            const sw = document.getElementById('sec_lore_v');
+            const grp = document.getElementById('lore-fields');
+            if (sw && grp) {
+                grp.style.opacity = sw.checked ? '1' : '0.45';
+            }
         }
 
         function toggleEvent2Editor() {
