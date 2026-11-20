@@ -110,8 +110,18 @@ function setAudioTrackByType(isWedding, shouldAutoPlay, customUrl) {
   const currentAttrSrc = (lagu.getAttribute("src") || "").trim();
   const hasLoadError = Boolean(lagu.error) || lagu.networkState === 3;
 
-  // Jangan mengganggu audio yang sudah berjalan jika sumbernya sama
-  if (currentAttrSrc === targetSrc && !hasLoadError) {
+  // Jangan mengganggu audio yang sudah berjalan/siap jika sumbernya sama (termasuk URL penuh vs relatif)
+  let isSameResolvedSrc = currentAttrSrc === targetSrc;
+  if (!isSameResolvedSrc && lagu.src) {
+    try {
+      const resolvedTarget = new URL(targetSrc, window.location.href).href;
+      isSameResolvedSrc = lagu.src === resolvedTarget;
+    } catch (err) {
+      isSameResolvedSrc = false;
+    }
+  }
+
+  if (isSameResolvedSrc && !hasLoadError) {
     if (shouldAutoPlay && lagu.paused && !window.userMutedAudio) {
       playAudio(0);
     }
