@@ -37,3 +37,35 @@ function escapeHtml(str) {
   div.textContent = str === null || str === undefined ? "" : String(str);
   return div.innerHTML;
 }
+
+function buildDefaultWaTemplate(type, religion) {
+  const isKhitan = String(type || "wedding").trim().toLowerCase().startsWith("khitan");
+  const rel = String(religion || "islam").trim().toLowerCase();
+
+  const greetings = {
+    islam: { open: "Assalamualaikum Wr. Wb.", close: "Wassalamualaikum Wr. Wb." },
+    kristen: { open: "Shalom, Salam Sejahtera.", close: "Tuhan Yesus Memberkati." },
+    katolik: { open: "Salam Damai Sejahtera dalam Kristus.", close: "Berkah Dalem, Tuhan Memberkati." },
+    hindu: { open: "Om Swastyastu.", close: "Om Shanti, Shanti, Shanti Om." },
+    buddha: { open: "Namo Buddhaya.", close: "Sabbe Satta Bhavantu Sukhitatta." },
+    khonghucu: { open: "Wei De Dong Tian (Salam Kebajikan).", close: "Shan Zai, Tian You." },
+    umum: { open: "Salam Sejahtera.", close: "Terima kasih atas perhatian dan kehadirannya." },
+  };
+  const g = greetings[rel] || greetings.islam;
+
+  if (isKhitan) {
+    return `${g.open}\n\nKepada Yth. [nama],\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara Tasyakuran Khitanan putra kami.\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu untuk ananda.\n\n${g.close}`;
+  }
+
+  const eventLabel = {
+    islam: "pernikahan kami",
+    kristen: "pemberkatan dan resepsi pernikahan kami",
+    katolik: "sakramen perkawinan dan resepsi kami",
+    hindu: "upacara pawiwahan dan resepsi pernikahan kami",
+    buddha: "pemberkatan dan resepsi pernikahan kami",
+    khonghucu: "upacara dan resepsi pernikahan kami",
+    umum: "acara pernikahan kami",
+  }[rel] || "acara pernikahan kami";
+
+  return `${g.open}\n\nKepada Yth. [nama],\nTanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri ${eventLabel}.\n\nMerupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir serta memberikan doa restu.\n\n${g.close}`;
+}

@@ -349,11 +349,17 @@
     const bismillahEl = document.getElementById("bismillah-img");
     const openGreetEl = document.getElementById("profile-greeting");
     const closeGreetEl = document.getElementById("closing-greeting");
+    const heroQuestTagEl = document.getElementById("hero-quest-tag");
+    const wishInputEl = document.getElementById("wish-msg-input");
+    const rsvpSubEl = document.getElementById("rsvp-subtitle");
 
     if (!isWedding) {
       if (bismillahEl) bismillahEl.style.display = religionKey === "islam" ? "block" : "none";
       if (openGreetEl) openGreetEl.innerText = relCfg.openingGreeting;
       if (closeGreetEl) closeGreetEl.innerText = relCfg.closingGreeting;
+      if (heroQuestTagEl) heroQuestTagEl.innerText = "✦ Tasyakuran Khitanan ✦";
+      if (wishInputEl) wishInputEl.placeholder = "Tuliskan doa dan ucapan terbaik untuk ananda...";
+      if (rsvpSubEl) rsvpSubEl.innerText = "Tinggalkan pesan doa restu dan konfirmasikan kehadiran Anda pada acara khitanan putra kami.";
 
       document.getElementById("open-title").innerText = "Tasyakuran Khitanan";
       document.getElementById("hero-title").innerText = "Tasyakuran Khitanan";
@@ -370,6 +376,9 @@
       if (bismillahEl) bismillahEl.style.display = relCfg.showBismillah ? "block" : "none";
       if (openGreetEl) openGreetEl.innerText = relCfg.openingGreeting;
       if (closeGreetEl) closeGreetEl.innerText = relCfg.closingGreeting;
+      if (heroQuestTagEl) heroQuestTagEl.innerText = "✦ Main Quest Unlocked ✦";
+      if (wishInputEl) wishInputEl.placeholder = "Tuliskan doa dan ucapan terbaik untuk kedua mempelai...";
+      if (rsvpSubEl) rsvpSubEl.innerText = "Tinggalkan pesan doa restu dan konfirmasikan kehadiran Anda di catatan perjalanan kami.";
 
       document.getElementById("open-title").innerText = "The Wedding of";
       document.getElementById("hero-title").innerText = "The Wedding of";
@@ -464,8 +473,11 @@
 
     document.getElementById("event-2-date").innerText = date2Str;
     document.getElementById("event-2-time").innerText = time2Str;
-    if (settings.event_2_name && settings.event_2_name.value) {
-      document.getElementById("event-2-name").innerText = settings.event_2_name.value;
+    const rawEvent2Name = (settings.event_2_name && settings.event_2_name.value ? settings.event_2_name.value : "").trim();
+    if (!isWedding && (!rawEvent2Name || rawEvent2Name === "Resepsi")) {
+      document.getElementById("event-2-name").innerText = "Syukuran Khitanan";
+    } else if (rawEvent2Name) {
+      document.getElementById("event-2-name").innerText = rawEvent2Name;
     }
     if (settings.event_2_loc && settings.event_2_loc.value) {
       document.getElementById("event-2-loc").innerText = settings.event_2_loc.value;

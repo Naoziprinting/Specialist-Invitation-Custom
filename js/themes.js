@@ -311,7 +311,7 @@ window.NAOZI_THEMES = {
       particleAltRgb: "252, 211, 77",
     },
     "romantic-visual-novel": {
-      label: "[Romantic] Visual Novel Love Story",
+      label: "[Romantic] Visual Novel Story",
       crest: "♥ A Love Story Begins ♥",
       startBtn: "Open Our Story",
       guildTag: "Protagonists",
@@ -565,7 +565,7 @@ window.NAOZI_THEMES = {
       particleAltRgb: "52, 211, 153",
     },
     "sacral-sanctuary": {
-      label: "[Sacral] Walimatul Ursy Islami",
+      label: "[Sacral] Sacred Sanctuary Islami",
       crest: "✧ Walimatul Ursy ✧",
       startBtn: "Buka Undangan",
       guildTag: "Mempelai",
@@ -590,7 +590,7 @@ window.NAOZI_THEMES = {
       particleAltRgb: "94, 234, 212",
     },
     "celestial-hymn": {
-      label: "[Sacral] Holy Matrimony Sanctuary",
+      label: "[Sacral] Sacred Cathedral Sanctuary",
       crest: "✦ Holy Matrimony ✦",
       startBtn: "Enter Sanctuary",
       guildTag: "Blessed Union",
@@ -1026,6 +1026,79 @@ function renderGenreBackdropOrbs(genreKey) {
   window.NAOZI_PARTICLE_STYLE = styleMap[category] || "fireflies";
 }
 
+function buildSideBorderSvgUri(category, ornamentKey, c1, c2) {
+  let effectiveCat = category;
+  if (ornamentKey === "javanese-gunungan") effectiveCat = "culture";
+  else if (ornamentKey === "islamic-arch" || ornamentKey === "sacred-dome" || ornamentKey === "mandala-lotus") effectiveCat = "sacral";
+  else if (ornamentKey === "art-deco-gold" || ornamentKey === "royal-crest" || ornamentKey === "diamond-lattice") effectiveCat = "luxury";
+  else if (ornamentKey === "floral-botanical" || ornamentKey === "vine-wreath" || ornamentKey === "heart-filigree" || ornamentKey === "ribbon-scallop") effectiveCat = "romantic";
+
+  let bodySvg = "";
+  if (effectiveCat === "culture") {
+    // Batik Kawung & Parang Frame
+    bodySvg = `
+      <rect x="0" y="0" width="54" height="90" fill="none"/>
+      <path d="M0,0 L46,0 L46,90 L0,90" fill="none" stroke="${c1}" stroke-width="1.4" opacity="0.45"/>
+      <ellipse cx="23" cy="22" rx="14" ry="18" fill="none" stroke="${c1}" stroke-width="1.6"/>
+      <ellipse cx="23" cy="22" rx="6" ry="10" fill="${c2}" fill-opacity="0.28" stroke="${c2}" stroke-width="1.1"/>
+      <path d="M5,45 Q23,32 41,45 Q23,58 5,45 Z" fill="${c1}" fill-opacity="0.22" stroke="${c1}" stroke-width="1.2"/>
+      <ellipse cx="23" cy="68" rx="14" ry="18" fill="none" stroke="${c1}" stroke-width="1.6"/>
+      <circle cx="23" cy="68" r="4.5" fill="${c2}" fill-opacity="0.65"/>
+      <line x1="50" y1="0" x2="50" y2="90" stroke="${c1}" stroke-width="1.5" stroke-dasharray="4 3"/>
+    `;
+  } else if (effectiveCat === "sacral") {
+    // Arabesque Geometris & Kubah
+    bodySvg = `
+      <path d="M8,0 L8,90 M46,0 L46,90" stroke="${c1}" stroke-width="1.2" opacity="0.5"/>
+      <polygon points="27,8 42,23 27,38 12,23" fill="${c2}" fill-opacity="0.16" stroke="${c1}" stroke-width="1.4"/>
+      <rect x="17" y="13" width="20" height="20" fill="none" stroke="${c2}" stroke-width="1.1"/>
+      <path d="M12,68 C12,50 27,44 27,44 C27,44 42,50 42,68 L42,84 L12,84 Z" fill="none" stroke="${c1}" stroke-width="1.5"/>
+      <circle cx="27" cy="65" r="4" fill="${c2}" fill-opacity="0.6"/>
+    `;
+  } else if (effectiveCat === "luxury") {
+    // Art Deco Sunburst & Pilar Berlian
+    bodySvg = `
+      <line x1="6" y1="0" x2="6" y2="90" stroke="${c1}" stroke-width="2"/>
+      <line x1="48" y1="0" x2="48" y2="90" stroke="${c1}" stroke-width="1.4"/>
+      <polygon points="27,6 42,30 27,54 12,30" fill="${c1}" fill-opacity="0.15" stroke="${c1}" stroke-width="1.5"/>
+      <polygon points="27,16 35,30 27,44 19,30" fill="none" stroke="${c2}" stroke-width="1.2"/>
+      <path d="M10,66 L27,56 L44,66 M10,76 L27,66 L44,76 M10,86 L27,76 L44,86" fill="none" stroke="${c1}" stroke-width="1.3"/>
+    `;
+  } else if (effectiveCat === "romantic") {
+    // Sulur Bunga & Daun Romantis
+    bodySvg = `
+      <path d="M27,0 C12,22 42,45 27,68 C18,80 27,90 27,90" fill="none" stroke="${c1}" stroke-width="1.5"/>
+      <ellipse cx="16" cy="22" rx="8" ry="4" transform="rotate(-30 16 22)" fill="${c2}" fill-opacity="0.35" stroke="${c2}" stroke-width="1"/>
+      <ellipse cx="38" cy="44" rx="8" ry="4" transform="rotate(30 38 44)" fill="${c1}" fill-opacity="0.3" stroke="${c1}" stroke-width="1"/>
+      <circle cx="27" cy="68" r="5" fill="${c2}" fill-opacity="0.5" stroke="${c1}" stroke-width="1.2"/>
+      <line x1="49" y1="0" x2="49" y2="90" stroke="${c1}" stroke-width="1" stroke-dasharray="2 5"/>
+    `;
+  } else {
+    // Adventure / Ancient Rune Frame
+    bodySvg = `
+      <line x1="8" y1="0" x2="8" y2="90" stroke="${c1}" stroke-width="1.3" stroke-dasharray="8 4"/>
+      <line x1="48" y1="0" x2="48" y2="90" stroke="${c1}" stroke-width="1.6"/>
+      <polygon points="28,10 38,26 28,42 18,26" fill="none" stroke="${c1}" stroke-width="1.4"/>
+      <circle cx="28" cy="26" r="3" fill="${c2}"/>
+      <path d="M16,60 L28,52 L40,60 L40,78 L28,86 L16,78 Z" fill="${c2}" fill-opacity="0.14" stroke="${c1}" stroke-width="1.3"/>
+    `;
+  }
+
+  const fullSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="54" height="90" viewBox="0 0 54 90">${bodySvg}</svg>`;
+  return `url("data:image/svg+xml,${encodeURIComponent(fullSvg)}")`;
+}
+
+function renderSideBorders(genreKey, ornamentKey, accentHex, secondaryHex) {
+  const category = getGenreCategory(genreKey);
+  const c1 = accentHex || "#d4af37";
+  const c2 = secondaryHex || "#4fd1c5";
+  const bgUri = buildSideBorderSvgUri(category, ornamentKey, c1, c2);
+  document.querySelectorAll(".theme-side-border").forEach((el) => {
+    el.style.backgroundImage = bgUri;
+    el.style.borderColor = c1;
+  });
+}
+
 function renderOrnamentDividers(ornamentType) {
   const type = ornamentType || "wave-soft";
   const allThemeClasses = Object.keys(window.NAOZI_THEMES.ornaments).map((k) => "theme-" + k);
@@ -1171,6 +1244,8 @@ function applyThemeFromSettings(settings) {
   document.body.classList.remove(...allGenreClasses);
   document.body.classList.add("genre-" + genreKey);
 
+  const isKhitan = Boolean(s.type && String(s.type.value).trim().toLowerCase().startsWith("khitan"));
+
   if (genreCfg) {
     if (isGenreColorMode && !isLightMode) {
       root.style.setProperty("--bg-slate", genreCfg.bg);
@@ -1195,23 +1270,44 @@ function applyThemeFromSettings(settings) {
     }
 
     renderGenreBackdropOrbs(genreKey);
+    renderSideBorders(
+      genreKey,
+      ornament,
+      root.style.getPropertyValue("--gold-antique").trim(),
+      root.style.getPropertyValue("--cyan-ethereal").trim()
+    );
 
-    const mapText = {
-      "ui-crest-badge": genreCfg.crest,
-      "btn-open-text": genreCfg.startBtn,
-      "ui-guild-tag": genreCfg.guildTag,
-      "ui-guild-title": genreCfg.guildTitle,
-      "ui-lore-tag": genreCfg.loreTag,
-      "ui-lore-title": genreCfg.loreTitle,
-      "ui-quest-tag": genreCfg.questTag,
-      "ui-quest-title": genreCfg.questTitle,
-      "ui-relic-tag": genreCfg.relicTag,
-      "ui-relic-title": genreCfg.relicTitle,
-      "ui-chest-tag": genreCfg.chestTag,
-      "ui-chest-title": genreCfg.chestTitle,
-      "ui-rsvp-tag": genreCfg.rsvpTag,
-      "ui-rsvp-title": genreCfg.rsvpTitle,
-    };
+    const mapText = isKhitan
+      ? {
+          "ui-crest-badge": "✦ Tasyakuran Khitanan ✦",
+          "btn-open-text": genreCfg.startBtn === "Open Our Story" ? "Buka Undangan" : genreCfg.startBtn,
+          "ui-guild-tag": "Profil Anak",
+          "ui-guild-title": "Putra Tercinta Kami",
+          "ui-quest-tag": "Rangkaian Acara",
+          "ui-quest-title": "Jadwal & Lokasi Acara",
+          "ui-relic-tag": genreCfg.relicTag,
+          "ui-relic-title": genreCfg.relicTitle,
+          "ui-chest-tag": "Tanda Kasih",
+          "ui-chest-title": "Amplop Digital",
+          "ui-rsvp-tag": "Doa & Kehadiran",
+          "ui-rsvp-title": "Ucapan & RSVP",
+        }
+      : {
+          "ui-crest-badge": genreCfg.crest,
+          "btn-open-text": genreCfg.startBtn,
+          "ui-guild-tag": genreCfg.guildTag,
+          "ui-guild-title": genreCfg.guildTitle,
+          "ui-lore-tag": genreCfg.loreTag,
+          "ui-lore-title": genreCfg.loreTitle,
+          "ui-quest-tag": genreCfg.questTag,
+          "ui-quest-title": genreCfg.questTitle,
+          "ui-relic-tag": genreCfg.relicTag,
+          "ui-relic-title": genreCfg.relicTitle,
+          "ui-chest-tag": genreCfg.chestTag,
+          "ui-chest-title": genreCfg.chestTitle,
+          "ui-rsvp-tag": genreCfg.rsvpTag,
+          "ui-rsvp-title": genreCfg.rsvpTitle,
+        };
     Object.keys(mapText).forEach((elId) => {
       const el = document.getElementById(elId);
       if (el && mapText[elId]) el.textContent = mapText[elId];
