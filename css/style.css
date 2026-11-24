@@ -1867,99 +1867,33 @@ body.theme-light-mode .btn-game-cyan:hover {
   position: fixed;
   top: 0;
   bottom: 0;
-  width: 34px;
+  width: 54px;
   pointer-events: none;
   z-index: 6;
-  opacity: 0.42;
-  background-color: transparent;
-  background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent 0 18px,
-      var(--gold-antique) 18px 20px,
-      transparent 20px 38px
-    ),
-    radial-gradient(circle at 50% 19px, var(--cyan-ethereal) 2.5px, transparent 3.5px);
-  background-size: 34px 38px;
+  opacity: 0.72;
+  background-repeat: repeat-y;
+  background-size: 54px auto;
+  background-position: top center;
 }
 
 .theme-side-border-left {
   left: 0;
-  border-right: 1px solid rgba(212, 175, 55, 0.35);
-  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.15) 100%);
-  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.15) 100%);
+  border-right: 1.5px solid rgba(212, 175, 55, 0.38);
+  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.28);
 }
 
 .theme-side-border-right {
   right: 0;
-  border-left: 1px solid rgba(212, 175, 55, 0.35);
-  mask-image: linear-gradient(270deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.15) 100%);
-  -webkit-mask-image: linear-gradient(270deg, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.15) 100%);
-}
-
-/* Batik Kawung / Parang Nusantara */
-body.genre-nusantara-keraton .theme-side-border,
-body.genre-archipelago-heritage .theme-side-border,
-body.theme-javanese-gunungan .theme-side-border {
-  width: 44px;
-  opacity: 0.55;
-  background-image:
-    radial-gradient(circle at 0% 50%, transparent 11px, var(--gold-antique) 11.5px, var(--gold-antique) 13.5px, transparent 14px),
-    radial-gradient(circle at 100% 50%, transparent 11px, var(--gold-antique) 11.5px, var(--gold-antique) 13.5px, transparent 14px),
-    radial-gradient(circle at 50% 0%, transparent 11px, var(--cyan-ethereal) 11.5px, var(--cyan-ethereal) 13px, transparent 13.5px),
-    radial-gradient(circle at 50% 100%, transparent 11px, var(--cyan-ethereal) 11.5px, var(--cyan-ethereal) 13px, transparent 13.5px);
-  background-size: 32px 32px;
-}
-
-/* Arabesque / Geometris Sakral */
-body.genre-sacral-sanctuary .theme-side-border,
-body.genre-celestial-hymn .theme-side-border,
-body.theme-islamic-arch .theme-side-border,
-body.theme-sacred-dome .theme-side-border {
-  width: 40px;
-  opacity: 0.5;
-  background-image:
-    linear-gradient(45deg, transparent 42%, var(--gold-antique) 43%, var(--gold-antique) 47%, transparent 48%),
-    linear-gradient(-45deg, transparent 42%, var(--gold-antique) 43%, var(--gold-antique) 47%, transparent 48%),
-    radial-gradient(circle at 50% 50%, var(--cyan-ethereal) 2px, transparent 3px);
-  background-size: 28px 28px;
-}
-
-/* Art Deco & Royal Luxury */
-body.genre-royal-palace .theme-side-border,
-body.genre-art-deco-gala .theme-side-border,
-body.genre-diamond-monarch .theme-side-border,
-body.genre-emerald-crown .theme-side-border,
-body.theme-art-deco-gold .theme-side-border,
-body.theme-diamond-lattice .theme-side-border {
-  width: 36px;
-  opacity: 0.48;
-  background-image:
-    repeating-linear-gradient(90deg, var(--gold-antique) 0 2px, transparent 2px 8px),
-    repeating-linear-gradient(0deg, transparent 0 22px, var(--gold-bright) 22px 24px, transparent 24px 48px);
-  background-size: 36px 48px;
-}
-
-/* Romantic Floral & Pearl */
-body.genre-romantic-visual-novel .theme-side-border,
-body.genre-moonlight-serenade .theme-side-border,
-body.genre-paris-atelier .theme-side-border,
-body.genre-cherry-blossom .theme-side-border,
-body.genre-sage-daylight .theme-side-border,
-body.theme-floral-botanical .theme-side-border,
-body.theme-vine-wreath .theme-side-border {
-  width: 32px;
-  opacity: 0.44;
-  background-image:
-    radial-gradient(circle at 50% 14px, var(--gold-antique) 3px, transparent 4px),
-    radial-gradient(circle at 50% 28px, var(--cyan-ethereal) 2px, transparent 3px);
-  background-size: 32px 42px;
+  border-left: 1.5px solid rgba(212, 175, 55, 0.38);
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.28);
+  transform: scaleX(-1);
 }
 
 @media (max-width: 768px) {
   .theme-side-border {
-    width: 14px !important;
-    opacity: 0.35 !important;
+    width: 24px !important;
+    background-size: 24px auto !important;
+    opacity: 0.58 !important;
   }
 }
 
