@@ -75,6 +75,20 @@
             </div>
             <div class="form-group">
                 <div class="row">
+                    <label style="color: #1c1c1e; font-size: 15px; margin: 0;">Agama / Format Ibadah</label>
+                    <select id="religion" style="width: auto;" onchange="onReligionChange(this.value)">
+                        <option value="islam">Islam</option>
+                        <option value="kristen">Kristen Protestan</option>
+                        <option value="katolik">Katolik</option>
+                        <option value="hindu">Hindu</option>
+                        <option value="buddha">Buddha</option>
+                        <option value="khonghucu">Konghucu</option>
+                        <option value="umum">Umum / Nasional</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
                     <label style="color: #1c1c1e; font-size: 15px; margin: 0;">Zona Waktu Acara</label>
                     <select id="timezone_label" style="width: auto;">
                         <option value="WIB">WIB</option>
@@ -90,7 +104,7 @@
         <div class="card">
             <div class="form-group">
                 <label>Genre UI/UX Pengalaman Undangan (15 Tema)</label>
-                <select id="game_genre"></select>
+                <select id="game_genre" onchange="onGenreChange(this.value)"></select>
             </div>
             <div class="form-group">
                 <label>Preset Palet Warna</label>
@@ -172,7 +186,7 @@
         <h2>Waktu &amp; Lokasi</h2>
         <div class="card">
             <div class="form-group">
-                <label>Acara 1 (Akad / Utama)</label>
+                <label id="lbl-event-1">Acara 1 (Akad / Utama)</label>
                 <input type="text" id="event_1_name" placeholder="Nama Acara (Contoh: Akad Nikah)">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
                     <div>
@@ -189,7 +203,7 @@
                 <input type="text" id="event_1_loc" placeholder="Lokasi Acara 1" style="margin-top: 6px;">
             </div>
             <div class="form-group" id="event-2-group" style="transition: opacity 0.3s ease;">
-                <label>Acara 2 (Resepsi / Acara Sekunder)</label>
+                <label id="lbl-event-2">Acara 2 (Resepsi / Acara Sekunder)</label>
                 <input type="text" id="event_2_name" placeholder="Nama Acara (Contoh: Resepsi)">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px;">
                     <div>
@@ -231,6 +245,7 @@
         </div>
 
         <!-- World Map & Lore (Cerita Cinta) -->
+        <div id="lore-editor-wrapper">
         <h2>World Map &amp; Lore (Cerita Cinta)</h2>
         <div class="card" id="lore-fields">
             <div class="form-group">
@@ -251,6 +266,7 @@
                 <textarea id="lore_3_desc" rows="2" placeholder="Kisah singkat Final Destination..." style="margin-bottom: 6px;"></textarea>
                 <input type="text" id="lore_3_img" placeholder="URL Foto Final Destination (Default: img/img13.jpg)" onchange="preview(this)">
             </div>
+        </div>
         </div>
 
         <!-- Gift Section -->
@@ -273,7 +289,7 @@
         <!-- Settings Section -->
         <h2>Tampilkan Kolom</h2>
         <div class="card">
-            <div class="form-group">
+            <div class="form-group" id="sec-lore-toggle-row">
                 <div class="row"><span>World Map &amp; Lore (Cerita Cinta)</span><label class="switch"><input type="checkbox" id="sec_lore_v" checked onchange="toggleLoreEditor()"><span class="slider"></span></label></div>
             </div>
             <div class="form-group">
@@ -313,7 +329,14 @@
         document.getElementById('nav-guests').href = `guest.html?event=${encodeURIComponent(EVENT_ID)}`;
 
         populateSelectFromMap(document.getElementById('game_genre'), window.NAOZI_THEMES.gameGenres, false);
-        populateSelectFromMap(document.getElementById('theme_preset'), window.NAOZI_THEMES.palettes, true);
+        (function initPresetSelect() {
+            const presetEl = document.getElementById('theme_preset');
+            populateSelectFromMap(presetEl, window.NAOZI_THEMES.palettes, true);
+            const genreDefaultOpt = document.createElement('option');
+            genreDefaultOpt.value = 'genre-default';
+            genreDefaultOpt.textContent = 'Ikuti Warna Tema Utama (Genre)';
+            presetEl.insertBefore(genreDefaultOpt, presetEl.firstChild);
+        })();
         populateSelectFromMap(document.getElementById('font_pairing_select'), window.NAOZI_THEMES.fontPairings, false);
         populateSelectFromMap(document.getElementById('theme_ornament'), window.NAOZI_THEMES.ornaments, false);
 
@@ -352,7 +375,42 @@
                 });
         }
 
+        function onReligionChange(rel) {
+            const defaultEventNames = {
+                islam: 'Akad Nikah',
+                kristen: 'Pemberkatan Nikah',
+                katolik: 'Sakramen Perkawinan',
+                hindu: 'Upacara Pawiwahan',
+                buddha: 'Pemberkatan Pernikahan',
+                khonghucu: 'Upacara Pernikahan',
+                umum: 'Upacara Pernikahan'
+            };
+            const e1 = document.getElementById('event_1_name');
+            const isWedding = document.getElementById('type').value === 'wedding';
+            if (e1 && isWedding) {
+                const knownDefaults = Object.values(defaultEventNames);
+                if (!e1.value || knownDefaults.includes(e1.value.trim())) {
+                    e1.value = defaultEventNames[rel] || 'Akad Nikah';
+                }
+                e1.placeholder = 'Nama Acara (Contoh: ' + (defaultEventNames[rel] || 'Akad Nikah') + ')';
+            }
+        }
+
+        function onGenreChange(genreKey) {
+            const g = window.NAOZI_THEMES.gameGenres[genreKey];
+            if (!g) return;
+            document.getElementById('theme_preset').value = 'genre-default';
+            document.getElementById('primary_color').value = g.accent;
+            document.getElementById('secondary_color').value = g.secondary;
+            document.getElementById('bg_color').value = g.bg;
+            document.getElementById('surface_color').value = g.surface;
+        }
+
         function applyPalettePreset(presetKey) {
+            if (presetKey === 'genre-default') {
+                onGenreChange(document.getElementById('game_genre').value);
+                return;
+            }
             const pal = window.NAOZI_THEMES.palettes[presetKey];
             if (!pal) return;
             document.getElementById('primary_color').value = pal.primary;
@@ -455,13 +513,28 @@
 
         function toggleFields(resetMusic) {
             const t = document.getElementById('type').value;
-            document.getElementById('wedding-fields').style.display = t === 'wedding' ? 'block' : 'none';
+            const isWedding = t === 'wedding';
+            document.getElementById('wedding-fields').style.display = isWedding ? 'block' : 'none';
             document.getElementById('khitan-fields').style.display = t === 'khitan' ? 'block' : 'none';
+
+            const loreWrap = document.getElementById('lore-editor-wrapper');
+            const loreToggleRow = document.getElementById('sec-lore-toggle-row');
+            if (loreWrap) loreWrap.style.display = isWedding ? 'block' : 'none';
+            if (loreToggleRow) loreToggleRow.style.display = isWedding ? 'block' : 'none';
+
+            const lbl1 = document.getElementById('lbl-event-1');
+            const lbl2 = document.getElementById('lbl-event-2');
+            const e1Input = document.getElementById('event_1_name');
+            const e2Input = document.getElementById('event_2_name');
+            if (lbl1) lbl1.textContent = isWedding ? 'Acara 1 (Akad / Utama)' : 'Acara 1 (Walimatul Khitan / Utama)';
+            if (lbl2) lbl2.textContent = isWedding ? 'Acara 2 (Resepsi / Acara Sekunder)' : 'Acara 2 (Syukuran / Hiburan)';
+            if (e1Input) e1Input.placeholder = isWedding ? 'Nama Acara (Contoh: Akad Nikah)' : 'Nama Acara (Contoh: Walimatul Khitan)';
+            if (e2Input) e2Input.placeholder = isWedding ? 'Nama Acara (Contoh: Resepsi)' : 'Nama Acara (Contoh: Syukuran Khitanan)';
 
             if (resetMusic !== false) {
                 const musicInput = document.getElementById('music_url');
                 if (musicInput && (!musicInput.value || musicInput.value === 'audio/audio.mp3' || musicInput.value === 'assets/music.mp3')) {
-                    musicInput.value = t === 'wedding' ? 'audio/audio.mp3' : 'assets/music.mp3';
+                    musicInput.value = isWedding ? 'audio/audio.mp3' : 'assets/music.mp3';
                 }
             }
         }

@@ -29,6 +29,8 @@
   <!-- Ambient Floating Golden Dust & Fireflies -->
   <canvas id="fireflies-canvas" aria-hidden="true"></canvas>
   <div class="realm-noise-overlay" aria-hidden="true"></div>
+  <div class="theme-side-border theme-side-border-left" aria-hidden="true"></div>
+  <div class="theme-side-border theme-side-border-right" aria-hidden="true"></div>
 
   <!-- Preloader -->
   <div id="app-loading" aria-live="polite">
@@ -185,8 +187,8 @@
         <div class="section-quest-tag" id="ui-guild-tag">Party Roster</div>
         <h2 class="section-title text-gold-gradient" id="ui-guild-title">Guild &amp; Party Members</h2>
         <div class="compass-divider"><span class="compass-divider-icon">&#9876;</span></div>
-        <img src="img/bismillah.png" alt="Bismillah" width="160" class="mb-3 mx-auto d-block" style="filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(10deg);" />
-        <h5 class="font-display text-light mb-2">Assalamualaikum Wr. Wb.</h5>
+        <img id="bismillah-img" src="img/bismillah.png" alt="Bismillah" width="160" class="mb-3 mx-auto d-block" style="filter: brightness(0) invert(1) sepia(1) saturate(2) hue-rotate(10deg);" />
+        <h5 id="profile-greeting" class="font-display text-light mb-2">Assalamualaikum Wr. Wb.</h5>
         <p class="section-subtitle" id="intro-text">
           Kami mengundang Bapak/Ibu/Saudara/i serta kerabat sekalian untuk menghadiri acara pernikahan kami
         </p>
@@ -653,7 +655,7 @@
               Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan
               memberikan doa restu. Atas kehadiran dan doa restunya, kami mengucapkan terima kasih.
             </p>
-            <h5 class="font-display text-light mb-2">Wassalamualaikum Wr. Wb.</h5>
+            <h5 id="closing-greeting" class="font-display text-light mb-2">Wassalamualaikum Wr. Wb.</h5>
             <h2 class="hero-names-display text-gold-gradient mb-0" style="font-size: clamp(2rem, 5vw, 3rem);" id="footer-names">
               Aril &amp; Cici
             </h2>
