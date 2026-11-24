@@ -1869,31 +1869,39 @@ body.theme-light-mode .btn-game-cyan:hover {
   bottom: 0;
   width: 54px;
   pointer-events: none;
-  z-index: 6;
-  opacity: 0.72;
+  z-index: 3;
+  opacity: 0.65;
   background-repeat: repeat-y;
   background-size: 54px auto;
   background-position: top center;
 }
 
 .theme-side-border-left {
-  left: 0;
-  border-right: 1.5px solid rgba(212, 175, 55, 0.38);
-  box-shadow: 6px 0 24px rgba(0, 0, 0, 0.28);
+  left: 18px;
+  border-left: 1px solid rgba(212, 175, 55, 0.25);
+  border-right: 1px solid rgba(212, 175, 55, 0.35);
 }
 
 .theme-side-border-right {
-  right: 0;
-  border-left: 1.5px solid rgba(212, 175, 55, 0.38);
-  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.28);
+  right: 18px;
+  border-left: 1px solid rgba(212, 175, 55, 0.25);
+  border-right: 1px solid rgba(212, 175, 55, 0.35);
   transform: scaleX(-1);
 }
 
 @media (max-width: 768px) {
   .theme-side-border {
-    width: 24px !important;
-    background-size: 24px auto !important;
-    opacity: 0.58 !important;
+    width: 22px !important;
+    background-size: 22px auto !important;
+    opacity: 0.38 !important;
+  }
+
+  .theme-side-border-left {
+    left: 6px;
+  }
+
+  .theme-side-border-right {
+    right: 6px;
   }
 }
 
