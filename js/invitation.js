@@ -248,6 +248,65 @@
     }
   }
 
+  const RELIGION_PRESETS = {
+    islam: {
+      showBismillah: true,
+      openingGreeting: "Assalamualaikum Wr. Wb.",
+      closingGreeting: "Wassalamualaikum Wr. Wb.",
+      ayat: '"Dan diantara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir."',
+      source: "- QS. Ar-Rum 21 -",
+      defaultEvent1: "Akad Nikah",
+    },
+    kristen: {
+      showBismillah: false,
+      openingGreeting: "Shalom, Salam Sejahtera",
+      closingGreeting: "Tuhan Yesus Memberkati",
+      ayat: '"Demikianlah mereka bukan lagi dua, melainkan satu. Karena itu, apa yang telah dipersatukan Allah, tidak boleh diceraikan manusia."',
+      source: "- Matius 19:6 -",
+      defaultEvent1: "Pemberkatan Nikah",
+    },
+    katolik: {
+      showBismillah: false,
+      openingGreeting: "Salam Damai Sejahtera dalam Kristus",
+      closingGreeting: "Berkah Dalem, Tuhan Memberkati",
+      ayat: '"Dan di atas semuanya itu: kenakanlah kasih, sebagai pengikat yang mempersatukan dan menyempurnakan."',
+      source: "- Kolose 3:14 -",
+      defaultEvent1: "Sakramen Perkawinan",
+    },
+    hindu: {
+      showBismillah: false,
+      openingGreeting: "Om Swastyastu",
+      closingGreeting: "Om Shanti, Shanti, Shanti Om",
+      ayat: '"Wahai pasangan suami-istri, semoga kalian tetap bersatu dan tidak pernah terpisahkan. Semoga kalian mencapai hidup penuh kebahagiaan, tinggal di rumah yang penuh kegembiraan bersama seluruh keturunanmu."',
+      source: "- Rgveda X.85.42 -",
+      defaultEvent1: "Upacara Pawiwahan",
+    },
+    buddha: {
+      showBismillah: false,
+      openingGreeting: "Namo Buddhaya",
+      closingGreeting: "Sabbe Satta Bhavantu Sukhitatta",
+      ayat: '"Dengan saling menjaga keharmonisan, kepercayaan, dan cinta kasih yang tulus, kebahagiaan sejati akan senantiasa menyertai kehidupan berumah tangga."',
+      source: "- Dhammapada & Sigalovada Sutta -",
+      defaultEvent1: "Pemberkatan Pernikahan",
+    },
+    khonghucu: {
+      showBismillah: false,
+      openingGreeting: "Wei De Dong Tian (Salam Kebajikan)",
+      closingGreeting: "Shan Zai, Tian You",
+      ayat: '"Keharmonisan dalam rumah tangga bagaikan alunan kecapi dan harpa yang merdu; di sanalah benih kebajikan, bakti, dan kebahagiaan tumbuh abadi."',
+      source: "- Kitab Shi Jing (Sajak Agung) -",
+      defaultEvent1: "Upacara Pernikahan",
+    },
+    umum: {
+      showBismillah: false,
+      openingGreeting: "Salam Sejahtera bagi Kita Semua",
+      closingGreeting: "Terima Kasih atas Doa Restunya",
+      ayat: '"Cinta sejati bukan tentang menemukan seseorang yang sempurna, melainkan belajar melihat seseorang yang tidak sempurna dengan cara yang sempurna."',
+      source: "- Untaian Doa & Harapan -",
+      defaultEvent1: "Upacara Pernikahan",
+    },
+  };
+
   function renderPage() {
     // Terapkan Tema (Warna Aksen, Font, Ornamen & Atmosfer) dari Editor
     if (typeof applyThemeFromSettings === "function") {
@@ -256,6 +315,8 @@
 
     const rawType = (settings.type && settings.type.value ? String(settings.type.value) : "wedding").trim().toLowerCase();
     const isWedding = rawType !== "khitan" && rawType !== "khitanan";
+    const religionKey = (settings.religion && settings.religion.value ? String(settings.religion.value) : "islam").trim().toLowerCase();
+    const relCfg = RELIGION_PRESETS[religionKey] || RELIGION_PRESETS.islam;
     const tzLabel = (settings.timezone_label && settings.timezone_label.value) || "WITA";
 
     const groomFull = (settings.groom_name && settings.groom_name.value) || "Muhammad Nazril Mokodompit";
@@ -285,7 +346,15 @@
     document.getElementById("front-image-img").src = coverImgUrl;
     document.getElementById("closing-img").src = closingImgUrl;
 
+    const bismillahEl = document.getElementById("bismillah-img");
+    const openGreetEl = document.getElementById("profile-greeting");
+    const closeGreetEl = document.getElementById("closing-greeting");
+
     if (!isWedding) {
+      if (bismillahEl) bismillahEl.style.display = religionKey === "islam" ? "block" : "none";
+      if (openGreetEl) openGreetEl.innerText = relCfg.openingGreeting;
+      if (closeGreetEl) closeGreetEl.innerText = relCfg.closingGreeting;
+
       document.getElementById("open-title").innerText = "Tasyakuran Khitanan";
       document.getElementById("hero-title").innerText = "Tasyakuran Khitanan";
       document.getElementById("intro-text").innerText = "Kami mengundang Bapak/Ibu/Saudara/i serta kerabat sekalian untuk menghadiri acara tasyakuran khitanan putra kami:";
@@ -298,11 +367,15 @@
       document.getElementById("khitan-parents").innerText = (settings.khitan_parents && settings.khitan_parents.value) || "";
       document.getElementById("khitan-img").src = sanitizeUrl(settings.khitan_photo && settings.khitan_photo.value, "img/img9.jpg");
     } else {
+      if (bismillahEl) bismillahEl.style.display = relCfg.showBismillah ? "block" : "none";
+      if (openGreetEl) openGreetEl.innerText = relCfg.openingGreeting;
+      if (closeGreetEl) closeGreetEl.innerText = relCfg.closingGreeting;
+
       document.getElementById("open-title").innerText = "The Wedding of";
       document.getElementById("hero-title").innerText = "The Wedding of";
       document.getElementById("intro-text").innerText = "Kami mengundang Bapak/Ibu/Saudara/i serta kerabat sekalian untuk menghadiri acara pernikahan kami";
-      document.getElementById("ayat-text").innerText = '"Dan diantara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang. Sungguh, pada yang demikian itu benar-benar terdapat tanda-tanda (kebesaran Allah) bagi kaum yang berpikir"';
-      document.getElementById("ayat-source").innerText = "- QS. Ar-Rum 21 -";
+      document.getElementById("ayat-text").innerText = relCfg.ayat;
+      document.getElementById("ayat-source").innerText = relCfg.source;
 
       document.getElementById("wedding-ui").classList.remove("hidden");
       document.getElementById("khitan-ui").classList.add("hidden");
@@ -354,8 +427,13 @@
 
     document.getElementById("event-1-date").innerText = date1Str;
     document.getElementById("event-1-time").innerText = time1Str;
-    if (settings.event_1_name && settings.event_1_name.value) {
-      document.getElementById("event-1-name").innerText = settings.event_1_name.value;
+    const rawEvent1Name = (settings.event_1_name && settings.event_1_name.value ? settings.event_1_name.value : "").trim();
+    if (!isWedding && (!rawEvent1Name || rawEvent1Name === "Akad Nikah")) {
+      document.getElementById("event-1-name").innerText = "Walimatul Khitan";
+    } else if (isWedding && (!rawEvent1Name || rawEvent1Name === "Akad Nikah")) {
+      document.getElementById("event-1-name").innerText = relCfg.defaultEvent1;
+    } else if (rawEvent1Name) {
+      document.getElementById("event-1-name").innerText = rawEvent1Name;
     }
     if (settings.event_1_loc && settings.event_1_loc.value) {
       document.getElementById("event-1-loc").innerText = settings.event_1_loc.value;
@@ -511,9 +589,10 @@
     ];
     renderLoreChapter(activeLoreIdx);
 
-    // Visibilitas Kolom
+    // Visibilitas Kolom (pada mode Khitanan, sembunyikan World Map & Lore Cerita Cinta)
     ["sec_lore_v", "sec_events_v", "sec_event_2_v", "sec_gallery_v", "sec_gift_v", "sec_wishes_v", "sec_turut_v"].forEach((key) => {
-      if (settings[key] && settings[key].visible === false) {
+      const shouldHide = (settings[key] && settings[key].visible === false) || (!isWedding && key === "sec_lore_v");
+      if (shouldHide) {
         document.querySelectorAll("." + key).forEach((el) => el.classList.add("hidden"));
       } else {
         document.querySelectorAll("." + key).forEach((el) => el.classList.remove("hidden"));

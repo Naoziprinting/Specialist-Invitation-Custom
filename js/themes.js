@@ -725,6 +725,7 @@ function loadDynamicFonts(headingFont, bodyFont) {
   if (bodyFont) {
     document.documentElement.style.setProperty("--font-body", `"${bodyFont}", sans-serif`);
     document.documentElement.style.setProperty("--font-sans", `"${bodyFont}", -apple-system, BlinkMacSystemFont, sans-serif`);
+    document.documentElement.style.setProperty("--font-ui-caps", `"${bodyFont}", "Plus Jakarta Sans", sans-serif`);
   }
 }
 
@@ -1082,7 +1083,9 @@ function applyThemeFromSettings(settings) {
   const genreKey = (s.game_genre && s.game_genre.value) || "rpg-explorer";
   const genreCfg = window.NAOZI_THEMES.gameGenres[genreKey];
   const presetVal = (s.theme_preset && s.theme_preset.value) || "";
-  const isDefaultPreset = !presetVal || presetVal === "lilac-pink" || presetVal === "ancient-explorer";
+  // Hanya gunakan warna bawaan genre jika preset adalah 'genre-default' atau kosong (atau legacy default yang belum diubah)
+  const isLegacyUntouched = presetVal === "lilac-pink" && primary.toLowerCase() === "#8785a2" && bg.toLowerCase() === "#ffe2e2" && genreKey !== "rpg-explorer";
+  const isGenreColorMode = !presetVal || presetVal === "genre-default" || isLegacyUntouched;
 
   const bgRgb = hexToRgbObj(bg);
   const surfaceRgb = hexToRgbObj(surface);
@@ -1090,18 +1093,18 @@ function applyThemeFromSettings(settings) {
   const secondaryRgb = hexToRgbObj(secondary);
 
   const isLightMode = Boolean(
-    (isDefaultPreset && genreCfg && genreCfg.isLight) ||
-    (!isDefaultPreset && bgRgb && getRelativeLuminance(bgRgb) > 0.60)
+    (isGenreColorMode && genreCfg && genreCfg.isLight) ||
+    (!isGenreColorMode && bgRgb && getRelativeLuminance(bgRgb) > 0.55)
   );
 
   document.body.classList.toggle("theme-light-mode", isLightMode);
 
   if (isLightMode) {
-    const activeBg = isDefaultPreset && genreCfg ? genreCfg.bg : bg;
-    const activeVoid = isDefaultPreset && genreCfg ? genreCfg.bgVoid : mixHex(bgRgb || { r: 248, g: 244, b: 238 }, { r: 225, g: 218, b: 208 }, 0.35);
-    const activeSurface = isDefaultPreset && genreCfg ? genreCfg.surface : surface;
-    const rawAccent = isDefaultPreset && genreCfg ? genreCfg.accent : primary;
-    const rawSecondary = isDefaultPreset && genreCfg ? genreCfg.secondary : secondary;
+    const activeBg = isGenreColorMode && genreCfg ? genreCfg.bg : bg;
+    const activeVoid = isGenreColorMode && genreCfg ? genreCfg.bgVoid : mixHex(bgRgb || { r: 248, g: 244, b: 238 }, { r: 225, g: 218, b: 208 }, 0.35);
+    const activeSurface = isGenreColorMode && genreCfg ? genreCfg.surface : surface;
+    const rawAccent = isGenreColorMode && genreCfg ? genreCfg.accent : primary;
+    const rawSecondary = isGenreColorMode && genreCfg ? genreCfg.secondary : secondary;
 
     const readableAccent = ensureReadableOnLight(rawAccent, 0.36);
     const readableBright = ensureReadableOnLight(rawAccent, 0.44);
@@ -1137,7 +1140,7 @@ function applyThemeFromSettings(settings) {
 
     if (bgRgb) {
       const bgLum = getRelativeLuminance(bgRgb);
-      if (bgLum <= 0.20) {
+      if (bgLum <= 0.22) {
         root.style.setProperty("--bg-slate", bg);
         root.style.setProperty("--bg-void", mixDarkHex(bgRgb, 0.72));
       } else {
@@ -1148,7 +1151,7 @@ function applyThemeFromSettings(settings) {
 
     if (surfaceRgb) {
       const surfLum = getRelativeLuminance(surfaceRgb);
-      if (surfLum <= 0.22) {
+      if (surfLum <= 0.24) {
         root.style.setProperty("--bg-parchment-dark", surface);
       } else {
         root.style.setProperty("--bg-parchment-dark", mixDarkHex(primaryRgb || surfaceRgb, 0.26));
@@ -1169,7 +1172,7 @@ function applyThemeFromSettings(settings) {
   document.body.classList.add("genre-" + genreKey);
 
   if (genreCfg) {
-    if (isDefaultPreset && !isLightMode) {
+    if (isGenreColorMode && !isLightMode) {
       root.style.setProperty("--bg-slate", genreCfg.bg);
       root.style.setProperty("--bg-void", genreCfg.bgVoid);
       root.style.setProperty("--bg-parchment-dark", genreCfg.surface);
@@ -1182,7 +1185,7 @@ function applyThemeFromSettings(settings) {
     // Jika preset warna kustom dipakai, partikel mengikuti warna aksen yang aktif; jika default, pakai warna partikel genre
     const activeGoldRgb = hexToRgbObj(root.style.getPropertyValue("--gold-bright"));
     const activeCyanRgb = hexToRgbObj(root.style.getPropertyValue("--cyan-ethereal"));
-    if (!isDefaultPreset && activeGoldRgb && activeCyanRgb) {
+    if (!isGenreColorMode && activeGoldRgb && activeCyanRgb) {
       window.NAOZI_PARTICLE_COLORS = [
         `${activeGoldRgb.r}, ${activeGoldRgb.g}, ${activeGoldRgb.b}`,
         `${activeCyanRgb.r}, ${activeCyanRgb.g}, ${activeCyanRgb.b}`,
