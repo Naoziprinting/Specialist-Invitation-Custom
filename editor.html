@@ -278,11 +278,18 @@
         </div>
 
         <!-- Turut Mengundang -->
-        <h2>Turut Mengundang</h2>
+        <h2>Turut Mengundang &amp; Pesan WhatsApp</h2>
         <div class="card">
             <div class="form-group">
                 <label>Daftar Keluarga / Tokoh yang Turut Mengundang (Pisahkan dengan | atau baris baru)</label>
                 <textarea id="turut_mengundang" rows="4" placeholder="Kel. Besar Mempelai Pria | Kel. Besar Mempelai Wanita"></textarea>
+            </div>
+            <div class="form-group">
+                <div class="row" style="margin-bottom:6px;">
+                    <label style="margin:0;">Template Pesan WhatsApp (Gunakan [nama])</label>
+                    <button type="button" onclick="resetWaTemplateFromEditor()" style="border:none; background:#eef0f7; color:#4a4863; padding:5px 10px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">Sesuaikan Otomatis</button>
+                </div>
+                <textarea id="wa_message" rows="4" placeholder="Template pesan undangan WhatsApp..."></textarea>
             </div>
         </div>
 
@@ -375,6 +382,15 @@
                 });
         }
 
+        function resetWaTemplateFromEditor() {
+            const t = document.getElementById('type').value;
+            const r = document.getElementById('religion').value;
+            const waEl = document.getElementById('wa_message');
+            if (waEl && typeof buildDefaultWaTemplate === 'function') {
+                waEl.value = buildDefaultWaTemplate(t, r);
+            }
+        }
+
         function onReligionChange(rel) {
             const defaultEventNames = {
                 islam: 'Akad Nikah',
@@ -393,6 +409,10 @@
                     e1.value = defaultEventNames[rel] || 'Akad Nikah';
                 }
                 e1.placeholder = 'Nama Acara (Contoh: ' + (defaultEventNames[rel] || 'Akad Nikah') + ')';
+            }
+            const waEl = document.getElementById('wa_message');
+            if (waEl && (!waEl.value || waEl.value.includes('untuk menghadiri acara kami.'))) {
+                resetWaTemplateFromEditor();
             }
         }
 
@@ -528,8 +548,24 @@
             const e2Input = document.getElementById('event_2_name');
             if (lbl1) lbl1.textContent = isWedding ? 'Acara 1 (Akad / Utama)' : 'Acara 1 (Walimatul Khitan / Utama)';
             if (lbl2) lbl2.textContent = isWedding ? 'Acara 2 (Resepsi / Acara Sekunder)' : 'Acara 2 (Syukuran / Hiburan)';
-            if (e1Input) e1Input.placeholder = isWedding ? 'Nama Acara (Contoh: Akad Nikah)' : 'Nama Acara (Contoh: Walimatul Khitan)';
-            if (e2Input) e2Input.placeholder = isWedding ? 'Nama Acara (Contoh: Resepsi)' : 'Nama Acara (Contoh: Syukuran Khitanan)';
+            if (e1Input) {
+                e1Input.placeholder = isWedding ? 'Nama Acara (Contoh: Akad Nikah)' : 'Nama Acara (Contoh: Walimatul Khitan)';
+                if (!isWedding && e1Input.value.trim() === 'Akad Nikah') e1Input.value = 'Walimatul Khitan';
+                if (isWedding && e1Input.value.trim() === 'Walimatul Khitan') e1Input.value = 'Akad Nikah';
+            }
+            if (e2Input) {
+                e2Input.placeholder = isWedding ? 'Nama Acara (Contoh: Resepsi)' : 'Nama Acara (Contoh: Syukuran Khitanan)';
+                if (!isWedding && e2Input.value.trim() === 'Resepsi') e2Input.value = 'Syukuran Khitanan';
+                if (isWedding && e2Input.value.trim() === 'Syukuran Khitanan') e2Input.value = 'Resepsi';
+            }
+
+            const turutInput = document.getElementById('turut_mengundang');
+            if (turutInput && !isWedding && turutInput.value.includes('Mempelai')) {
+                turutInput.value = 'Kel. Besar Orang Tua | Segenap Keluarga';
+            }
+            if (resetMusic !== false) {
+                resetWaTemplateFromEditor();
+            }
 
             if (resetMusic !== false) {
                 const musicInput = document.getElementById('music_url');

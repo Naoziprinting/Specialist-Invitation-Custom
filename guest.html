@@ -69,6 +69,7 @@
                 Gunakan kode <code>[nama]</code> untuk memanggil nama tamu secara otomatis dalam pesan.
             </p>
             <textarea id="wa_message" rows="5" placeholder="Masukkan format pesan undangan di sini..."></textarea>
+            <button type="button" class="btn" onclick="applySmartWaTemplate()" style="width:100%; background:#eef0f7; color:#4a4863; margin-bottom:8px;">Sesuaikan Template Otomatis (Sesuai Acara &amp; Agama)</button>
             <button class="btn btn-add" id="saveTemplateBtn" onclick="saveTemplate()" style="margin-top: 5px; background: #5c5a78;">Simpan Template</button>
         </div>
 
@@ -125,13 +126,25 @@
                 });
         }
 
+        function applySmartWaTemplate() {
+            const t = settings && settings.type ? settings.type.value : 'wedding';
+            const r = settings && settings.religion ? settings.religion.value : 'islam';
+            if (typeof buildDefaultWaTemplate === 'function') {
+                document.getElementById('wa_message').value = buildDefaultWaTemplate(t, r);
+            }
+        }
+
         function init() {
             apiGet('getSettings', { event: EVENT_ID })
                 .then(data => {
                     settings = data;
-                    if (settings.wa_message && settings.wa_message.value) {
-                        document.getElementById('wa_message').value = settings.wa_message.value;
-                    }
+                    const t = settings && settings.type ? settings.type.value : 'wedding';
+                    const r = settings && settings.religion ? settings.religion.value : 'islam';
+                    const rawWa = settings.wa_message && settings.wa_message.value ? settings.wa_message.value : '';
+                    const isLegacyGeneric = !rawWa || rawWa === 'Halo [nama], tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara kami.';
+                    document.getElementById('wa_message').value = isLegacyGeneric && typeof buildDefaultWaTemplate === 'function'
+                        ? buildDefaultWaTemplate(t, r)
+                        : rawWa;
                     refreshList();
                 })
                 .catch(err => {
@@ -313,7 +326,10 @@
             }
 
             const invLink = buildInvitationLink(name);
-            const template = settings.wa_message.value || 'Halo [nama], kami mengundang Anda ke acara kami!';
+            const inputWa = document.getElementById('wa_message').value;
+            const t = settings && settings.type ? settings.type.value : 'wedding';
+            const r = settings && settings.religion ? settings.religion.value : 'islam';
+            const template = inputWa || (settings.wa_message && settings.wa_message.value) || (typeof buildDefaultWaTemplate === 'function' ? buildDefaultWaTemplate(t, r) : 'Halo [nama], kami mengundang Anda ke acara kami!');
             let message = template.replace(/\[nama\]/gi, name);
             message += `\n\nBuka Undangan: ${invLink}`;
 
